@@ -1,11 +1,11 @@
 version: '3'
 services: 
     web-app:
-        build: web-app
+        build: web-application
         ports: 
             - "8080:8080"
         volumes: 
-            - "./web-app/src:/web-application/src"
+            - "./web-application/src:/web-application/src"
         depends_on: 
             - "db"
     db:
