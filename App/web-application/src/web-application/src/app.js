@@ -1,15 +1,21 @@
 const express = require('express');
-const nodemon = require("nodemon");
 const handlebars = require("handlebars");
 const exphbs = require('express-handlebars');
 const path = require("path");
 const mysql = require("mysql")
+
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
 
 // App
 const app = express();
+const db = mysql.createConnection({
+    host: "db",
+    user: "root",
+    passsword: "abc123",
+    database: "myDB"
+})
 //Initialize handlebars
 app.engine('hbs', exphbs({
     extname: 'hbs',
@@ -19,6 +25,11 @@ app.engine('hbs', exphbs({
 }));
 app.set('views', path.join(__dirname, '/pl/src/views'));
 app.set('view engine', 'hbs');
+app.use(express.static(__dirname + '/pl/src/public/'));
+app.use(express.static(__dirname + '/pl/src/js'));
+
+app.use(express.json());
+
 
 const db = mysql.createConnection({
     host: "db",
@@ -28,7 +39,7 @@ const db = mysql.createConnection({
 })
 
 app.get('/', (req, res) => {
-    res.render("home", { title: "Home" });
+    res.render("home", {title: "Home"});
 });
 
 app.listen(PORT, HOST);
