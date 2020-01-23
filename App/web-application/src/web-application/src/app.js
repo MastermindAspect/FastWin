@@ -25,6 +25,8 @@ app.engine('hbs', exphbs({
 app.set('views', path.join(__dirname , '/pl/src/views'));
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/pl/src/public/'));
+app.use(express.static(__dirname + '/pl/src/js'));
+
 app.use(express.json());
 
 
