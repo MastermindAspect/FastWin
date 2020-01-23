@@ -1,8 +1,8 @@
 const express = require('express');
-const handlebars = require("handlebars");
+const handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
-const path = require("path");
-const mysql = require("mysql");
+const path = require('path');
+const mysql = require('mysql');
 // Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -22,6 +22,13 @@ app.engine('hbs', exphbs({
     layoutsDir: __dirname + '/pl/src/views/layouts/',
     partialsDir: __dirname + '/pl/src/views/partials/'
 }));
+
+//router files
+const usersRouter = require('./pl/src/js/usersRouter');
+
+//routers
+app.use("/users", usersRouter);
+
 app.set('views', path.join(__dirname , '/pl/src/views'));
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/pl/src/public/'));
