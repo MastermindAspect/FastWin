@@ -1,32 +1,27 @@
+
 <link type="text/css" rel="stylesheet" href="dashboard-navigation.css">
-<header>
+<ul class="navbar-nav flex-column" id="dashboardNav">
+  <li class="nav-item">
     <h3 class="text-left dashboardHeader">
-        <a class="nav-item" href="#">DASHBOARD</a>
+        <a class="nav-item active" aria-pressed="true" role="button" href="/">DASHBOARD</a>
     </h3>
-</header>
-<ul class="nav nav-stacked">
-  <li class="nav-item dashboardItem ">
-    <a class="nav-link dashboardLink dashboardItemHeader" href="#">> Hubs</a>
-    <ul class="nav nav-stacked dropdownDisable dropdown">
-        <li class="dashboardListItem">
-            <a class="nav-link dashboardLink" href="#"> dsadsa</a>
-        </li>
-    </ul>
   </li>
-  <li class="nav-item dashboardItem">
-    <a class="nav-link dashboardLink dashboardItemHeader" href="#">> Tournaments</a>
-    <ul class="nav nav-stacked dropdownDisable dropdown">
-        <li class="dashboardListItem">
-            <a class="nav-link dashboardLink" href="#"> dsadsa</a>
-        </li>
-    </ul>
-  </li>
-  <li class="nav-item dashboardItem">
-    <a class="nav-link dashboardLink dashboardItemHeader" href="#">> Teams</a>
-    <ul class="nav nav-stacked dropdownDisable dropdown" >
-        <li class="dashboardListItem">
-            <a class="nav-link dashboardLink" href="#"> dsadsa</a>
-        </li>
-    </ul>
-  </li>
+  {{#each model.dashbaordItems as |item|}}
+    <li class="nav-item dashboardItem ">
+      <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" >> {{item.name}}</a>
+      <a role="button" class="nav-item btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
+      <ul class="nav nav-stacked dropdownDisable dropdown">
+          <li class="dashboardListItem">
+            {{#each item.contentLinks as |innerLink|}}
+              <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+            {{/each}}
+          </li>
+      </ul>
+    </li>
+  {{/each}}
+  <div class="row">
+    <div class="col text-center">
+        <button type="button" class="btn btn-outline-secondary btn-md fixed-bottom">Create</button>
+    </div>
+  </div>
 </ul>
