@@ -6,7 +6,6 @@ const path = require('path');
 const mysql = require('mysql');
 
 const bodyParser = require("body-parser")
-const mysql = require("mysql");
 const dashboardContent = require("../src/pl/src/js/dashboard-sidemenu");
 
 //TODO: ADD dashboardContent into a cookie and modify when needed, that way we wont have to run the function everytime we 
