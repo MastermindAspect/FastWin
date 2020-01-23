@@ -1,5 +1,87 @@
 .col-md-3{
-    height: 100%;
-    background-color: #1a1a1a;
-    padding-right: 0;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+#dashboardNav{
+    width: 100%;
+}
+li{
+    display: inline-block;
+    height:100%;
+    width: 100%;
+    padding-left: 0;
+}
+#buttons{
+    width: 100%;
+    height: 2.5rem;
+}
+li a{
+    width: 85%;
+    cursor: pointer;
+}
+a:not([href]):not([tabindex]){
+    color: #a0a0a0;
+}
+a:not([href]):not([tabindex]):hover{
+    background-color: #404040;
+    color: #ffffff;
+}
+li a.dashboardLink.nav-link{
+    display:inline-block;
+}
+.dashboardItem{
+    margin-bottom: 10px;
+}
+
+.dashboardLink{
+    padding-left: 25px;
+    color: #a0a0a0;
+}
+.dashboardLink:hover{
+    color: #ffffff;
+}
+
+.dashboardHeader a{
+    color: #a0a0a0;
+}
+.dashboardHeader:hover{
+    color: white;
+    background: #404040;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dropdownDisable{
+    display: none;
+}
+.dashboardListItem a.dashboardLink{
+    padding-left: 50px;
+}
+
+li .moreInfoBtn{
+    background-color: transparent;
+    color: #a0a0a0;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: none;
+    width: 15%;
+    height: 3.5rem;
+}
+
+#buttonForce{
+    width: 100% ;
+    display: flex;
+    flex-wrap: nowrap;
 }
