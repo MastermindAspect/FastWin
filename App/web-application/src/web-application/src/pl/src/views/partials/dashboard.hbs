@@ -1,21 +1,47 @@
 <link type="text/css" rel="stylesheet" href="dashboard.css">
 
 <nav class="col-md-3 d-none d-md-block bg-light sidebar">
-    <div class="sidebar-sticky">
+    <div class="sidebar-sticky navbarToggler" id="second">
         <ul class="nav flex-column">
-            {{#each model.dashbaordItems as |item|}}
-                <li class="nav-item">
-                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" >> {{item.name}}</a>
-                    <a role="button" class="nav-item nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
-                    <ul class="nav flex-column dropdownDisable dropdown">
-                        <li class="dashboardListItem">
-                            {{#each item.contentLinks as |innerLink|}}
-                            <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
-                            {{/each}}
-                        </li>
-                    </ul>
-                </li>
-            {{/each}}
+            <li class="nav-item">
+                <span id="singleLineForce">
+                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">> Hubs</p></a>
+                    <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
+                </span>
+                <ul class="nav flex-column dropdownDisable dropdown">
+                    <li class="dashboardListItem">
+                        {{#each item.contentLinks as |innerLink|}}
+                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                        {{/each}}
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span id="singleLineForce">
+                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">> Tournaments</p></a>
+                    <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
+                </span>
+                <ul class="nav flex-column dropdownDisable dropdown">
+                    <li class="dashboardListItem">
+                        {{#each item.contentLinks as |innerLink|}}
+                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                        {{/each}}
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span id="singleLineForce">
+                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">> Teams</p></a>
+                    <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
+                </span>
+                <ul class="nav flex-column dropdownDisable dropdown">
+                    <li class="dashboardListItem">
+                        {{#each item.contentLinks as |innerLink|}}
+                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                        {{/each}}
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </nav>
