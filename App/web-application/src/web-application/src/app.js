@@ -23,7 +23,7 @@ app.engine('hbs', exphbs({
     layoutsDir: __dirname + '/pl/src/views/layouts/',
     partialsDir: __dirname + '/pl/src/views/partials/'
 }));
-app.set('views', path.join(__dirname , '/pl/src/views'));
+app.set('views', path.join(__dirname, '/pl/src/views'));
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/pl/src/public/'));
 app.use(express.static(__dirname + '/pl/src/js'));
@@ -36,6 +36,13 @@ const hubs_router = require("./pl/src/js/hubs-router.js");
 
 //use routers
 app.use("/hubs", hubs_router)
+
+const db = mysql.createConnection({
+    host: "db",
+    user: "root",
+    password: "abc123",
+    database: "myDB"
+})
 
 app.get('/', (req, res) => {
     const model = {title: "Home", dashboardItems: dashboardContent.getDashboardContent()}

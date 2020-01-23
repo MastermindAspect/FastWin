@@ -8,6 +8,7 @@
     "start": "nodemon -L ./src/web-application/src/app.js"
   },
   "dependencies": {
+    "mysql": "^2.18.0",
     "express": "^4.16.1",
     "bootstrap": "^4.3.1",
     "handlebars": "^4.4.0",
