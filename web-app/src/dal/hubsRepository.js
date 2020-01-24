@@ -10,8 +10,10 @@ exports.getAllHubs = function(callback){
 	
 	db.query("SELECT * FROM hubs", function(error, hubs){
 		// TODO: Also handle errors.
-		console.log(hubs)
-		callback(hubs)
+		if (!error) {
+			console.log(hubs)
+			callback(hubs)
+		} else throw "Failed to get hubs!"
 	})
 	
 }

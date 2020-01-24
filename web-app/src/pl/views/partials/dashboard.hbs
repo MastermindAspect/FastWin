@@ -1,12 +1,31 @@
 <link type="text/css" rel="stylesheet" href="dashboard.css">
 
-<nav class="col-md-3 d-none d-md-block bg-light sidebar">
+<nav class="col-md-3 d-none d-lg-block bg-light sidebar">
     <div class="sidebar-sticky navbarToggler" id="second">
         <ul class="nav flex-column">
-            <li class="nav-item">
+            <li class="nav-item"> <!--Hubs-->
                 <span id="singleLineForce">
-                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">> Hubs</p></a>
-                    <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/hubs">{{item.image_name}}</a>
+                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">▼Hubs</p></a>
+                        <span id="forcMultipleLines">
+                            <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/hubs">+</a>
+                            <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/hubs/all"><img src="images/magnifying_glass.png" /></a>
+                        </span>                
+                    </span>
+                <ul class="nav flex-column dropdownDisable dropdown">
+                    <li class="dashboardListItem">
+                        {{#each item.contentLinks as |innerLink|}}
+                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                        {{/each}}
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item"> <!--Tournaments-->
+                <span id="singleLineForce">
+                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">▼Tournaments</p></a>
+                    <span id="forcMultipleLines">
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/tournaments">+</a>
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/tournaments/all"><img src="images/magnifying_glass.png" /></a>
+                    </span>
                 </span>
                 <ul class="nav flex-column dropdownDisable dropdown">
                     <li class="dashboardListItem">
@@ -16,23 +35,13 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item"> <!--Teams-->
                 <span id="singleLineForce">
-                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">> Tournaments</p></a>
-                    <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
-                </span>
-                <ul class="nav flex-column dropdownDisable dropdown">
-                    <li class="dashboardListItem">
-                        {{#each item.contentLinks as |innerLink|}}
-                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
-                        {{/each}}
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <span id="singleLineForce">
-                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">> Teams</p></a>
-                    <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn" href="/{{item.link_name}}">{{item.image_name}}</a>
+                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p style="white-space: nowrap;">▼Teams</p></a>
+                    <span id="forcMultipleLines">
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/teams">+</a>
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/teams/all"><img src="images/magnifying_glass.png" /></a>
+                    </span>
                 </span>
                 <ul class="nav flex-column dropdownDisable dropdown">
                     <li class="dashboardListItem">

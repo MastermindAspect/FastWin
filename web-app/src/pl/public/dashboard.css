@@ -45,11 +45,14 @@ li a.dashboardLink.nav-link{
 }
 
 .dashboardLink{
-    padding-left: 25px;
+    padding-left: 15px;
     color: #a0a0a0;
 }
 .dashboardLink:hover{
     color: #ffffff;
+}
+.dashboardLink p{
+    padding-top: 10px
 }
 
 .dashboardHeader a{
@@ -66,7 +69,8 @@ li a.dashboardLink.nav-link{
     display: none;
 }
 .dashboardListItem a.dashboardLink{
-    padding-left: 50px;
+    padding-left: 35px;
+    padding-top: 10px;
 }
 
 li .moreInfoBtn{
@@ -80,8 +84,25 @@ li .moreInfoBtn{
     height: 3.5rem;
 }
 
-#buttonForce{
+#singleLineForce{
     width: 100% ;
     display: flex;
     flex-wrap: nowrap;
+}
+
+#forcMultipleLines{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+a.stack{
+    padding: 0 0 0 0;
+    width: 2rem;
+    height: 50%;
+}
+
+a.stack img{
+    height:35%;
+    width:35%;
 }
