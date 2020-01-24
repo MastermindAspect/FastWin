@@ -1,13 +1,12 @@
 const dashboardManager = require("../../../bll/dashboard-manager")
 
-exports.getDashboardContent = function(){
+exports.getDashboardContent = function(userId, callback){
     try{
-        const content = dashboardManager.getDashboardContent()
-        const model = {dashboardItems: content}
-        return model
+        dashboardManager.getDashboardContent(userId,function(hubs){
+            callback(hubs)
+        })
     }
     catch(error){
-        const model = {error: error}
-        return model
+        //handle error
     }
 }

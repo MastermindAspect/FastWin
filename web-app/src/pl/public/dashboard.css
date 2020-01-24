@@ -44,11 +44,20 @@ li a.dashboardLink.nav-link{
     margin-bottom: 10px;
 }
 
+.arrow::before{
+    content: "▲";
+}
+
+.defaultarrow::before{
+    content: "▼"
+}
+
 .dashboardLink{
     padding-left: 15px;
     color: #a0a0a0;
 }
 .dashboardLink:hover{
+    background-color: #404040;
     color: #ffffff;
 }
 .dashboardLink p{
