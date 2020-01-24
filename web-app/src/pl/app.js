@@ -3,10 +3,8 @@ const handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
 
 const path = require('path');
-const mysql = require('mysql');
 
 const bodyParser = require("body-parser")
-const dashboardContent = require("../src/pl/src/js/dashboard-sidemenu");
 
 //TODO: ADD dashboardContent into a cookie and modify when needed, that way we wont have to run the function everytime we 
 //render a view.
@@ -22,37 +20,30 @@ const app = express();
 app.engine('hbs', exphbs({
     extname: 'hbs',
     defaultLayout: 'base',
-    layoutsDir: __dirname + '/pl/src/views/layouts/',
-    partialsDir: __dirname + '/pl/src/views/partials/'
+    layoutsDir: __dirname + '/views/layouts/',
+    partialsDir: __dirname + '/views/partials/'
 }));
 
-app.set('views', path.join(__dirname , '/pl/src/views'));
+app.set('views', path.join(__dirname , '/views/'));
 
 app.set('view engine', 'hbs');
-app.use(express.static(__dirname + '/pl/src/public/'));
-app.use(express.static(__dirname + '/pl/src/js'));
+app.use(express.static(__dirname + '/public/'));
+app.use(express.static(__dirname + '/js/'));
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.json());
 
 //routers
-const usersRouter = require('./pl/src/js/usersRouter');
-const hubs_router = require("./pl/src/js/hubs-router.js");
+const usersRouter = require('./routers/usersRouter');
+const hubs_router = require("./routers/hubs-router");
 
 //use routers
 app.use("/hubs", hubs_router)
 app.use("/users", usersRouter);
 
-const db = mysql.createConnection({
-    host: "db",
-    user: "root",
-    password: "abc123",
-    database: "myDB"
-})
-
 app.get('/', (req, res) => {
-    const model = {title: "Home", dashboardItems: dashboardContent.getDashboardContent()}
+    const model = {title: "Home"}
     res.render("home", {model:model});
 });
 
