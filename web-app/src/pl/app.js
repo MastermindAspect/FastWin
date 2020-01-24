@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const session = require('express-session');
 const path = require('path');
-
+const hubsManager = require("../bll/hubsManager")
 const bodyParser = require("body-parser")
 
 //TODO: ADD dashboardContent into a cookie and modify when needed, that way we wont have to run the function everytime we 
@@ -40,11 +40,9 @@ app.use(express.json());
 
 //csrf
 
-
 //routers
 const usersRouter = require('./routers/usersRouter');
 const hubsRouter = require("./routers/hubs-router");
-
 
 
 //use routers
@@ -52,8 +50,11 @@ app.use("/hubs", hubsRouter)
 app.use("/users", usersRouter);
 
 app.get('/', (req, res) => {
-    const model = {title: "Home"}
-    res.render("home", {model:model});
+    hubsManager.getAllHubs(function(hubs){
+        const model = {title: "Home", hubs}
+        console.log(model)
+        res.render("home", model);
+    })
 });
 
 app.listen(PORT, HOST);

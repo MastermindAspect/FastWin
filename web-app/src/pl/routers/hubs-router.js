@@ -9,13 +9,13 @@ router.get("/", function(req,res){
 			const model = {
 				hubs
 			}
-			res.render("hubs.hbs", model)
+			res.render("hubs.hbs", model);
 		})
 	} catch (error){
 		const model = {
 			error
 		}
-		res.render("error.hba", model)
+		res.render("error.hba", model);
 	}
 })
 
@@ -25,9 +25,18 @@ router.get("/all", function(req,res){
 			title: "All Hubs",
 			hubs
 		}
-		res.render("hubs_all.hbs", model)
+		res.render("hubs_all.hbs", model);
 	})
 })
+
+router.get("/create", function(req,res){
+	const model = {title: "Create"}
+	res.render("hubs_create", model);
+})
+
+router.post("/create", function(req,res){
+
+})	
 
 
 module.exports = router;

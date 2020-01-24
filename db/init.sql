@@ -9,6 +9,8 @@ CREATE TABLE hubs (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     ownerId INT,
     hubName TEXT,
+    description TEXT,
+    game TEXT,
     creationDate TEXT,
     FOREIGN KEY (ownerId) REFERENCES users(id)
 );
@@ -33,3 +35,4 @@ CREATE TABLE posts (
 );
 
 INSERT INTO users (username, passHash, email) VALUES ("john", "snow", "a@email.com");
+INSERT INTO hubs (hubName,description, game, creationDate) VALUES ("Test", "best hub","csgo", "1-1-1-1");
