@@ -1,0 +1,11 @@
+<h2>Hubs</h2>
+{{#if hubs.length}}
+	<ul>
+		{{#each hubs}}
+			<li>{{username}}</li>
+			<li>{{email}}</li>
+		{{/each}}
+	</ul>
+{{else}}
+	<p>There are no hubs.</p>
+{{/if}}

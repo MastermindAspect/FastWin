@@ -1,11 +1,11 @@
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username TEXT,
     passHash TEXT,
     email TEXT
 );
 
-CREATE TABLE IF NOT EXISTS hubs (
+CREATE TABLE hubs (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     ownerId INT,
     hubName TEXT,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS hubs (
     FOREIGN KEY (ownerId) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS subscriptions (
+CREATE TABLE subscriptions (
     hubId INT,
     userId INT,
     PRIMARY KEY (hubId, userId),
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     FOREIGN KEY (userId) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS posts (
+CREATE TABLE posts (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     hubId INT,
     userId INT,
