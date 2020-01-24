@@ -22,6 +22,7 @@ router.get("/", function(req,res){
 router.get("/all", function(req,res){
 	hubsManager.getAllHubs(function(hubs){
 		const model = {
+			title: "All Hubs",
 			hubs
 		}
 		res.render("hubs_all.hbs", model)

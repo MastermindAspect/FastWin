@@ -28,8 +28,8 @@ app.engine('hbs', exphbs({
 app.set('views', path.join(__dirname , '/views/'));
 app.set('view engine', 'hbs');
 //static folders
-app.use(express.static(__dirname + '/public/'));
-app.use(express.static(__dirname + '/js/'));
+app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/js'));
 
 //bodyparser
 app.use(bodyParser.json())
