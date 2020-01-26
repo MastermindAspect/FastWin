@@ -40,9 +40,26 @@ exports.getHub = function(id, callback){
 }
 
 
-exports.subscribeTo = function(hubId, userId){
-	db.query("INSERT INTO subscriptions (hubId, userId) VALUES (?,?)", [hubId, userId], function(err){
-		if (err) return false
-		else return true
+exports.subscribeTo = function(hubId, userId, clalback){
+	db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [hubId, userId], function(err){
+		callback(err)
+	})
+}
+
+exports.unSubscribeTo = function(hubId, userId){
+	db.query("DELETE FROM hub_subscriptions WHERE hubId = ? AND userId = ?", [hubId, userId], function(err){
+		callback(err)
+	})
+}
+
+exports.getMembers = function(hubId, callback){
+	db.query("SELECT u.* FROM hubs h INNER JOIN hub_subscriptions hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.id WHERE h.id = ?", [hubId], function(users, err){
+		callback(users[0],err)
+	})
+}
+
+exports.getAllHubsByUser = function(userId, callback){
+	db.query("SELECT h.* FROM hubs h INNER JOIN hub_subscriptions hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.id WHERE u.id = ?", [userId], function(hubs, err){
+		callback(hubs[0],err)
 	})
 }

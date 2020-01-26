@@ -34,7 +34,31 @@ exports.getHub = function(id, callback){
 }
 
 exports.subscribeTo = function(hubId, userId){
-	if(!hubsRepository.subscribeTo(hubId,userId)){
-		throw "Could not subscribe!"
-	}
+	//check if user is logged in
+	//eles throw exception
+	hubsRepository.subscribeTo(hubId, userId, function(err){
+		if (err) throw "could not subscribe to hub!"
+	})
+}
+
+exports.unSubscribeTo = function(hubId, userId){
+	//check if user is logged in
+	//eles throw exception
+	hubsRepository.unSubscribeTo(hubId, userId, function(err){
+		if (err) throw "could not unsubscribe to hub!"
+	})
+}
+
+exports.getMembers = function(hubId, callback){
+	hubsRepository.getMembers(hubId, function(users, err){
+		if (err) throw "could not get members"
+		else callback(users)
+	})
+}
+
+exports.getAllHubsByUser = function(userId, callback){
+	hubsRepository.getAllHubsByUser(userId, function(hubs, err){
+		if (err) throw "could not get hubs"
+		else callback(hubs)
+	})
 }
