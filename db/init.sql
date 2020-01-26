@@ -26,6 +26,13 @@ CREATE TABLE tournaments (
     FOREIGN KEY (ownerId) REFERENCES users(id)
 );
 
+CREATE TABLE tournament_info (
+    tournamentId INT NOT NULL,
+    userId INT NOT NULL,
+    PRIMARY KEY (tournamentId, userId)
+);
+
+
 CREATE TABLE teams (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     ownerId INT,
@@ -35,12 +42,10 @@ CREATE TABLE teams (
     FOREIGN KEY (ownerId) REFERENCES users(id)
 );
 
-CREATE TABLE subscriptions (
-    hubId INT,
-    userId INT,
-    PRIMARY KEY (hubId, userId),
-    FOREIGN KEY (hubId) REFERENCES hubs(id),
-    FOREIGN KEY (userId) REFERENCES users(id)
+CREATE TABLE hub_subscriptions (
+    hubId INT NOT NULL,
+    userId INT NOT NULL,
+    PRIMARY KEY (hubId, userId)
 );
 
 CREATE TABLE posts (
