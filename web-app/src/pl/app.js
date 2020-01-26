@@ -72,4 +72,29 @@ app.get('/', (req, res) => {
     })
 });
 
+app.get('/login', (req, res) => {
+    const model = {title: "Login"}
+    res.render("login", model);
+});
+
+const usersManager = require('../bll/usersManager')
+
+app.post('/login', (req, res) => {
+    const email = req.body.loginEmail
+    const password = req.body.loginPassword
+    usersManager.loginUser(email, password, function(loginErrors) {
+        if (loginErrors.length > 0) {
+            const modal = {
+                loginEmail: email,
+                loginErrors
+            }
+            res.render("login", modal)
+        } else {
+            res.redirect("/")
+        }
+    })
+    
+})
+
+
 app.listen(PORT, HOST);

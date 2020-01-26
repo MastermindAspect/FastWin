@@ -1,0 +1,64 @@
+<script type="text/javascript" src="/loginForm.js"></script>
+
+<div class="row">
+    <div class="col">
+        <form id="loginForm" action="/login" method="POST">
+            <h2>Login</h2>
+            {{#if loginErrors}}
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        {{#each loginErrors}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" name="loginEmail" aria-describedby="emailHelp" value="{{loginEmail}}">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" name="loginPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+
+        <form id="createAccountForm" action="/users/create" method="POST">
+            <h2>Create Account</h2>
+            <div class="form-group" id="usernamePlacement">
+                <label for="exampleInputUsername">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{username}}">
+            </div>
+            <div class="form-group" id="emailPlacement">
+                <label for="exampleInputEmail2">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" value="{{createAccountEmail}}">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
+            </div>
+            <div class="form-group" id="password1Placement">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="password1" name="password1" value="{{password}}">
+            </div>
+            <div class="form-group" id="password2Placement">
+                <label for="exampleInputPassword2">Re-write password</label>
+                <input type="password" class="form-control" id="password2" name="password2" value="{{validationPassword}}">
+            </div>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+
+            {{#if createAccountErrors}}
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        {{#each createAccountErrors}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+        </form>
+    </div>
+    <div class="col">
+        <h2 id="changeFormText">Don't have a account?</h2>
+        <button id="changeFormButton" class="btn btn-primary">Create Account</button>
+    </div>
+</div>
