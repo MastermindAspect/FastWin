@@ -12,53 +12,74 @@ exports.getAllHubs = function(callback){
 	}
 }
 
-exports.createHub = function(values, callback){
+exports.createHub = function(values, loggedin, callback){
 	//check if user is logged in
 	//eles throw exception
-	try{
-		hubsRepository.createHub(values, function(id){
-			callback(id)
+	if (loggedin){
+		hubsRepository.createHub(values, function(id, err){
+			if (err) throw "Could not create hub!"
+			else callback(id)
 		})
-	} catch(error){
-		throw "could not get hub"
 	}
+	else {
+		throw "You need to be logged in to create a hub!"
+	}
+
 }
 
 exports.getHub = function(id, callback){
 	//check if user is logged in
 	//eles throw exception
-	hubsRepository.getHub(id, function(hub){
+	hubsRepository.getHub(id, function(hub,err){
 		console.log("data from manager" + hub)
+		if (err) throw "could not get hub"
 		callback(hub)
 	})
 }
 
-exports.subscribeTo = function(hubId, userId){
-	//check if user is logged in
-	//eles throw exception
-	hubsRepository.subscribeTo(hubId, userId, function(err){
-		if (err) throw "could not subscribe to hub!"
-	})
+exports.subscribeTo = function(hubId,loggedin, userId){
+	if (loggedin){
+		hubsRepository.getHub(hubId, function(hub, err){
+			if (err) throw "could not get hub"
+			hubsRepository.subscribeTo(hub.id, userId, function(err){
+				if (err) throw "could not subscribe to hub!"
+			})
+		})
+	}else{
+		throw "You need to be logged in to be able to subscribe!"
+	}
 }
 
 exports.unSubscribeTo = function(hubId, userId){
-	//check if user is logged in
-	//eles throw exception
-	hubsRepository.unSubscribeTo(hubId, userId, function(err){
-		if (err) throw "could not unsubscribe to hub!"
-	})
+	if(loggedin){
+		hubsRepository.getHub(hubId, function(hub,err){
+			if (err) throw "Hub not found!"
+			hubsRepository.unSubscribeTo(hub.id, userId, function(err){
+				if (err) throw "Could not unsubscribe to hub!"
+			})
+		})
+	} else{
+		throw "You need to be logged in to unsubscribe!"
+	}
 }
 
 exports.getMembers = function(hubId, callback){
-	hubsRepository.getMembers(hubId, function(users, err){
-		if (err) throw "could not get members"
-		else callback(users)
+	hubsRepository.getHub(hubId, function(hub, err){
+		if (err) throw "Hub not found!"
+		hubsRepository.getMembers(hub.id, function(users, err){
+			if (err) throw "could not get members"
+			else callback(users)
+		})
 	})
 }
 
-exports.getAllHubsByUser = function(userId, callback){
-	hubsRepository.getAllHubsByUser(userId, function(hubs, err){
-		if (err) throw "could not get hubs"
-		else callback(hubs)
-	})
+exports.getAllHubsByUser = function(userId, loggedin,callback){
+	if (loggedin && userId){
+		hubsRepository.getAllHubsByUser(userId, function(hubs, err){
+			if (err) throw "could not get hubs"
+			else callback(hubs)
+		})
+	}else{
+		throw "Please login to view this page"
+	}
 }

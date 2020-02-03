@@ -31,9 +31,8 @@ router.post("/create", function(req,res){
 	const description = req.body.description;
     const game = req.body.game;
     const maxPlayers = req.body.max_players;
-	console.log(game, description, tournamentName)
 	try {
-		tournamentsManager.createTournament([0,tournamentName,description,game,maxPlayers, "1-1-1-1"], function(id){
+		tournamentsManager.createTournament([req.session.userId,tournamentName,description,game,maxPlayers, "1-1-1-1"],req.session.loggedin, function(id){
 			res.redirect("/tournaments/"+id);
 		})
 	} catch(error){
@@ -60,9 +59,8 @@ router.get("/:id", function(req,res){
 
 router.post("/:id/join", function(req,res){
 	const tournamentId = req.params.id;
-	//also get userID
 	try{
-		tournamentsManager.joinTournament(tournamentId, 0/*userID when accessable*/)
+		tournamentsManager.joinTournament(tournamentId, req.session.loggedin,req.session.userId)
 	}
 	catch(error){
 		const model = {error}
@@ -73,7 +71,7 @@ router.post("/:id/join", function(req,res){
 router.post("/:id/leave", function(req,res){
     const tournamentId = req.params.id;
     try{
-        tournamentsManager.leaveTournament(tournamentId, 0/*userID when accessable*/)
+        tournamentsManager.leaveTournament(tournamentId, req.session.loggedin,req.session.userId)
     }
     catch(error){
         const model = {error}
