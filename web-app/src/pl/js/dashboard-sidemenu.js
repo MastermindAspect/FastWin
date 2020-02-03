@@ -1,13 +1,14 @@
-const dashboardManager = require("../../../bll/dashboard-manager")
-
-exports.getDashboardContent = function(){
+const hubsManager = require("../../bll/hubsManager");
+const tournamentsManager = require("../../bll/tournamentsManager")
+exports.getDashboardContent = function(userId,loggedin, callback){
     try{
-        const content = dashboardManager.getDashboardContent()
-        const model = {dashboardItems: content}
-        return model
+        hubsManager.getAllHubsByUser(userId, loggedin,function(hubs){
+            tournamentsManager.getAllTournamentByUser(userId, loggedin,function(tournaments){
+                callback(hubs, tournaments)
+            })
+        })
     }
     catch(error){
-        const model = {error: error}
-        return model
+        //handle error
     }
 }

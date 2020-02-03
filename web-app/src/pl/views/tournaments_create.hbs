@@ -7,7 +7,7 @@
         <div class="mb-3">
           <label for="Hub name">Hub name</label>
           <div class="input-group">
-            <input type="text" class="form-control" name="hub_name" id="hub_name" placeholder="Headshot Hub" required="true">
+            <input type="text" class="form-control" name="tournament_name" id="hub_name" placeholder="Headshot Hub" required="true">
             <div class="invalid-feedback" style="width: 100%;">
               A Hub name is required.
             </div>
@@ -34,7 +34,24 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label for="max_players">Max players</label>
+            <select class="custom-select d-block w-100" id="max_players" name="max_players" required="">
+              <option value="">Choose...</option>
+              <option>8</option>
+              <option>16</option>
+              <option>32</option>
+              <option>64</option>
+              <option>128</option>
+              <option>256</option>
+            </select>
+            <div class="invalid-feedback">
+              Please select a valid option.
+            </div>
+          </div>
+        </div>
         <hr class="mb-4">
-        <button class="btn btn-secondary btn-lg btn-block" type="submit">Create hub</button> 
+        <button class="btn btn-secondary btn-lg btn-block" type="submit">Create tournament</button> 
       </form>
 </div>
