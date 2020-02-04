@@ -2,7 +2,7 @@ const usersRepository = require('../dal/usersRepository')
 
 bcrypt = require('bcrypt')
 
-exports.loginUser = function(email, password, callback) {
+exports.loginUser = function(email, password, session, callback) {
     let errors = []
     usersRepository.getUserByEmail(email, function(err, user) {
         if (err) {
@@ -19,7 +19,8 @@ exports.loginUser = function(email, password, callback) {
             }
 
             if (errors.length == 0) {
-                //CREATE SESSION FOR LOOGED IN USER
+                session.loggedIn = true
+                session.userId = user.Id
             }
 
             callback(errors)

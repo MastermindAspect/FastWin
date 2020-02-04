@@ -21,6 +21,7 @@
                 <label for="exampleInputPassword1">Password</label>
                 <input type="password" class="form-control" name="loginPassword">
             </div>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
             <button type="submit" class="btn btn-primary">Log in</button>
         </form>
 
@@ -44,6 +45,7 @@
                 <label for="exampleInputPassword2">Re-write password</label>
                 <input type="password" class="form-control" id="password2" name="password2" value="{{validationPassword}}">
             </div>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
             <button type="submit" class="btn btn-primary">Create Account</button>
 
             {{#if createAccountErrors}}

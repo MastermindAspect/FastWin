@@ -57,7 +57,7 @@ app.use(cookieParser());
 app.use(csrf({ cookie: true }));
 
 app.use(function (req, res, next) {
-    res.locals.loggedIn = req.session.loggedin;
+    res.locals.loggedIn = req.session.loggedIn;
     res.locals.userId = req.session.userId;
     res.locals.csrfToken = req.csrfToken();
     next();
