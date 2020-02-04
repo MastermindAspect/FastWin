@@ -13,29 +13,26 @@ exports.getAllHubs = function(callback){
 		if (!error) {
 			console.log(hubs)
 			callback(hubs)
-		} else throw "Failed to get hubs!"
+		} else {throw "Failed to get hubs!"}
 	})
 	
 }
 
-exports.createHub = function(values, callback){
+exports.createHub = function(values, loggedin, callback){
 	db.query("INSERT INTO hubs (hubName, description, game, creationDate) VALUES (?,?,?,?)", values, function(err){
 		//handle error
-		console.log(err)
+		callback(null, err)
 	})
 	db.query("SELECT id FROM hubs WHERE hubName = ?", values[0], function(err,id){
 		//handle error
-		callback(id[0].id)
+		callback(id[0].id, err)
 	})
 }
 
 
 exports.getHub = function(id, callback){
 	db.query("SELECT * FROM hubs WHERE id = ?", id,function(err,hub){
-		if (err) throw "Could not get the specific hub!"
-		else {
-			callback(hub[0])
-		}
+		callback(hub[0],err)
 	})
 }
 

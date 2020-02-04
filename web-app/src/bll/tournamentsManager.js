@@ -2,44 +2,48 @@ const tournamentsRepository = require('../dal/tournamentsRepository')
 
 exports.getAllTournaments = function(callback){
 	tournamentsRepository.getAllTournaments(function(tournaments, error){
-		// TODO: Also handle errors.
 		if (error) throw "unable to get tournaments"
 		else callback(tournaments)
 	})
 }
 
-exports.createTournament = function(values, callback){
-	//check if user is logged in
-	//eles throw exception
-	tournamentsRepository.createTournament(values, function(id, error){
-		if (error) throw "unable to create tournament!"
-		else callback(id)
-	})
+exports.createTournament = function(values, loggedin,callback){
+	if (loggedin){
+		tournamentsRepository.createTournament(values, function(id, error){
+			if (error) throw "unable to create tournament!"
+			else callback(id)
+		})
+	}else {
+		throw "Please login to create a tournament!"
+	}
 }
 
 exports.getTournament = function(id, callback){
-	//check if user is logged in
-	//eles throw exception
 	tournamentsRepository.getTournament(id, function(tournament){
-		console.log("data from manager" + tournament)
 		callback(tournament)
 	})
 }
 
-exports.joinTournament = function(tournamentId, userId){
-	//check if user is logged in
-	//eles throw exception
-	tournamentsRepository.joinTournament(tournamentId,userId, function(err){
-		if (err) throw "could not join tournament"
-	})
+exports.joinTournament = function(tournamentId, loggedin,userId){
+	if (loggedin && userId){
+		tournamentsRepository.joinTournament(tournamentId,userId, function(err){
+			if (err) throw "could not join tournament"
+		})
+	}
+	else {
+		throw "Please login to join a tournament!"
+	}
 }
 
-exports.leaveTournament = function(tournamentId, userId){
-	//check if user is logged in
-	//eles throw exception
-	tournamentsRepository.leaveTournament(tournamentId, userId, function(err){
-		if (err) throw "could not leave tournament"
-	})
+exports.leaveTournament = function(tournamentId, loggedin,userId){
+	if (loggedin && userId){
+		tournamentsRepository.leaveTournament(tournamentId, userId, function(err){
+			if (err) throw "could not leave tournament"
+		})
+	}
+	else {
+		throw "Could not leave tournament!"
+	}
 }
 
 exports.getTournamentPlayers = function(tournamentId, callback){
@@ -56,9 +60,14 @@ exports.getTournamentPlayers = function(userId, callback){
 	})
 }
 
-exports.getAllTournamentByUser = function(userId, callback){
-    tournamentsRepository.getAllTournamentByUser(userId, function(tournaments, error){
-		if (error) throw "unable to get tournaments"
-		else callback(tournaments)
-	})
+exports.getAllTournamentByUser = function(userId, loggedin,callback){
+	if (loggedin && userId){
+		tournamentsRepository.getAllTournamentByUser(userId, function(tournaments, error){
+			if (error) throw "unable to get tournaments"
+			else callback(tournaments)
+		})
+	}
+	else{
+		throw "Please login to view hubs!"
+	}
 }

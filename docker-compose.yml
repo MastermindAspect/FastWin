@@ -16,3 +16,8 @@ services:
     environment: 
       - "MYSQL_ROOT_PASSWORD=abc123"
       - "MYSQL_DATABASE=myDB"
+  redis: 
+    image: "redis"
+    container_name: "cache"
+    ports: 
+      - "6379:6379"

@@ -4,40 +4,25 @@ const hubsManager = require('../../bll/hubsManager')
 const dashboardContent = require("../js/dashboard-sidemenu")
 
 router.get("/all", function(req,res){
-	router.get("/", function(req,res){
-		//hubs initial page
-		/*try{
-        dashboardContent.getDashboardContent(userId, function(hubs, tournaments){
-            const model = {title: "Home", hubs, tournaments}
-            console.log(model);
-            res.render("tournaments_create", model);
-        })
-		}
-		catch(error){
-			const model = {title: "Error", error}
-			res.render("error.hbs", model);
-		}
-		*/
-		try {
-			hubsManager.getAllHubs(function(hubs){
-				const model = {
-					title: "All hubs",
-					hubs
-				}
-				res.render("hubs.hbs", model);
-			})
-		} catch (error){
+	try {
+		hubsManager.getAllHubs(function(hubs){
 			const model = {
-				error
+				title: "All hubs",
+				hubs
 			}
-			res.render("error.hba", model);
+			res.render("hubs_all.hbs", model);
+		})
+	} catch (error){
+		const model = {
+			error
 		}
-	})
+		res.render("error.hba", model);
+	}
 })
 
 router.get("/create", function(req,res){
 	/*try{
-        dashboardContent.getDashboardContent(userId, function(hubs, tournaments){
+        dashboardContent.getDashboardContent(req.session.userId, function(hubs, tournaments){
             const model = {title: "Home", hubs, tournaments}
             console.log(model);
             res.render("tournaments_create", model);
@@ -60,7 +45,7 @@ router.post("/create", function(req,res){
 	const game = req.body.game;
 	console.log(game, description, hubName)
 	try {
-		hubsManager.createHub([hubName,description,game, "1-1-1-1"], function(id){
+		hubsManager.createHub([hubName,description,game, "1-1-1-1"],req.session.loggedin, function(id){
 			res.redirect("/hubs/"+id);
 		})
 	} catch(error){
@@ -74,7 +59,7 @@ router.get("/:id", function(req,res){
 	try{
 		hubsManager.getHub(id,function(hub){
 			/*
-			dashboardContent.getDashboardContent(userId, function(hubs, tournaments){
+			dashboardContent.getDashboardContent(req.session.userId, function(hubs, tournaments){
 				const model = {title: "hub"+hub.id, hub, hubs, tournaments}
 				console.log(model);
 				res.render("hubs_hubs.hbs", model);
@@ -94,12 +79,10 @@ router.get("/:id", function(req,res){
 
 router.post("/:id/subscribe", function(req,res){
 	const hubId = req.params.id;
-	//also get userID
 	try{
-		hubsManager.subscribeTo(hubId, 0)
+		hubsManager.subscribeTo(hubId,req.session.loggedin, req.session.userId)
 	}
 	catch(error){
-		console.log(error)
 		const model = {error}
 		res.render("error.hbs", model);
 	}
@@ -107,12 +90,10 @@ router.post("/:id/subscribe", function(req,res){
 
 router.post("/:id/unsubscribe", function(req,res){
 	const hubId = req.params.id;
-	//also get userID
 	try{
-		hubsManager.subscribeTo(hubId, 0/*USER ID */)
+		hubsManager.subscribeTo(hubId,req.session.loggedin, req.session.userId)
 	}
 	catch(error){
-		console.log(error)
 		const model = {error}
 		res.render("error.hbs", model);
 	}
@@ -123,7 +104,7 @@ router.get("/:id/members", function(req,res){
 	try {
 		hubsManager.getMembers(hubId, function(users){
 			/*
-			dashboardContent.getDashboardContent(userId, function(hubs, tournaments){
+			dashboardContent.getDashboardContent(req.session.userId, function(hubs, tournaments){
 				const model = {title: "Members", users, hubs, tournaments}
 				console.log(model);
 				res.render("hubs_members.hbs", model);

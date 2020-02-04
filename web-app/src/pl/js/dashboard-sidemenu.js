@@ -1,9 +1,9 @@
 const hubsManager = require("../../bll/hubsManager");
 const tournamentsManager = require("../../bll/tournamentsManager")
-exports.getDashboardContent = function(userId, callback){
+exports.getDashboardContent = function(userId,loggedin, callback){
     try{
-        hubsManager.getAllHubsByUser(userId, function(hubs){
-            tournamentsManager.getAllTournamentByUser(userId, function(tournaments){
+        hubsManager.getAllHubsByUser(userId, loggedin,function(hubs){
+            tournamentsManager.getAllTournamentByUser(userId, loggedin,function(tournaments){
                 callback(hubs, tournaments)
             })
         })

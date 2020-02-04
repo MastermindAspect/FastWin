@@ -1,5 +1,7 @@
 <link type="text/css" rel="stylesheet" href="/dashboard.css">
 
+<!--  TODO: Write some hbs code that shows a message with a link to showing all hubs/tournaments/teams if the user is not logged in -->
+
 <nav class="col-md-3 d-none d-lg-block bg-light sidebar">
     <div class="sidebar-sticky navbarToggler" id="second">
         <ul class="nav flex-column">
@@ -7,15 +9,19 @@
                 <span id="singleLineForce">
                     <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Hubs</p></a>
                         <span id="forcMultipleLines">
-                            <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/hubs/create">+</a>
+                            <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/hubs/create"{{else}}"/login"{{/if}}>+</a>
                             <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/hubs/all"><img src="/images/magnifying_glass.png" /></a>
                         </span>                
                     </span>
                 <ul class="nav flex-column dropdownDisable dropdown">
                     <li class="dashboardListItem">
-                        {{#each hubs}}
-                            <a class="nav-link dashboardLink" href="/hubs/{{id}}"> {{hubName}}</a>
-                        {{/each}}
+                        {{#if hubs.length}}
+                            {{#each hubs}}
+                                <a class="nav-link dashboardLink" href="/hubs/{{id}}"> {{hubName}}</a>
+                            {{/each}}
+                        {{else}}
+                            <p>test</p>
+                        {{/if}}
                     </li>
                 </ul>
             </li>
@@ -23,15 +29,19 @@
                 <span id="singleLineForce">
                     <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow" style="white-space: nowrap;">Tournaments</p></a>
                     <span id="forcMultipleLines">
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/tournaments/create">+</a>
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"}}/tournaments/create"{{else}}"/login"{{/if}}>+</a>
                         <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/tournaments/all"><img src="/images/magnifying_glass.png" /></a>
                     </span>
                 </span>
                 <ul class="nav flex-column dropdownDisable dropdown">
                     <li class="dashboardListItem">
-                        {{#each item.contentLinks as |innerLink|}}
-                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
-                        {{/each}}
+                        {{#if item.contentLinks.length}}
+                            {{#each item.contentLinks as |innerLink|}}
+                            <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                            {{/each}}
+                        {{else}}
+                            <p>test</p>
+                        {{/if}}
                     </li>
                 </ul>
             </li>
@@ -39,15 +49,19 @@
                 <span id="singleLineForce">
                     <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Teams</p></a>
                     <span id="forcMultipleLines">
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/teams/create">+</a>
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/teams/create"{{else}}"/login"{{/if}}>+</a>
                         <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/teams/all"><img src="/images/magnifying_glass.png" /></a>
                     </span>
                 </span>
                 <ul class="nav flex-column dropdownDisable dropdown">
                     <li class="dashboardListItem">
-                        {{#each item.contentLinks as |innerLink|}}
-                        <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
-                        {{/each}}
+                        {{#if item.contentLinks.length}}
+                            {{#each item.contentLinks as |innerLink|}}
+                            <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                            {{/each}}
+                        {{else}}
+                            <p>Test</p>
+                        {{/if}}
                     </li>
                 </ul>
             </li>
