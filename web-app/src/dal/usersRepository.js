@@ -24,13 +24,13 @@ exports.getUserById = function(userId, callback) {
 }
 
 exports.getMostUsedHubs = function(userId, callback) {
-	db.query("SELECT * FROM hubs WHERE id in (SELECT hubId FROM posts WHERE userId = ? GROUP BY hubId ORDER BY COUNT(*) DESC LIMIT 3)"), [userId], function(err, hubs) {
+	db.query("SELECT hubs.* FROM hubs LEFT JOIN posts ON hubs.id = posts.hubId WHERE posts.userId = ? GROUP BY hubs.id ORDER BY COUNT(posts.id) DESC LIMIT 3", [userId], function(err, hubs) {
 		if (err) {
 			console.log(err)
 		} else {
 			callback(hubs)
 		}
-	}
+	})
 }
 
 exports.createUser = function(username, email, password, callback) {
