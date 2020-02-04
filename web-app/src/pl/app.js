@@ -65,11 +65,13 @@ app.use(function (req, res, next) {
 
 //routers
 const usersRouter = require('./routers/usersRouter');
+const logRouter = require('./routers/logRouter');
 const hubsRouter = require("./routers/hubs-router");
 const tournamentsRouter = require("./routers/tournaments-router");
 //use routers
 app.use("/hubs", hubsRouter)
 app.use("/users", usersRouter);
+app.use("/log", logRouter)
 app.use("/tournaments", tournamentsRouter)
 app.get('/', (req, res) => {
     //When user and session is implemented switch to getDashboardContent(userId, callback)
@@ -94,29 +96,7 @@ app.get('/', (req, res) => {
     })
 });
 
-app.get('/login', (req, res) => {
-    const model = {title: "Login"}
-    res.render("login", model);
-});
 
-const usersManager = require('../bll/usersManager')
-
-app.post('/login', (req, res) => {
-    const email = req.body.loginEmail
-    const password = req.body.loginPassword
-    usersManager.loginUser(email, password, function(loginErrors) {
-        if (loginErrors.length > 0) {
-            const modal = {
-                loginEmail: email,
-                loginErrors
-            }
-            res.render("login", modal)
-        } else {
-            res.redirect("/")
-        }
-    })
-    
-})
 
 /*
 app.post("/search", function(req,res){
