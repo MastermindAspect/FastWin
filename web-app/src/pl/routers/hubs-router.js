@@ -96,9 +96,8 @@ router.get("/:id/members", function(req,res){
 	const hubId = req.params.id;
 	try {
 		hubsManager.getMembers(hubId, function(users){
-			dashboardContent.getDashboardContent(req.session.userId, function(hubs, tournaments){
+			dashboardContent.getDashboardContent(req.session.userId,req.session.loggedIn, function(hubs, tournaments){
 				const model = {title: "Members", users, hubs, tournaments}
-				console.log(model);
 				res.render("hubs_members.hbs", model);
 			})
 		})
