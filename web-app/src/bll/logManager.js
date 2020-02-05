@@ -20,7 +20,7 @@ exports.loginUser = function(email, password, session, callback) {
 
             if (errors.length == 0) {
                 session.loggedIn = true
-                session.userId = user.Id
+                session.userId = user.id
             }
 
             callback(errors)

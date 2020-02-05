@@ -6,8 +6,9 @@
     </div>
     <div class="col-md-12">
         <hr class="mb-4">
-        <form method="POST" action="/hubs/{{hub.id}}/subscribe">
-            <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if subscribed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
+        <form method="POST" action={{#if isSubbed}}"/hubs/{{hub.id}}/unsubscribe"{{else}}"/hubs/{{hub.id}}/subscribe"{{/if}}>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if isSubbed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
         </form>
     </div>
 </div>

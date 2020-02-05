@@ -13,11 +13,9 @@ exports.getAllHubs = function(callback){
 }
 
 exports.createHub = function(values, loggedin, callback){
-	//check if user is logged in
-	//eles throw exception
 	if (loggedin){
 		hubsRepository.createHub(values, function(id, err){
-			if (err) throw "Could not create hub!"
+			if (err) throw err
 			else callback(id)
 		})
 	}
@@ -28,21 +26,19 @@ exports.createHub = function(values, loggedin, callback){
 }
 
 exports.getHub = function(id, callback){
-	//check if user is logged in
-	//eles throw exception
 	hubsRepository.getHub(id, function(hub,err){
-		console.log("data from manager" + hub)
 		if (err) throw "could not get hub"
 		callback(hub)
 	})
 }
 
 exports.subscribeTo = function(hubId,loggedin, userId){
+	console.log(userId)
 	if (loggedin){
 		hubsRepository.getHub(hubId, function(hub, err){
 			if (err) throw "could not get hub"
 			hubsRepository.subscribeTo(hub.id, userId, function(err){
-				if (err) throw "could not subscribe to hub!"
+				if (err) throw err
 			})
 		})
 	}else{
@@ -50,7 +46,7 @@ exports.subscribeTo = function(hubId,loggedin, userId){
 	}
 }
 
-exports.unSubscribeTo = function(hubId, userId){
+exports.unSubscribeTo = function(hubId, loggedin,userId){
 	if(loggedin){
 		hubsRepository.getHub(hubId, function(hub,err){
 			if (err) throw "Hub not found!"
@@ -76,10 +72,17 @@ exports.getMembers = function(hubId, callback){
 exports.getAllHubsByUser = function(userId, loggedin,callback){
 	if (loggedin && userId){
 		hubsRepository.getAllHubsByUser(userId, function(hubs, err){
-			if (err) throw "could not get hubs"
+			if (err) throw "cant get hubs"
 			else callback(hubs)
 		})
 	}else{
 		throw "Please login to view this page"
 	}
+}
+
+exports.isSubscribed = function(hubId, userId, callback){
+	hubsRepository.isSubscribed(hubId, userId,function(isSubbed){
+		callback(isSubbed)
+
+	})
 }

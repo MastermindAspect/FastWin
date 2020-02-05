@@ -75,9 +75,9 @@ app.use("/log", logRouter)
 app.use("/tournaments", tournamentsRouter)
 app.get('/', (req, res) => {
     //When user and session is implemented switch to getDashboardContent(userId, callback)
-    /*
     try{
-        dashboardContent.getDashboardContent(userId, function(hubs, tournaments){
+        console.log(req.session.userId)
+        dashboardContent.getDashboardContent(req.session.userId, req.session.loggedIn, function(hubs, tournaments){
             const model = {title: "Home", hubs, tournaments}
             console.log(model);
             res.render("home", model);
@@ -87,13 +87,14 @@ app.get('/', (req, res) => {
         const model = {title: "Error", error}
         res.render("error.hbs", model);
     }
-    */
+    /*
     hubsManager.getAllHubs(function(hubs){
 
         const model = {title: "Home", hubs}
         console.log(model)
         res.render("home", model);
     })
+    */
 });
 
 

@@ -10,7 +10,7 @@ exports.getAllTournaments = function(callback){
 exports.createTournament = function(values, loggedin,callback){
 	if (loggedin){
 		tournamentsRepository.createTournament(values, function(id, error){
-			if (error) throw "unable to create tournament!"
+			if (error) throw error
 			else callback(id)
 		})
 	}else {
@@ -27,7 +27,7 @@ exports.getTournament = function(id, callback){
 exports.joinTournament = function(tournamentId, loggedin,userId){
 	if (loggedin && userId){
 		tournamentsRepository.joinTournament(tournamentId,userId, function(err){
-			if (err) throw "could not join tournament"
+			if (err) throw err
 		})
 	}
 	else {
@@ -53,13 +53,6 @@ exports.getTournamentPlayers = function(tournamentId, callback){
 	})
 }
 
-exports.getTournamentPlayers = function(userId, callback){
-	tournamentsRepository.getAllTournamentByUser(userId, function(tournaments, err){
-		if (err) throw "error getting players"
-		else callback(tournaments)
-	})
-}
-
 exports.getAllTournamentByUser = function(userId, loggedin,callback){
 	if (loggedin && userId){
 		tournamentsRepository.getAllTournamentByUser(userId, function(tournaments, error){
@@ -70,4 +63,12 @@ exports.getAllTournamentByUser = function(userId, loggedin,callback){
 	else{
 		throw "Please login to view hubs!"
 	}
+}
+
+exports.isJoined = function(tournamentId, userId, callback){
+	tournamentsRepository.isJoined(tournamentId, userId,function(joined){
+		callback(joined)
+
+	})
+
 }

@@ -1,15 +1,13 @@
 <div class="col-md-12">
       <h4 class="mb-3">Hub information</h4>
       <form class="needs-validation" method="POST">
-      <!--
       	<input type="hidden" name="_csrf" value="{{csrfToken}}" />
-        -->
         <div class="mb-3">
-          <label for="Hub name">Hub name</label>
+          <label for="Hub name">Tournament name</label>
           <div class="input-group">
-            <input type="text" class="form-control" name="tournament_name" id="hub_name" placeholder="Headshot Hub" required="true">
+            <input type="text" class="form-control" name="tournament_name" id="hub_name" placeholder="Beast tournament" required="true">
             <div class="invalid-feedback" style="width: 100%;">
-              A Hub name is required.
+              A tournament name is required.
             </div>
           </div>
         </div>
@@ -18,7 +16,7 @@
           <div class="input-group">
             <textarea type="text" class="form-control" id="description" name="description"rows="2" placeholder="Lorem Ipsum has been the industry'sstandard dummy text ever since the 1500s, when an unknown printertook a galley of type and scrambled it to make a type specimen book." required="true"></textarea>
             <div class="invalid-feedback" style="width: 100%;">
-              A description for the hub is required.
+              A description for the tournament is required.
             </div>
           </div>
         </div>
