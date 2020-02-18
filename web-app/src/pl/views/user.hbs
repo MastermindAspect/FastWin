@@ -8,8 +8,8 @@
     <div class="row">
         <div class="col">
             <h4>Most active in: </h4>
-            {{#if hubs}}
-                {{#each hubs}}
+            {{#if top3Hubs}}
+                {{#each top3Hubs}}
                     <div class="card">
                         <div class="card-body">
                             {{this.hubName}}
@@ -19,6 +19,18 @@
             {{else}}
                 <p>{{@root.user.username}} Seems to not be active in any hubs</p>
             {{/if}}
+            <noscript>
+                <h4>All hubs {{user.username}} is subscribed to</h4>
+                {{#if hubs}}
+                    {{#each hubs}}
+                        <div class="card">
+                            <div class="card-body">
+                                {{this.hubName}}
+                            </div>
+                        </div>
+                    {{/each}}
+                {{/if}}
+            </noscript>
         </div>
         <div class="col">
             <h4>Latest posts: </h4>
