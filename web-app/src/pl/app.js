@@ -5,12 +5,36 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const session = require('express-session');
 const path = require('path');
-const hubsManager = require("../bll/hubsManager")
-const dashboardContent = require("./js/dashboard-sidemenu");
 const bodyParser = require("body-parser");
 const redis = require("redis");
 const redisClient = redis.createClient({host: 'redis', port: 6379});
 const redisStore = require("connect-redis")(session)
+const awilix = require("awilix")
+
+//Hubs
+const hubsManager = require("../bll/hubsManager")
+const hubsRepository = require("../dal/hubsRepository")
+const hubsRouter = require("./routers/hubs-router");
+//Tournaments
+const tournamentsManager = require("../bll/tournamentsManager");
+const tournamentsRepository = require("../dal/tournamentsRepository");
+const tournamentsRouter = require("./routers/tournaments-router");
+
+const dashboardContent = require("./js/dashboard-sidemenu");
+
+
+//Awilix container setup
+const container = awilix.createContainer()
+container.register("hubsManager", awilix.asFunction(hubsManager))
+container.register("hubsRepository", awilix.asFunction(hubsRepository))
+container.register("hubsRouter", awilix.asFunction(hubsRouter))
+container.register("tournamentsManager", awilix.asFunction(tournamentsManager))
+container.register("tournamentsRepository", awilix.asFunction(tournamentsRepository))
+container.register("tournamentsRouter", awilix.asFunction(tournamentsRouter))
+container.register("dashboardContent", awilix.asFunction(dashboardContent))
+const theDashboardContent = container.resolve("dashboardContent")
+const theTournamentsRouter = container.resolve("tournamentsRouter")
+const theHubsRouter = container.resolve("hubsRouter")
 
 //TODO: ADD dashboardContent into a cookie and modify when needed, that way we wont have to run the function everytime we 
 //render a view.
@@ -60,41 +84,31 @@ app.use(function (req, res, next) {
     res.locals.loggedIn = req.session.loggedIn;
     res.locals.userId = req.session.userId;
     res.locals.csrfToken = req.csrfToken();
-    next();
+
+    theDashboardContent.getDashboardContent(req.session.userId,req.session.loggedIn,function(hubs,tournaments){
+        res.locals.hubs = hubs
+        res.locals.sidemenuContent = tournaments
+        next();
+    })
 });
 
 //routers
 const usersRouter = require('./routers/usersRouter');
 const logRouter = require('./routers/logRouter');
-const hubsRouter = require("./routers/hubs-router");
-const tournamentsRouter = require("./routers/tournaments-router");
 //use routers
-app.use("/hubs", hubsRouter)
+app.use("/hubs", theHubsRouter)
 app.use("/users", usersRouter);
 app.use("/log", logRouter)
-app.use("/tournaments", tournamentsRouter)
+app.use("/tournaments", theTournamentsRouter)
 app.get('/', (req, res) => {
-    //When user and session is implemented switch to getDashboardContent(userId, callback)
     try{
-        console.log(req.session.userId)
-        dashboardContent.getDashboardContent(req.session.userId, req.session.loggedIn, function(hubs, tournaments){
-            const model = {title: "Home", hubs, tournaments}
-            console.log(model);
-            res.render("home", model);
-        })
+        const model = {title: "Home"}
+        res.render("home", model);
     }
     catch(error){
         const model = {title: "Error", error}
         res.render("error.hbs", model);
     }
-    /*
-    hubsManager.getAllHubs(function(hubs){
-
-        const model = {title: "Home", hubs}
-        console.log(model)
-        res.render("home", model);
-    })
-    */
 });
 
 
