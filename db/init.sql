@@ -1,3 +1,5 @@
+
+
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username TEXT,
@@ -29,7 +31,8 @@ CREATE TABLE tournaments (
 CREATE TABLE tournament_info (
     tournamentId INT NOT NULL,
     userId INT NOT NULL,
-    PRIMARY KEY (tournamentId, userId)
+    FOREIGN KEY (tournamentId) REFERENCES tournaments(id),
+    FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 
@@ -45,7 +48,8 @@ CREATE TABLE teams (
 CREATE TABLE hub_subscriptions (
     hubId INT NOT NULL,
     userId INT NOT NULL,
-    PRIMARY KEY (hubId, userId)
+    FOREIGN KEY (hubId) REFERENCES hubs(id),
+    FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 CREATE TABLE posts (
