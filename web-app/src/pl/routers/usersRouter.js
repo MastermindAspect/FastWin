@@ -8,7 +8,7 @@ module.exports = function ({ usersManager }) {
     router.get('/:userId', function (req, res) {
         const userId = req.params.userId;
         usersManager.getUserById(userId, function (user) {
-            usersManager.getMostUsedHubs(userId, function (hubs) {
+            usersManager.getMostUsedHubs(userId, function (top3Hubs) {
                 const modal = {
                     user,
                     top3Hubs

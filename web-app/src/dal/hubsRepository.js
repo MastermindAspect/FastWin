@@ -44,7 +44,10 @@ module.exports = function({}){
 				console.log(userId,hubId)
 				if (!user.length) {
 					db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [hubId, userId], function(err){
-						if (err) callback("Error subscribing")
+						if (err) {
+							console.log(err)
+							callback("Error subscribing")
+						}
 					})
 				}
 				else callback("Already subscribed")

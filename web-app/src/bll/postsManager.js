@@ -1,4 +1,3 @@
-
 module.exports = function({postsRepository}) {
     return {
         createPost: function(title, content, hubId, session, callback) {
@@ -71,7 +70,7 @@ module.exports = function({postsRepository}) {
                     errors.push("You need to write some content")
                 }
         
-                postsRepository.getPostById(postId, function (err, post) {
+                postsRepository.getPostById(postId, function (post, err) {
                     if (err) {
                         databaseErrors.push(err)
                     } else if (post) {
@@ -101,12 +100,14 @@ module.exports = function({postsRepository}) {
         },
         
         getHubPosts: function(hubId, callback) {
-            postsRepository.getAllPosts(hubId, function(err, posts) {
+            postsRepository.getHubPosts(hubId, function(posts, err) {
                 if (err) {
-                    //Handle error
-                } else {
+                    throw error
+                }
+                else {
                     callback(posts)
                 }
+                 
             })
         }
     }

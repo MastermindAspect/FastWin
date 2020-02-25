@@ -19,6 +19,17 @@ const hubsRouter = require("./routers/hubs-router");
 const tournamentsManager = require("../bll/tournamentsManager");
 const tournamentsRepository = require("../dal/tournamentsRepository");
 const tournamentsRouter = require("./routers/tournaments-router");
+//Users
+const usersManager = require("../bll/usersManager");
+const usersRepository = require("../dal/usersRepository");
+const usersRouter = require("./routers/usersRouter");
+//log
+const logManager = require("../bll/logManager");
+const logRouter = require("./routers/logRouter");
+//posts
+const postsManager = require("../bll/postsManager");
+const postsRepository = require("../dal/postsRepository");
+const postsRouter = require("./routers/postsRouter");
 
 const dashboardContent = require("./js/dashboard-sidemenu");
 
@@ -32,9 +43,24 @@ container.register("tournamentsManager", awilix.asFunction(tournamentsManager))
 container.register("tournamentsRepository", awilix.asFunction(tournamentsRepository))
 container.register("tournamentsRouter", awilix.asFunction(tournamentsRouter))
 container.register("dashboardContent", awilix.asFunction(dashboardContent))
+
+container.register("usersManager", awilix.asFunction(usersManager))
+container.register("usersRepository", awilix.asFunction(usersRepository))
+container.register("usersRouter", awilix.asFunction(usersRouter))
+
+container.register("logManager", awilix.asFunction(logManager))
+container.register("logRouter", awilix.asFunction(logRouter))
+
+container.register("postsManager", awilix.asFunction(postsManager))
+container.register("postsRepository", awilix.asFunction(postsRepository))
+container.register("postsRouter", awilix.asFunction(postsRouter))
+
 const theDashboardContent = container.resolve("dashboardContent")
 const theTournamentsRouter = container.resolve("tournamentsRouter")
 const theHubsRouter = container.resolve("hubsRouter")
+const theUsersRouter = container.resolve("usersRouter")
+const theLogRouter = container.resolve("logRouter")
+const thePostsRouter = container.resolve("postsRouter")
 
 //TODO: ADD dashboardContent into a cookie and modify when needed, that way we wont have to run the function everytime we 
 //render a view.
@@ -92,13 +118,12 @@ app.use(function (req, res, next) {
     })
 });
 
-//routers
-const usersRouter = require('./routers/usersRouter');
-const logRouter = require('./routers/logRouter');
-//use routers
+
+
 app.use("/hubs", theHubsRouter)
-app.use("/users", usersRouter);
-app.use("/log", logRouter)
+app.use("/users", theUsersRouter);
+app.use("/log", theLogRouter)
+app.use("/posts", thePostsRouter)
 app.use("/tournaments", theTournamentsRouter)
 app.get('/', (req, res) => {
     try{

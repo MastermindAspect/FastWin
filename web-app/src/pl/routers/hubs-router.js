@@ -1,6 +1,6 @@
 const express = require("express");
 
-module.exports = function({hubsManager}){
+module.exports = function({hubsManager, postsManager}){
 	const router = express.Router()
 	router.get("/all", function(req,res){
 		try {
@@ -49,10 +49,12 @@ module.exports = function({hubsManager}){
 		const userId = req.session.userId;
 		try{
 			hubsManager.getHub(id,function(hub){
-				hubsManager.isSubscribed(id,userId,function(isSubbed){
-					const model = {title: "hub"+hub.id, hub,isSubbed}
-					console.log(model)
-					res.render("hubs_hub.hbs", model);
+				hubsManager.isSubscribed(id,userId,function(subscribed){
+					postsManager.getHubPosts(id, function(posts) {
+						const model = {title: "hub"+hub.id, hub, subscribed, posts}
+						console.log(model)
+						res.render("hubs_hub.hbs", model);
+					})
 				})
 			})
 		}
@@ -65,6 +67,7 @@ module.exports = function({hubsManager}){
 	router.post("/:id/subscribe", function(req,res){
 		const hubId = req.params.id;
 		try{
+			console.log(req.session.userId)
 			hubsManager.subscribeTo(hubId,req.session.loggedIn, req.session.userId)
 			res.redirect("/hubs/"+hubId)
 		}
