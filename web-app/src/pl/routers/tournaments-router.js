@@ -30,7 +30,6 @@ module.exports = function({tournamentsManager}){
 		const description = req.body.description;
 		const game = req.body.game;
 		const maxPlayers = req.body.max_players;
-		console.log(tournamentName, description, game, maxPlayers)
 		try {
 			tournamentsManager.createTournament([req.session.userId,tournamentName,description,game,maxPlayers, "1-1-1-1"],req.session.loggedIn, function(id){
 				res.redirect("/tournaments/"+id);
@@ -85,7 +84,6 @@ module.exports = function({tournamentsManager}){
 		const tournamentId = req.params.id;
 		try{
 			tournamentsManager.getTournamentPlayers(tournamentId, function(users){
-				console.log(users)
 				const model = {title: "Players", users}
 				res.render("tournaments_players.hbs", model)
 			})

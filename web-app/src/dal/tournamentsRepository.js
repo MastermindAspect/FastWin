@@ -18,7 +18,6 @@ module.exports = function({}){
 		},
 
 		createTournament: function(values, callback){
-			console.log(values)
 			db.query("SELECT * FROM tournaments WHERE tournamentName = ?", values[1], function(err,tournament){
 				if (tournament.length) callback(null,"Already a tournament with that name")
 				db.query("INSERT INTO tournaments (ownerId,tournamentName, description, game, maxPlayers,creationDate) VALUES (?,?,?,?,?,?)", values, function(err){
@@ -39,20 +38,17 @@ module.exports = function({}){
 
 		getTournamentPlayers: function(tournamentId, callback){
 			db.query("SELECT u.* FROM tournaments t INNER JOIN tournament_info ti ON ti.tournamentId = t.id INNER JOIN users u ON u.id = ti.userId WHERE t.id = ?", [tournamentId], function(err, users){
-				console.log(users)
 				callback(users,err)
 			})
 		},
 
 		getAllTournamentByUser: function(userId, callback){
 			db.query("SELECT h.* FROM tournaments h INNER JOIN tournament_info hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.userId WHERE u.id = ?", [userId], function(err, tournaments){
-				console.log("All tournaments: " + tournaments)
 				callback(tournaments,err)
 			})
 		},
 
 		joinTournament: function(tournamentId, userId, callback){
-			console.log(tournamentId, userId)
 			db.query("INSERT INTO tournament_info (tournamentId, userId) VALUES (?,?)", [tournamentId, userId], function(err){
 				if (err) callback("Unable to join tournament!")
 			})

@@ -4,10 +4,10 @@ module.exports = function({hubsManager}){
 	const router = express.Router()
 	router.get("/all", function(req,res){
 		try {
-			hubsManager.getAllHubs(function(hubs){
+			hubsManager.getAllHubs(function(allHubs){
 				const model = {
 					title: "All hubs",
-					hubs
+					allHubs
 				}
 				res.render("hubs_all.hbs", model);
 			})

@@ -87,7 +87,7 @@ app.use(function (req, res, next) {
 
     theDashboardContent.getDashboardContent(req.session.userId,req.session.loggedIn,function(hubs,tournaments){
         res.locals.hubs = hubs
-        res.locals.sidemenuContent = tournaments
+        res.locals.tournaments = tournaments
         next();
     })
 });

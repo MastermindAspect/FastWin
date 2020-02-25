@@ -6,7 +6,7 @@ module.exports = function({hubsManager, tournamentsManager}){
                 if (userId && loggedin){
                     hubsManager.getAllHubsByUser(userId, loggedin,function(hubs){
                         tournamentsManager.getAllTournamentByUser(userId, loggedin,function(tournaments){
-                            console.log(hubs,tournaments)
+                            console.log(tournaments)
                             callback(hubs, tournaments)
                         })
                     })

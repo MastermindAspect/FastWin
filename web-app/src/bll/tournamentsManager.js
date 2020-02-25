@@ -28,8 +28,17 @@ module.exports = function({tournamentsRepository}){
 
 		joinTournament: function(tournamentId, loggedin,userId){
 			if (loggedin && userId){
-				tournamentsRepository.joinTournament(tournamentId,userId, function(err){
-					if (err) throw err
+				tournamentsRepository.getTournament(tournamentId, function(t){
+					tournamentsRepository.getTournamentPlayers(tournamentId, function(users){
+						console.log("users length " + users.length)
+						if (users.length == t.maxPlayers) throw "The tournament is already full!"
+						else{
+							tournamentsRepository.joinTournament(tournamentId,userId, function(err){
+								if (err) throw err
+								console.log("Joining tournament!")
+							})
+						}
+					})
 				})
 			}
 			else {
