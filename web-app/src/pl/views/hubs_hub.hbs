@@ -12,7 +12,7 @@
 
             </div>
             <div class="col">
-                <form method="POST" action="/hubs/{{hub.id}}/subscribe">
+                <form method="POST" action="/hubs/{{hub.id}}/{{#if subscribed}}unsubscribe{{else}}subscribe{{/if}}">
                     <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if subscribed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
                     <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 </form>
