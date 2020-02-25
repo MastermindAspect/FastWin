@@ -14,20 +14,13 @@
             <div class="col">
                 <form method="POST" action="/hubs/{{hub.id}}/subscribe">
                     <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if subscribed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 </form>
                 <div id="postsContainer" style="padding-top: 60px;">   <!-- MOVE THE CHANGES IN THE STYLE ATTRIBUTE TO A CSS FILE -->
                     {{#if loggedIn}}
-                        <form method="POST" action="/posts/create">
-                            <div class="form-group" id="titlePlacement">
-                                <label for="exampleInputUsername">Title</label>
-                                <input type="text" class="form-control" id="username" name="username" value="{{username}}">
-                            </div>
-
-                            <div class="form-group" id="contentPlacement">
-                                <label for="exampleInputUsername">Content</label>
-                                <input type="text" class="form-control" id="username" name="username" value="{{username}}">
-                            </div>
-                        </form>
+                        {{#if subscribed}}
+                            {{createPostForm}}
+                        {{/if}}
                     {{/if}}
                     {{#if posts}}
                         {{#each posts}}

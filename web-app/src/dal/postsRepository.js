@@ -38,7 +38,7 @@ module.exports = function({}) {
 		
 		getHubPosts: function(hubId, callback) {
 			db.query("SELECT * FROM posts WHERE hubId = ?", [hubId], function(error, posts) {
-				callback(error, posts)
+				callback(posts, error)
 			})
 		}
 	}

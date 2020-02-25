@@ -2,7 +2,7 @@ bcrypt = require('bcrypt')
 
 module.exports = function({usersRepository}) {
     return {
-        loginUser: function(email, password, session, callback) {
+        loginUser: function(email, password, callback) {
             let errors = []
             usersRepository.getUserByEmail(email, function(err, user) {
                 if (err) {
@@ -18,12 +18,7 @@ module.exports = function({usersRepository}) {
                         errors.push("There is no user with this email")
                     }
         
-                    if (errors.length == 0) {
-                        session.loggedIn = true
-                        session.userId = user.Id
-                    }
-        
-                    callback(errors)
+                    callback(user, errors)
                 }
             })
         }
