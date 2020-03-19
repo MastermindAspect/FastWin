@@ -30,6 +30,7 @@ module.exports = function({ logManager }) {
                     const accessToken = logManager.generateAccessToken(userSign)
                     const refreshToken = jwt.sign(userSign, REFRESH_TOKEN_SECRET)
                     redisClient.set("idToken", idToken, redis.print)
+                    redisClient.set("userId", user.id, redis.print)
                     redisClient.rpush(["refreshTokens", refreshToken], redis.print)
                     res.status(200).json({"access_token": accessToken, "refresh_token": refreshToken, "id_token": idToken})
                 }
@@ -44,7 +45,7 @@ module.exports = function({ logManager }) {
         const token = req.body.token
         if (token){
             redisClient.lrem("refreshTokens", 0,req.body.token,redis.print)
-            req.userId = null
+            redisClient.del("userId",redis.print)
             res.status(204).json({"message": "Successfully logged out and deleted refresh token!", "success": "true"})
         }else {
             res.status(404).json({"message": "Please specify a token to logout", "success": "false"})
