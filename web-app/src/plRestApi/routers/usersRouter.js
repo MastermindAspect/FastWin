@@ -16,9 +16,9 @@ module.exports = function ({ usersManager }) {
         const username = req.body.username
         const email = req.body.email
         const password = req.body.password
-        usersManager.createUser(username, email, password, password, function (createAccountErrors) {
-            if (createAccountErrors.length > 0) {
-                res.status(201).json({"message": "Failed to create account!", "success": "false", "errors": createAccountErrors})
+        usersManager.createUser(username, email, password, password, function (errors, dbError) {
+            if (errors || dbError) {
+                res.status(400).json({"message": "Failed to create account!", "success": "false", "errors": {errors,dbError}})
             } else {
                 res.status(201).json({"message": "Successfully created account!", "success": "true"})
             }

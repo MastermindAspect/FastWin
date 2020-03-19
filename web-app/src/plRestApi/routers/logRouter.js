@@ -18,8 +18,11 @@ module.exports = function({ logManager }) {
             return
         }
         if (grant_type == "password"){
-            logManager.loginUser(email, password, function (user, loginErrors) {
-                if (loginErrors.length > 0) {
+            logManager.loginUser(email, password, function (user, loginErrors, dbError) {
+
+                if (dbError) res.status(404).json({"message": "Unable to login!", "success": "false", "errors": dbError})
+
+                else if (loginErrors) {
                     res.status(404).json({"message": "Unable to login!", "success": "false", "errors": loginErrors})
                 } else {
                     const userSign = {userId: user.id}
