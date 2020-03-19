@@ -1,41 +1,50 @@
-module.exports = function({postsRepository}) {
+module.exports = function({postsRepository, usersRepository}) {
     return {
         createPost: function(title, content, hubId, session, callback) {
             let errors = []
-            let databaseErrors = []
         
-            if (!session.loggedIn) {
+            if (session.loggedIn) {
                 if (title.length == 0) {
                     errors.push("You need to write a title")
                 }
                 if (content.length == 0) {
                     errors.push("You need to write some content")
                 }
-        
-                if (errors.length > 0) {
-                    postsRepository.createPost(title, content, hubId, session.userId, function (err) {
-                        if (err) {
-                            databaseErrors.push(err)
+                usersRepository.getUserById(session.userId, function(user, error) {
+                    if (error) {
+                        callback(null, "Error getting user")
+                    } else {
+                        if (!user) {
+                            errors.push("Something went wrong")
                         }
-                        callback(errors, databaseErrors)
-                    })
-                } else {
-                    callback(errors, databaseErrors)
-                }
+                        if (errors.length == 0) {
+                            postsRepository.createPost(user.username, title, content, hubId, session.userId, function (err) {
+                                if (err) {
+                                    callback(null, "Error creating post")
+                                } else {
+                                    callback(null, null)
+                                }
+                            })
+                        } else {
+                            callback(errors, null)
+                        }
+                    }
+                })
         
             } else {
                 errors.push("You need to be logged in to create a post")
-                callback(errors, databaseErrors)
+                callback(errors, null)
             }
             
         },
         
         deletePost: function(session, postId, callback) {
             let errors = []
-            postsRepository.getPostById(postId, function(err, post) {
+            postsRepository.getPostById(postId, function(post, err) {
                 if (err) {
-                    //Handle error
+                    callback(null, "Error getting post, the post you are trying to delete may already be deleted")
                 } else {
+                    console.log("WOOOOOOOOOOOOOOOOO")
                     if (!post) {
                         errors.push("The post does not exist anymore")
                     }
@@ -45,15 +54,15 @@ module.exports = function({postsRepository}) {
                         errors.push("You don't have right authority to delete this post")
                     }
                     if (errors.length == 0) {
-                        postsRepository.deletePost(postId, function(err) {
+                        postsRepository.deletePost(postId, function (err) {
                             if (err) {
-                                //Handle error
+                                callback(null, "Error deleting post")
                             } else {
-                                callback(errors)
+                                callback(null, null)
                             }
                         })
                     } else {
-                        callback(errors)
+                        callback(errors, null)
                     }
                 }
             })
@@ -61,8 +70,7 @@ module.exports = function({postsRepository}) {
         
         updatePost: function (title, content, postId, session, callback) {
             let errors = []
-            let databaseErrors = []
-            if (!session.loggedIn) {
+            if (session.loggedIn) {
                 if (title.length == 0) {
                     errors.push("You need to write a title")
                 }
@@ -72,42 +80,51 @@ module.exports = function({postsRepository}) {
         
                 postsRepository.getPostById(postId, function (post, err) {
                     if (err) {
-                        databaseErrors.push(err)
+                        callback(null, "Error getting post, the post you are trying to update may be deleted")
                     } else if (post) {
                         if (post.userId != session.userId) {
                             errors.push("You do not have the right authority to update this post")
                         }
-                        if (errors.length > 0) {
-                            postsRepository.updatePost(title, content, session.userId, function (err) {
+                        if (errors.length == 0) {
+                            postsRepository.updatePost(postId, title, content, function (err) {
                                 if (err) {
-                                    databaseErrors.push(err)
+                                    callback(null, "Error updating post")
+                                } else {
+                                    callback(null, null)
                                 }
-                                callback(errors, databaseErrors)
                             })
                         } else {
-                            callback(errors, databaseErrors)
+                            callback(errors, null)
                         }
         
                     } else {
                         errors.push("The post does not exist anymore")
-                        callback(errors, databaseErrors)
+                        callback(errors, null)
                     }
                 })
             } else {
                 errors.push("You need to be logged in to edit a post")
-                callback(errors, databaseErrors)
+                callback(errors, null)
             }
         },
         
         getHubPosts: function(hubId, callback) {
             postsRepository.getHubPosts(hubId, function(posts, err) {
                 if (err) {
-                    throw error
+                    callback(null, "Error getting hub-posts")
+                } else {
+                    callback(posts, null)
                 }
-                else {
-                    callback(posts)
+            })
+        },
+
+        getPostById: function(postId, callback) {
+            postsRepository.getPostById(postId, function(post, err) {
+                if (err) {
+                    callback(null, "Error getting post")
+                } else {
+                    callback(post, null)
                 }
-                 
             })
         }
     }

@@ -4,41 +4,39 @@ module.exports = function({usersRepository}) {
     return {
         getAllUsers: function(callback) {
             usersRepository.getAllUsers(function(users) {
-                callback(users)
-            })
-        },
-        
-        getUserById: function(userId, callback) {
-            usersRepository.getUserById(userId, function(user) {
-                callback(user)
-            })
-        },
-        
-        getMostUsedHubs: function(userId, callback) {
-            usersRepository.getMostUsedHubs(userId, function(hubs, err) {
-                if (err) {
-                    //Handle error
+                callback(users, error)
+                if (error) {
+                    callback(null, "Error getting users")
                 } else {
-                    callback(hubs)
+                    callback(users, null)
                 }
             })
         },
         
-        createUser: function(username, email, password, validationPassword, callback) {
-            let errors = []
+        getUserById: function(userId, callback) {
+            usersRepository.getUserById(userId, function(user, error) {
+                if (error) {
+                    callback(user, "Error getting user")
+                } else {
+                    callback(user, null)
+                }
+            })
+        },
         
-            usersRepository.getUserByUsername(username, function(err, user) {
+        createUser: function (username, email, password, validationPassword, callback) {
+            let errors = []
+            usersRepository.getUserByEmail(email, function (user, err) {
                 //handle error
                 if (err) {
-                    console.log(err)
+                    callback(errors, "Error getting user")
                 } else {
                     if (user) {
-                        errors.push("Username is already in use")
+                        errors.push("Email is already in use")
                     }
                     if (username == "") {
                         errors.push("You need to have a username")
                     }
-            
+    
                     if (email == "") {
                         errors.push("You need to type a email")
                     } else if (!email.includes('@')) {
@@ -50,23 +48,24 @@ module.exports = function({usersRepository}) {
                     if (password != validationPassword) {
                         errors.push("The passwords does not match")
                     }
-            
+    
                     if (errors.length == 0) {
                         const saltRounds = 10
                         const passHash = bcrypt.hashSync(password, saltRounds)
-                        usersRepository.createUser(username, email, passHash, function(err) {
+                        usersRepository.createUser(username, email, passHash, function (err) {
                             if (err) {
-                                console.log(err)
+                                callback(null, "Error creating user")
+                            } else {
+                                callback(null, null)
                             }
                         })
+                    } else {
+                        callback(errors, null)
                     }
-        
-                    callback(errors)
                 }
-                
             })
+                
         }
     }
-
-
 }
+

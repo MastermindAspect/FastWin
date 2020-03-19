@@ -1,44 +1,80 @@
-const mysql = require("mysql")
+// const mysql = require("mysql")
 
-const db = mysql.createConnection({
-	host: "db",
-	user: "root",
-	password: "abc123",
-	database: "myDB"
-})
+// const db1 = mysql.createConnection({
+// 	host: "db",
+// 	user: "root",
+// 	password: "abc123",
+// 	database: "myDB"
+// })
 
-module.exports = function({}) {
+
+module.exports = function({db}) {
 	return {
 		getPostById: function(postId, callback) {
-			db.query("SELECT * FROM posts WHERE id = ?", [postId], function(error, post) {
-				callback(post[0], error)
+			db.Post.findOne({
+				where: {id: postId}
 			})
+				.then(function(post){
+					callback(post.dataValues, null)
+				})
+				.catch(function(error){
+					callback(null, error)
+				})
 		},
 		
-		createPost: function(title, content, hubId, userId, callback) {
-			data = [hubId, userId, title, content]
-			db.query("INSERT INTO posts (hubId, userId, title, content) VALUES (?, ?, ?, ?)", data, function(error){
-				// TODO: Also handle errors.
-				callback(error)
-			})
+		createPost: function(author, title, content, hubId, userId, callback) {
+			db.Post.create({author: author, hubId: hubId, userId: userId, title: title, content: content})
+                .then(function(){
+                    callback(null)
+                })
+                .catch(function(error) {
+                    callback(error)
+                })
 		},
 		
 		deletePost: function(postId, callback) {
-			db.query("DELETE FROM posts WHERE id = ?", [postId], function(error) {
-				callback(error)
+			db.Post.destroy({
+				where: {id: postId}
 			})
+				.then(function(){
+					callback(null)
+				})
+				.catch(function(error){
+					callback(error)
+				})
 		},
 		
 		updatePost: function(postId, title, content, callback) {
-			const data = [title, content, postId]
-			db.query("UPDATE posts SET title = ?, content = ? WHERE id = ?", [data], function(error) {
-				callback(error)
+			console.log("Title: " + title, "Content: " + content)
+			db.Post.update({
+				title: title,
+				content: content
+			}, {
+				where: {id: postId}
 			})
+				.then(function(){
+					callback(null)
+				})
+				.catch(function(error) {
+					console.log(error)
+					callback(error)
+				})
 		},
 		
 		getHubPosts: function(hubId, callback) {
-			db.query("SELECT * FROM posts WHERE hubId = ?", [hubId], function(error, posts) {
-				callback(posts, error)
+			db.Post.findAll({
+				where: {hubId: hubId}
+			})
+			.then(function(posts){
+				plainPosts = []
+				for (post in posts) {
+					plainPosts.push(posts[post].dataValues)
+				}
+				console.log(plainPosts)
+				callback(plainPosts, null)
+			})
+			.catch(function(error){
+				callback(null, error)
 			})
 		}
 	}

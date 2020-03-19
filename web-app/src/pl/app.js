@@ -33,6 +33,8 @@ const postsRouter = require("./routers/postsRouter");
 
 const dashboardContent = require("./js/dashboard-sidemenu");
 
+const sequelizeSetup = require("../dal/sequelizeSetup");
+
 
 //Awilix container setup
 const container = awilix.createContainer()
@@ -54,6 +56,8 @@ container.register("logRouter", awilix.asFunction(logRouter))
 container.register("postsManager", awilix.asFunction(postsManager))
 container.register("postsRepository", awilix.asFunction(postsRepository))
 container.register("postsRouter", awilix.asFunction(postsRouter))
+
+container.register("db", awilix.asValue(sequelizeSetup))
 
 const theDashboardContent = container.resolve("dashboardContent")
 const theTournamentsRouter = container.resolve("tournamentsRouter")

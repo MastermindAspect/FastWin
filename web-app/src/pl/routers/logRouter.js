@@ -5,7 +5,6 @@ module.exports = function({ logManager }) {
     const router = express.Router()
 
     router.get('/', (req, res) => {
-        console.log("Comes to router")
         const model = { title: "Login" }
         res.render("login", model);
     });
@@ -13,20 +12,25 @@ module.exports = function({ logManager }) {
     router.post('/login', (req, res) => {
         const email = req.body.loginEmail
         const password = req.body.loginPassword
-        logManager.loginUser(email, password, function (user, loginErrors) {
-            if (loginErrors.length > 0) {
+
+        logManager.loginUser(email, password, function (user, loginErrors, dbError) {
+            if (dbError) {
+                const model = {
+                    error: [dbError]
+                }
+                res.render("error.hbs", model)
+            } else if (loginErrors) {
                 const modal = {
                     loginEmail: email,
                     loginErrors
                 }
-                res.render("log", modal)
+                res.render("login", modal)
             } else {
                 req.session.loggedIn = true
                 req.session.userId = user.id
-                res.redirect("/")
+                res.redirect('/')
             }
-        })
-
+        }) 
     })
 
     router.get('/logout', (req, res) => {
