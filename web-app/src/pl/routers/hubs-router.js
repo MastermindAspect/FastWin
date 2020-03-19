@@ -38,6 +38,7 @@ module.exports = function({hubsManager, postsManager}){
 				const model = {
 					hubName,
 					description,
+					game,
 					errors
 				}
 				res.render("hubs_create", model);   //Displaya errors i hubs_create
@@ -46,6 +47,52 @@ module.exports = function({hubsManager, postsManager}){
 			}
 		})
 	})	
+
+	router.get("/:id/edit", function(req,res){
+		const id = req.params.id;
+		hubsManager.getHub(id, function(hub, dbError){
+			if (dbError) {
+				const model = {
+					error: [dbError]
+				}
+				res.render("error.hbs", model)
+			}
+			else {
+				const model = {
+					title: "Edit hub!",
+					hub
+				}
+				res.render("hubs_edit", model)
+			}
+		})
+	})
+
+	router.post("/:id/edit",function(req,res){
+		const id = req.params.id;
+		const userId = req.session.userId;
+		const hubName = req.body.hub_name;
+		const description = req.body.description;
+		const game = req.body.game;
+		hubsManager.updateHub(id,userId,hubName,description,game,req.session.loggedIn, function(errors,dbError){
+			if (dbError) {
+				const model = {
+					 error: [dbError]
+				}
+				res.render("error.hbs", model)
+			} else if (errors) {
+				const model = {
+					hubName,
+					description,
+					game,
+					errors
+				}
+				res.render("hubs_edit", model);   //Displaya errors i hubs_create
+			} else {
+				res.redirect("/hubs/" + id);
+			}
+		})
+		
+	})
 
 	router.get("/:id", function(req,res){
 		const id = req.params.id;

@@ -33,6 +33,8 @@ const postsRouter = require("./routers/postsRouter");
 //token
 const tokenRouter = require("./routers/token-router")
 
+const sequelizeSetup = require("../dal/sequelizeSetup");
+
 
 //Awilix container setup
 const container = awilix.createContainer()
@@ -55,6 +57,7 @@ container.register("logRouter", awilix.asFunction(logRouter))
 container.register("postsManager", awilix.asFunction(postsManager))
 container.register("postsRepository", awilix.asFunction(postsRepository))
 container.register("postsRouter", awilix.asFunction(postsRouter))
+container.register("db", awilix.asValue(sequelizeSetup))
 
 const theTokenRouter = container.resolve("tokenRouter")
 const theTournamentsRouter = container.resolve("tournamentsRouter")
