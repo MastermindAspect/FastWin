@@ -44,7 +44,6 @@ module.exports = function({postsRepository, usersRepository}) {
                 if (err) {
                     callback(null, "Error getting post, the post you are trying to delete may already be deleted")
                 } else {
-                    console.log("WOOOOOOOOOOOOOOOOO")
                     if (!post) {
                         errors.push("The post does not exist anymore")
                     }

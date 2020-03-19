@@ -99,6 +99,78 @@ module.exports = function({hubsRepository}){
 				}
 			})
 		},
+
+		deleteHub: function(hubId, userId, loggedIn, callback) {
+			let errors = []
+            hubsRepository.getHub(hubId, function(hub, err) {
+                if (err) {
+                    callback(null, "Error getting hub")
+                } else {
+                    if (!hub) {
+                        errors.push("The hub does not exist anymore")
+                    }
+                    if (!loggedIn) {
+                        errors.push("You need to be logged in to delete a hub")
+                    } else if (hub.userId != userId) {
+                        errors.push("You don't have right authority to delete this hub")
+                    }
+                    if (errors.length == 0) {
+                        hubsRepository.deleteHub(hubId, function (err) {
+                            if (err) {
+                                callback(null, "Error deleting hub")
+                            } else {
+                                callback(null, null)
+                            }
+                        })
+                    } else {
+                        callback(errors, null)
+                    }
+                }
+            })
+		},
+
+		updateHub: function (hubId, userId, hubName, description, game, loggedIn, callback) {
+            let errors = []
+            if (loggedIn) {
+                if (hubName.length == 0) {
+                    errors.push("You need to write a name")
+                }
+                if (description.length == 0) {
+                    errors.push("You need to write some description")
+				}
+				if (game.length == 0) {
+					errors.push("You need to choose a game")
+				}
+                hubsRepository.getHub(hubId, function (hub, err) {
+                    if (err) {
+                        callback(null, "Error getting post, the post you are trying to update may be deleted")
+                    } else if (hub) {
+						if (hub.userId != userId) {
+                            errors.push("You do not have the right authority to update this hub")
+                        }
+                        if (errors.length == 0) {
+                            hubsRepository.updateHub(hubId, hubName, description, game, function (err) {
+                                if (err) {
+                                    callback(null, "Error updating hub")
+                                } else {
+                                    callback(null, null)
+                                }
+                            })
+                        } else {
+                            callback(errors, null)
+                        }
+        
+                    } else {
+                        errors.push("The hub does not exist anymore")
+                        callback(errors, null)
+                    }
+                })
+            } else {
+                errors.push("You need to be logged in to edit a hub")
+                callback(errors, null)
+            }
+		},
+		
 		getAllHubsByUser: function(userId, loggedin,callback){
 			if (loggedin && userId){
 				hubsRepository.getAllHubsByUser(userId, function(hubs, err){

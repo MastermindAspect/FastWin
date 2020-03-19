@@ -43,6 +43,35 @@ module.exports = function({db}){
 					callback(null, error)
 				})
 		},
+
+		deleteHub: function(hubId, callback) {
+			db.Hub.destroy({
+				where: {id: hubId}
+			})
+				.then(function(){
+					callback(null)
+				})
+				.catch(function(error){
+					callback(error)
+				})
+		},
+
+		updateHub: function(hubId, hubName, description, game) {
+			db.Hub.update({
+				hubName: hubName,
+				description: description,
+				game: game
+			}, {
+				where: {id: hubId}
+			})
+				.then(function(){
+					callback(null)
+				})
+				.catch(function(error) {
+					callback(error)
+				})
+		},
+
 		subscribeTo: function(hubId, userId, callback){
 			db.Hub.findOne({
 				where: {id: hubId},

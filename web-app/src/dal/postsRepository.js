@@ -15,9 +15,14 @@ module.exports = function({db}) {
 				where: {id: postId}
 			})
 				.then(function(post){
-					callback(post.dataValues, null)
+					if (post) {
+						callback(post.dataValues, null)
+					} else {
+						callback(null, null)
+					}
 				})
 				.catch(function(error){
+					console.log(error)
 					callback(null, error)
 				})
 		},
@@ -45,7 +50,6 @@ module.exports = function({db}) {
 		},
 		
 		updatePost: function(postId, title, content, callback) {
-			console.log("Title: " + title, "Content: " + content)
 			db.Post.update({
 				title: title,
 				content: content
@@ -56,7 +60,6 @@ module.exports = function({db}) {
 					callback(null)
 				})
 				.catch(function(error) {
-					console.log(error)
 					callback(error)
 				})
 		},

@@ -19,6 +19,25 @@ module.exports = function({hubsManager, postsManager}){
 		})
 	})
 
+	router.post("/delete/:hubId", function(req, res) {
+		const hubId = req.params.hubId
+		hubsManager.deleteHub(hubId, req.session.userId, req.session.loggedIn, function(errors, dbError) {
+			if (dbError) {
+				const model = {
+					error: [dbError]
+				}
+				res.render("error.hbs", model);
+			} else if (errors) {
+				const model = {
+					error: errors
+				}
+				res.render("error.hbs", model);
+			} else {
+				res.redirect("../../")
+			}
+		})
+	})
+
 	router.get("/create", function(req,res){
 		const model = {title: "Create"}
 		res.render("hubs_create", model);
