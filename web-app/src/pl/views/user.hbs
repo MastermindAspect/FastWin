@@ -2,14 +2,14 @@
     <div class="row row-cols-1">
         <div class="col">
             <h1>{{user.username}}</h1>
-            <p>Member since: "some date"</p>
+            <p>Member since: {{user.createdAt}}</p>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <h4>Most active in: </h4>
-            {{#if top3Hubs}}
-                {{#each top3Hubs}}
+            <h4>Some hubs {{@root.user.username}} is active in: </h4>
+            {{#if threeHubs}}
+                {{#each threeHubs}}
                     <div class="card">
                         <div class="card-body">
                             {{this.hubName}}
@@ -33,7 +33,18 @@
             </noscript>
         </div>
         <div class="col">
-            <h4>Latest posts: </h4>
+            <h4>Some tournaments {{@root.user.username}} is playing in: </h4>
+            {{#if threeTournaments}}
+                {{#each threeTournaments}}
+                    <div class="card">
+                        <div class="card-body">
+                            {{this.tournamentName}}
+                        </div>
+                    </div>
+                {{/each}}
+            {{else}}
+                <p>{{@root.user.username}} Seems to not be active in any tournaments</p>
+            {{/if}}
         </div>
     </div>
 </div>

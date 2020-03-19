@@ -12,6 +12,13 @@
 
             </div>
             <div class="col">
+                {{#if subscribeError}}
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            <li>{{subscribeError}}</li>
+                        </ul>
+                    </div>
+                {{/if}}
                 <form method="POST" action="/hubs/{{hub.id}}/{{#if subscribed}}unsubscribe{{else}}subscribe{{/if}}">
                     <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if subscribed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
                     <input type="hidden" name="_csrf" value="{{csrfToken}}">
@@ -19,13 +26,31 @@
                 <div id="postsContainer" style="padding-top: 60px;">   <!-- MOVE THE CHANGES IN THE STYLE ATTRIBUTE TO A CSS FILE -->
                     {{#if loggedIn}}
                         {{#if subscribed}}
-                            {{createPostForm}}
+                            {{>createPostForm}}
                         {{/if}}
                     {{/if}}
                     {{#if posts}}
                         {{#each posts}}
-                            <!-- ADD ALL POSTS -->
-                            <!-- add delete and edit button if user userId == posts.userId -->
+                            <div class="card text-white bg-dark mb-3">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col">
+                                            <a href="/users/{{this.postId}}">{{this.author}}</a>
+                                        </div>
+                                        <div class="col">
+                                            <form method="POST" action="/posts/delete/{{this.hubId}}/{{this.id}}">
+                                                <button type="submit" class="btn btn-danger pull-right">Delete</button>
+                                                <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+                                            </form>
+                                            <a href="/posts/update/{{this.id}}" class="btn btn-primary pull-right">Edit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{this.title}}</h5>
+                                    <p class="card-text">{{this.content}}</p>
+                                </div>
+                            </div>  
                         {{/each}}
                     {{/if}}
                 </div>

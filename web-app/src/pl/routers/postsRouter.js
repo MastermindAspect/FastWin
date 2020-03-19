@@ -5,25 +5,41 @@ module.exports = function ({ postsManager }) {
     const router = express.Router();
 
     router.post("/create/:hubId", (req, res) => {
-        const title = req.body.title
-        const content = req.body.content
+        const title = req.body.postTitle
+        const content = req.body.postContent
         const hubId = req.params.hubId
-        postsManager.createPost(title, content, hubId, req.session, function (errors, databaseErrors) {
-            if (databaseErrors.length > 0) {
-                const error = "Something went wrong when trying to create the post"
-                const modal = {
-                    error
+        postsManager.createPost(title, content, hubId, req.session, function (errors, dbError) {
+            if (dbError) {
+                const model = {
+                    error: [dbError]
                 }
-                res.render("error", modal)
-            } else if (errors.length > 0) {
+                res.render("error.hbs", model)  
+            } else if (errors) {
                 const modal = {
-                    title,
-                    content,
+                    postTitle: title,
+                    postConetnt: content,
                     errors
                 }
                 res.render("", modal)
             } else {
-                res.redirect("hubs_hub") //Lägg till funktion för att hämta posts o.s.v
+                res.redirect("../../hubs/" + hubId)
+            }
+        })
+    })
+
+    router.get("/update/:postId", (req, res) => {
+        const postId = req.params.postId
+        postsManager.getPostById(postId, function (post, dbError) {
+            if (dbError) {
+                const model = {
+                    error: [dbError]   
+                }             
+                res.render("error.hbs", model)
+            } else {
+                const model = {
+                    post
+                }
+                res.render("updatePost.hbs", model)
             }
         })
     })
@@ -32,20 +48,44 @@ module.exports = function ({ postsManager }) {
         const title = req.body.title
         const content = req.body.content
         const postId = req.params.postId
-        postsManager.updatePost(title, content, postId, req.session, function (errors, databaseErrors) {
-            if (databaseErrors.length > 0) {
-                const error = "Something went wrong when trying to update the post"
-                const modal = {
-                    error
+        postsManager.updatePost(title, content, postId, req.session, function (errors, dbError1) {
+            postsManager.getPostById(postId, function (post, dbError2) {
+                if (dbError1 || dbError2) {
+                    const model = {
+                        error: [dbError1, dbError2]
+                    }
+                    res.render("error.hbs", model)
+                } else if (errors) {
+                    console.log(errors)
+                    const modal = {
+                        post,
+                        errors
+                    }
+                    res.render("updatePost", modal)
                 }
-                res.render("error", modal)
-            } else if (errors.length > 0) {
-                const modal = {
-                    title,
-                    content,
-                    errors
+                else {
+                    res.redirect("../../hubs/" + post.hubId)
                 }
-                res.render("", modal) //Lägg till sidan vi ska till
+            })
+        })
+    })
+
+    router.post("/delete/:hubId/:postId", (req, res) => {
+        const hubId = req.params.hubId
+        const postId = req.params.postId
+        postsManager.deletePost(req.session, postId, function(errors, dbError) {
+            if (dbError) {
+                const model = {
+                    error: [dbError]
+                }
+                res.render("error.hbs", model)
+            } else if (errors) {
+                const model = {
+                    error: errors
+                }
+                res.render("error.hbs", model)
+            } else {
+                res.redirect("../../../hubs/" + hubId)
             }
         })
     })

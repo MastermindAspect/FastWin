@@ -36,3 +36,12 @@ services:
     container_name: "cache"
     ports: 
       - "6379:6379"
+  postgreDB:
+    image: "postgres"
+    container_name: "postgreDB"
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_DB=db"
+      - "POSTGRES_USER=abc321"
+      - "POSTGRES_PASSWORD=myPostgresDB"

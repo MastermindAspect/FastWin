@@ -1,6 +1,6 @@
 const mysql = require("mysql")
 
-const db = mysql.createConnection({
+const db1 = mysql.createConnection({
 	host: "db",
 	user: "root",
 	password: "abc123",
@@ -8,47 +8,79 @@ const db = mysql.createConnection({
 })
 
 
-module.exports = function({}) {
+
+module.exports = function({db}) {
 	return {
 		getAllUsers: function(callback) {
-			db.query("SELECT * FROM users", function(error, users){
-				callback(users)
+			db.User.findAll()
+			.then(function(users) {
+				refinedUsers = []
+				for (user in users) {
+					refinedUsers.push(user.dataValues)
+				}
+				callback(refinedUsers, error)
+			})
+			.catch(function(error) {
+				callback(null, error)
 			})
 		},
 		
 		getUserById: function(userId, callback) {
-			db.query("SELECT * FROM users WHERE id = ?", [userId], function(err, user) {
-				if (err) {
-					console.log(err)
+            db.User.findByPk(userId)
+            .then(function(user){
+				if (user) {
+					callback(user.dataValues, null)
 				} else {
-					callback(user[0])
+					callback(null, null)
 				}
-			})
-		},
-		
-		getMostUsedHubs: function(userId, callback) {
-			db.query("SELECT hubs.* FROM hubs LEFT JOIN posts ON hubs.id = posts.hubId WHERE posts.userId = ? GROUP BY hubs.id ORDER BY COUNT(posts.id) DESC LIMIT 3", [userId], function(err, hubs) {
-				callback(hubs, err)
-			})
+            })
+            .catch(function(error) {
+                callback(null, error)
+            })
 		},
 		
 		createUser: function(username, email, password, callback) {
-			const data = [username, password, email]
-			db.query("INSERT INTO users (username, passHash, email) VALUES (?, ?, ?)", data, function(err) {
-				callback(err)
-			})
+			const passHash = password
+            db.User.create({username: username, passHash: passHash, email: email})
+                .then(function() {
+					callback(null)
+                })
+                .catch(function(error) {
+                    callback(error)
+                })
 		},
 		
 		getUserByUsername: function(username, callback) {
-			db.query('SELECT * FROM users WHERE username = ?', [username], function(err, user) {
-				callback(err, user[0])
+			db.User.findOne({
+				where: {username: username}
 			})
+				.then(function(user) {
+					if (user) {
+						callback(user.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+				})
+				.catch(function(error) {
+					callback(null, error)
+				})
 		},
 		
 		getUserByEmail: function(email, callback) {
-			db.query('SELECT * FROM users WHERE email = ?', [email], function(err, user) {
-				callback(err, user[0])
-			})
+			db.User.findOne({
+                where: {email: email}
+            })
+                .then(function(user){
+					console.log(user)
+					if (user) {
+						callback(user.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+                })
+                .catch(function(error){
+                    callback(null, error)
+                })
 		}
 	}
 }

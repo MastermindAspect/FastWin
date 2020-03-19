@@ -2,81 +2,148 @@
 module.exports = function({hubsRepository}){
 	return {
 		getAllHubs: function(callback){
-			try {
-				hubsRepository.getAllHubs(function(hubs){
-					// TODO: Also handle errors.
-					callback(hubs)
-				})
-			}
-			catch(error){
-				throw error
-			}
+			hubsRepository.getAllHubs(function (hubs, error) {
+				if (error) {
+					console.log(error)
+					callback(null, "Error getting hubs")
+				} else {
+					callback(hubs, null)
+				}
+			})
 		},
-		createHub: function(values, loggedin, callback){
-			if (loggedin){
-				hubsRepository.createHub(values, function(id, err){
-					if (err) throw err
-					else callback(id)
-				})
+		createHub: function(userId, hubName, description, game, loggedIn, callback){
+			errors = []
+			if (hubName == "") {
+				errors.push("You need to write a title")
 			}
-			else {
-				throw "You need to be logged in to create a hub!"
+			if (description == "") {
+				errors.push("You need to write a description")
+			}
+			if (game == "") {
+				errors.push("You need to specify a game")
+			}
+			if (!loggedIn) {
+				errors.push("You need to be logged in to create a hub")
+			}
+			if (errors.length == 0){
+				hubsRepository.createHub(userId, hubName, description, game, function(id, err){
+					if (err) {
+						callback(null, null, "Error creating hub")
+					} else {
+						callback(id, null, null)
+					}
+				})
+			} else {
+				callback(null, errors, null)
 			}
 		},
 		getHub: function(id, callback){
 			hubsRepository.getHub(id, function(hub,err){
-				if (err) throw "Error getting hub"
-				callback(hub)
+				if (err) {
+					callback(null, err)
+				} else {
+					callback(hub, null)
+				}
 			})
 		},
-		subscribeTo: function(hubId,loggedin, userId){
+		subscribeTo: function(hubId,loggedin, userId, callback){
 			if (loggedin){
 				hubsRepository.getHub(hubId, function(hub, err){
-					if (err) throw "could not get hub"
-					hubsRepository.subscribeTo(hub.id, userId, function(err){
-						if (err) throw err
-					})
+					if (err) {
+						callback(null, "Error getting hub")
+					} else {
+						hubsRepository.subscribeTo(hub.id, userId, function(err){
+							if (err) {
+								callback(null, "Error subscribing to hub")
+							} else {
+								callback(null, null)
+							}
+						})
+					}
 				})
-			}else{
-				throw "You need to be logged in to be able to subscribe!"
+			}else {
+				callback("You need to be logged in to subscribe to a hub", null)
 			}
 		},
-		unSubscribeTo: function(hubId, loggedin,userId){
+		unSubscribeTo: function(hubId, loggedin, userId, callback){
 			if(loggedin){
 				hubsRepository.getHub(hubId, function(hub,err){
-					if (err) throw "Hub not found!"
-					hubsRepository.unSubscribeTo(hub.id, userId, function(err){
-						if (err) throw "Could not unsubscribe to hub!"
-					})
+					if (err) {
+						callback(null, "Could not find hub")
+					} else {
+						hubsRepository.unSubscribeTo(hub.id, userId, function(err){
+							if (err) {
+								callback(null, "Could not unsubscribe from hub")
+							} else {
+								callback(null, null)
+							}
+						})
+					}
 				})
-			} else{
-				throw "You need to be logged in to unsubscribe!"
+			}else {
+				callback("You need to be logged in to unsubscribe", null)
 			}
 		},
 		getMembers: function(hubId, callback){
 			hubsRepository.getHub(hubId, function(hub, err){
-				if (err) throw "Hub not found!"
-				hubsRepository.getMembers(hub.id, function(users, err){
-					if (err) throw "could not get members"
-					else callback(users)
-				})
+				if (err) {
+					callback(null, "Hub was not found")
+				} else {
+					hubsRepository.getMembers(hub.id, function(users, err){
+						if (err) {
+							callback(null, "Error getting members")
+						} else {
+							callback(users, null)
+						}
+					})
+				}
 			})
 		},
 		getAllHubsByUser: function(userId, loggedin,callback){
 			if (loggedin && userId){
 				hubsRepository.getAllHubsByUser(userId, function(hubs, err){
-					if (err) throw "cant get hubs"
-					else callback(hubs)
+					if (err) {
+						callback(null, null, "Can't get hubs")
+					} else {
+						plainHubs = []
+						for (hub in hubs) {
+							plainHubs.push(hubs[hub].dataValues)		//Vrf funkar denna på detta sättet?? (som den utkommenterade loopen)
+						}
+						// for (let i = 0; i < hubs.length; i++) {
+						// 	plainHubs.push(hubs[i].dataValues)
+						// }
+						callback(plainHubs, null, null)
+					}
 				})
-			}else{
-				throw "Please login to view this page"
+			}else {
+				callback(null, "Please log in to se this page", null)
 			}
 		},
 		isSubscribed: function(hubId, userId, callback){
-			hubsRepository.isSubscribed(hubId, userId,function(isSubbed){
-				callback(isSubbed)
-	
+			hubsRepository.getMembers(hubId,function(subscribers, err){
+				if (err) {
+					callback(null, "Error checking if user is subbed")
+				} else {
+					let subbed = false
+					for (sub in subscribers) {
+						if (subscribers[sub].id == userId) {       //Vrf funkar det såhär? subscribers[sub].id och inte bara sub.id?
+							subbed = true
+						}
+					}
+					callback(subbed, null)
+				}
 			})
-		}
+		},
+
+		getMostUsedHubs: function(userId, callback) {
+            hubsRepository.getMostUsedHubs(userId, function(hubs, err) {
+				if (err) {
+					console.log(err)
+					callback(hubs, "Error getting most used hubs")
+				} else {
+					callback(hubs, null)
+				}
+            })
+        }
 	}
 }

@@ -1,70 +1,146 @@
 const mysql = require("mysql")
 
-const db = mysql.createConnection({
+const db1 = mysql.createConnection({
 	host: "db",
 	user: "root",
 	password: "abc123",
 	database: "myDB"
 })
 
-module.exports = function({}){
+//const db = require('../dal/sequelizeSetup')
+
+module.exports = function({db}){
 	return {
 		getAllTournaments: function(callback){
-
-			db.query("SELECT * FROM tournaments", function(error, tournaments){
-				callback(tournaments, error);
-			})
-			
+			db.Tournament.findAll({raw: true})
+				.then(function(tournaments) {
+					callback(tournaments, null)
+				})
+				.catch(function(error){
+					callback(null, error)
+				})
 		},
 
-		createTournament: function(values, callback){
-			db.query("SELECT * FROM tournaments WHERE tournamentName = ?", values[1], function(err,tournament){
-				if (tournament.length) callback(null,"Already a tournament with that name")
-				db.query("INSERT INTO tournaments (ownerId,tournamentName, description, game, maxPlayers,creationDate) VALUES (?,?,?,?,?,?)", values, function(err){
-					if (err) callback(null, "Error createing tournament!")
-					db.query("SELECT id FROM tournaments WHERE tournamentName = ?", values[1], function(err,id){
-						if (err) callback(null, "error finding tournament")
-						callback(id[0].id, null)
-					})
-				})
-			})
+		createTournament: function(userId, tournamentName, description, game, maxPlayers, callback){
+			db.Tournament.create({userId: userId, tournamentName: tournamentName, description: description, game: game, maxPlayers: maxPlayers})
+                .then(function(tournament){
+                    callback(tournament.dataValues.id)
+                })
+                .catch(function(error) {
+                    callback(error)
+                })
 		},
 
 		getTournament: function(tournamentId, callback){
-			db.query("SELECT * FROM tournaments WHERE id = ?", tournamentId,function(err,tournament){
-				callback(tournament[0],err)
-			})
+			db.Tournament.findByPk(tournamentId)
+				.then(function(tournament) {
+					if (tournament) {
+						callback(tournament.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+				})
+				.catch(function(error) {
+					callback(null, error)
+				})
 		},
 
 		getTournamentPlayers: function(tournamentId, callback){
-			db.query("SELECT u.* FROM tournaments t INNER JOIN tournament_info ti ON ti.tournamentId = t.id INNER JOIN users u ON u.id = ti.userId WHERE t.id = ?", [tournamentId], function(err, users){
-				callback(users,err)
+			db.Tournament.findOne({
+				where: {id: tournamentId},
+				include: [{
+					model: db.User,
+					as: "Players"
+				}]
+			})
+			.then(function(tournament){
+				const plainUsers = []
+				const players = tournament.Players
+				for (user in players) {
+					plainUsers.push(players[user].dataValues)
+				}
+				callback(plainUsers, null)
+			})
+			.catch(function(error){
+				callback(null, error)
 			})
 		},
 
 		getAllTournamentByUser: function(userId, callback){
-			db.query("SELECT h.* FROM tournaments h INNER JOIN tournament_info hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.userId WHERE u.id = ?", [userId], function(err, tournaments){
-				callback(tournaments,err)
+			db.User.findOne({
+				where: {id: userId},
+				include: [{
+					model: db.Tournament,
+					as: "Participation"
+				}]
+			})
+			.then(function(user){
+				const plainTournaments = []
+				const participations = user.Participation
+				for (tournament in participations) {
+					plainTournaments.push(participations[tournament].dataValues)
+				}
+				callback(user.Participation, null)		//Ska denna ligga i user repository istället?
+			})
+			.catch(function(error){
+				callback(null, error)
 			})
 		},
 
 		joinTournament: function(tournamentId, userId, callback){
-			db.query("INSERT INTO tournament_info (tournamentId, userId) VALUES (?,?)", [tournamentId, userId], function(err){
-				if (err) callback("Unable to join tournament!")
+			db.Tournament.findOne({
+				where: {id: tournamentId},
+				include: [{
+					model: db.User,
+					as: "Players"
+				}]
 			})
+				.then(function(hub){
+					db.User.findByPk(userId)
+						.then(function (user) {
+							hub.addPlayer(user)
+								.then(function () {
+									callback(null)
+								})
+								.catch(function (error) {
+									callback(error)
+								})
+						})
+						.catch(function (error) {
+							callback(error)
+						})
+				})
+				.catch(function(error){
+					callback(null, error)
+				})
 		},
 
 		leaveTournament: function(tournamentId, userId, callback){
-			db.query("DELETE FROM tournament_info WHERE tournamentId = ? AND userId = ?", [tournamentId, userId], function(err){
-				if (err) callback("Unable to leave tournament!")
+			db.Tournament.findOne({
+				where: {id: tournamentId},
+				include: [{
+					model: db.User,
+					as: "Players"
+				}]
 			})
-		},
-
-		isJoined: function(tournamentId, userId,callback){
-			db.query("SELECT * FROM tournament_info WHERE tournamentId = ? AND userId = ?", [tournamentId, userId], function(err, user){
-				if (user.length) callback(true);
-				else callback(false);
-			})
+				.then(function(hub){
+					db.User.findByPk(userId)
+						.then(function (user) {
+							hub.removePlayer(user)
+								.then(function () {
+									callback(null)
+								})
+								.catch(function (error) {
+									callback(error)
+								})
+						})
+						.catch(function (error) {
+							callback(error)
+						})
+				})
+				.catch(function(error){
+					callback(null, error)
+				})
 		}
 
 	}
