@@ -1,5 +1,20 @@
 version: '3'
 services:
+  rest-api:
+    build: web-app/src/plRestApi
+    ports:
+      - "3000:3000"
+      - "9230:9230"
+    volumes:
+      - "./web-app/src:/rest-api/src"
+    depends_on: 
+      - "db"
+  spa:
+    build: web-app/src/spa/frontend
+    ports:
+      - "4000:4000"
+    volumes:
+      - "./web-app/src:/spa/src"
   web-app:
     build: web-app
     ports:

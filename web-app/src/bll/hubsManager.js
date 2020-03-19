@@ -25,12 +25,11 @@ module.exports = function({hubsRepository}){
 		},
 		getHub: function(id, callback){
 			hubsRepository.getHub(id, function(hub,err){
-				if (err) throw "could not get hub"
+				if (err) throw "Error getting hub"
 				callback(hub)
 			})
 		},
 		subscribeTo: function(hubId,loggedin, userId){
-			console.log(userId)
 			if (loggedin){
 				hubsRepository.getHub(hubId, function(hub, err){
 					if (err) throw "could not get hub"

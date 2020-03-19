@@ -53,6 +53,7 @@ module.exports = function({hubsManager, postsManager}){
 					postsManager.getHubPosts(id, function(posts) {
 						const model = {title: "hub"+hub.id, hub, subscribed, posts}
 						console.log(model)
+						//res.status(200).json(model)
 						res.render("hubs_hub.hbs", model);
 					})
 				})

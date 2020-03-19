@@ -19,15 +19,16 @@ module.exports = function({}){
 			})
 		},
 		createHub: function(values, callback){
-			db.query("SELECT * FROM hubs WHERE hubName = ?", values[1], function(hub,err){
-				if (hub) callback(null,"Already a hub with that name")
+			console.log(values[1])
+			db.query("SELECT * FROM hubs WHERE hubName = ?", values[1], function(err,hub){
+				if (hub[0]) callback(null,"Already a hub with that name")
 				db.query("INSERT INTO hubs (ownerId, hubName, description, game, creationDate) VALUES (?,?,?,?,?)", values, function(err){
 					if (err) callback(null, "Error creating hub!")
 					db.query("SELECT id FROM hubs WHERE hubName = ?", values[1], function(err,id){
 						if (err) callback(null, "Error finding hub")
 						db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [id[0].id, values[0]], function(err){
 							if (err) callback("Error subscribing")
-							callback(id[0].id, null)
+							else callback(id[0].id, null)
 						})
 					})
 				})
