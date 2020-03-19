@@ -14,11 +14,9 @@ module.exports = function({db}){
 		getAllHubs: function(callback){
 			db.Hub.findAll({raw: true})
 				.then(function(hubs) {
-					console.log(hubs)
 					callback(hubs, null)
 				})
 				.catch(function(error) {
-					console.log(error)
 					callback(null, error)
 				})
 		},
