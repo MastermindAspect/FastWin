@@ -41,7 +41,7 @@ module.exports = function({ logManager }) {
         }
     })
 
-    router.delete('/logout', (req, res) => {
+    router.post('/logout', (req, res) => {
         const token = req.body.token
         if (token){
             redisClient.lrem("refreshTokens", 0,req.body.token,redis.print)

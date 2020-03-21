@@ -3,21 +3,21 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Petto</title>
+	<title>FastWin</title>
 	<link rel="stylesheet" href="/styles.css">
 	<script src="/navigation-handler.js"></script>
 </head>
 <body>
 	
 	<header>
-		Petto
+		FastWin
 	</header>
 	
 	<nav>
 		<ul>
 			<li><a href="/">Home</a></li>
-			<li><a href="/hubs/all">View pets</a></li>
-			<li class="showIfLoggedIn"><a href="/create-hub">Create pet</a></li>
+			<li><a href="/hubs/all">View hubs</a></li>
+			<li class="showIfLoggedIn"><a href="/create-hub">Create hub</a></li>
 			<li class="showIfLoggedOut"><a href="/login">Login</a></li>
 		</ul>
 	</nav>
@@ -35,20 +35,55 @@
 		</div>
 		
 		<div id="hubs-page">
-			<h1>Pets</h1>
+			<h1>Hubs</h1>
+			<strong><h4 class="errorMessage"></h4></strong>
+			<ul class="errors">
+
+			</ul>
 			<ul>
 				
 			</ul>
 		</div>
 		
 		<div id="hub-page">
-			<h1>Pet</h1>
-			<div>Name: <span class="name"></span></div>
+			<h1>Hub</h1>
+			<strong><h4 class="errorMessage"></h4></strong>
+			<ul class="errors">
+			</ul>
 			<div>Id: <span class="id"></span></div>
+			<div>Name: <span class="name"></span></div>
+			<div>Description: <span class="description"></span></div>
+			<div>Game: <span class="game"></span></div>
+			<button class="deleteButton">DELETE</button>
+			<button class="editButton">EDIT</button>
+		</div>
+
+		<div id="hubs-edit-page">
+			<h1>Edit hub</h1>
+			<strong><h4 class="errorMessage"></h4></strong>
+			<ul class="errors">
+			</ul>
+			<form> 
+				<div>
+					<div>Id: <span class="id"></span></div>
+					Hubname: <input type="text" class="name">
+					Description: <input type="text" class="description">
+					<label for="game">Game</label>
+					Game: <select class="game" id="game" name="game">
+						<option value="">Choose...</option>
+						<option selected="selected">Counter-Strike: Global Offensive</option>
+					</select>
+				</div>
+				<input type="submit" value="Update" id="submit">
+			</form>
 		</div>
 		
 		<div id="create-hub-page">
-			<h1>Create Pet</h1>
+			<h1>Create Hub</h1>
+			<strong><h4 class="errorMessage"></h4></strong>
+			<ul class="errors">
+
+			</ul>
 			<form action="">
 				<div>
 					Hubname: <input type="text" class="name">
@@ -65,14 +100,42 @@
 		
 		<div id="login-page">
 			<h1>Login</h1>
+			<strong><h4 class="errorMessage"></h4></strong>
+			<ul class="errors">
+
+			</ul>
+			<form action="">
+				<div>
+					 Email: <input type="email" class="username">
+				</div>
+				<div>
+					 Password: <input type="password" class="password">
+				</div>
+
+				<input type="submit" value="Login">
+			</form>
+			<p>Don't have an account? <a href="/register">Register</a></p>
+
+		</div>
+
+		<div id="register-page">
+			<h1>Register</h1>
+			<strong><h4 class="errorMessage"></h4></strong>
+			<ul class="errors">
+
+			</ul>
 			<form action="">
 				<div>
 					 Username: <input type="text" class="username">
 				</div>
 				<div>
-					 Password: <input type="text" class="password">
+					Email: <input type="email" class="email">
+			   	</div>
+				<div>
+					 Password: <input type="password" class="password">
 				</div>
-				<input type="submit" value="Login">
+
+				<input type="submit" value="Register">
 			</form>
 		</div>
 		
@@ -84,8 +147,8 @@
 	</main>
 	
 	<footer>
-		Petto |
-		Copyright 2020 Peter L-G |
+		FastWin |
+		Copyright 2020 OD Company |
 		<a href="/about">About</a>
 	</footer>
 	

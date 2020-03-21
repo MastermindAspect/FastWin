@@ -19,19 +19,16 @@ document.addEventListener("DOMContentLoaded", function(){
 	// TODO: Avoid using this long lines of code.
 	document.querySelector("#create-hub-page form").addEventListener("submit", function(event){
 		event.preventDefault()
-		
+		const errorMessage = document.querySelector("#create-hub-page .errorMessage")
+		const errors = document.querySelector("#create-hub-page .errors")
 		const name = document.querySelector("#create-hub-page .name").value
 		const description = document.querySelector("#create-hub-page .description").value
 		const game = document.querySelector("#create-hub-page .game").value
-		
 		const hub = {
 			hub_name: name,
 			description,
 			game
 		}
-		
-		// TODO: Build an SDK (e.g. a separate JS file)
-		// handling the communication with the backend.
 		fetch(
 			"http://localhost:3000/hubs/create", {
 				method: "POST",
@@ -42,11 +39,21 @@ document.addEventListener("DOMContentLoaded", function(){
 				body: JSON.stringify(hub)
 			}
 		).then(function(response){
-			// TODO: Check status code to see if it succeeded. Display errors if it failed.
-			// TODO: Update the view somehow.
-			console.log(response)
+			if (response.status != 201) {
+				response.json().then(function(errorObj){
+					errorMessage.innerText = errorObj.message
+					if (errorObj.errors){
+						for (error of errorObj.errors){
+							var li = document.createElement("li");
+							li.appendChild(document.createTextNode(error))
+							errors.appendChild(li)
+						}
+					}
+				})
+			}else{
+				goToPage("/"+String(response.headers.get("Location")))
+			} 
 		}).catch(function(error){
-			// TODO: Update the view and display error.
 			console.log(error)
 		})
 		
@@ -57,6 +64,9 @@ document.addEventListener("DOMContentLoaded", function(){
 		
 		const username = document.querySelector("#login-page .username").value
 		const password = document.querySelector("#login-page .password").value
+		const errorMessage = document.querySelector("#login-page .errorMessage")
+		const errors = document.querySelector("#login-page .errors")
+
 		
 		fetch(
 			"http://localhost:3000/log/login", {
@@ -67,15 +77,165 @@ document.addEventListener("DOMContentLoaded", function(){
 				body: "grant_type=password&username="+username+"&password="+password
 			}
 			).then(function(response){
-				// TODO: Check status code to see if it succeeded. Display errors if it failed.
-				return response.json()
+				const data = response.json()
+				errorMessage.innerText = ""
+				errors.innerHTML =""
+				if (response.status != 200) {
+					data.then(function(errorObj){
+						errorMessage.innerText = errorObj.message
+						if (errorObj.errors){
+							for (error of errorObj.errors){
+								var li = document.createElement("li");
+								li.appendChild(document.createTextNode(error))
+								errors.appendChild(li)
+							}
+						}
+					})
+				} 
+				else return data
 			}).then(function(body){
 				// TODO: Read out information about the user account from the id_token.
+				console.log(body)
 				login(body.access_token, body.refresh_token)
+				goToPage("/hubs/all")
 		}).catch(function(error){
 			console.log(error)
 		})
 	})
+
+
+	document.querySelector("#register-page form").addEventListener("submit", function(event){
+		event.preventDefault()
+		
+		const username = document.querySelector("#register-page .username").value
+		const password = document.querySelector("#register-page .password").value
+		const email = document.querySelector("#register-page .email").value
+		const errorMessage = document.querySelector("#register-page .errorMessage")
+		const errors = document.querySelector("#register-page .errors")
+		const user = {
+			username,password,email
+		}
+		
+		fetch(
+			"http://localhost:3000/users/create", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				}, // TODO: Escape username and password in case they contained reserved characters in the x-www-form-urlencoded format.
+				body: JSON.stringify(user)
+			}
+			).then(function(response){
+				const data = response.json()
+				errorMessage.innerText = ""
+				errors.innerHTML = ""
+				if (response.status != 201) {
+					data.then(function(errorObj){
+						errorMessage.innerText = errorObj.message
+						if (errorObj.errors.errors){
+							for (error of errorObj.errors.errors){
+								var li = document.createElement("li");
+								li.appendChild(document.createTextNode(error))
+								errors.appendChild(li)
+							}
+						}
+					})
+				} 
+				else return data
+			}).then(function(body){
+				goToPage("/login")
+		}).catch(function(error){
+			console.log(error)
+		})
+	})
+
+	document.querySelector("#hubs-edit-page form").addEventListener("submit", function(event){
+		event.preventDefault()
+		const errorMessage = document.querySelector("#hubs-edit-page .errorMessage")
+		const errors = document.querySelector("#hubs-edit-page .errors")
+		const name = document.querySelector("#hubs-edit-page .name").value
+		const description = document.querySelector("#hubs-edit-page .description").value
+		const game = document.querySelector("#hubs-edit-page .game").value
+		const hubId = parseInt(document.querySelector("#hubs-edit-page .id").innerText)
+		const hub = {
+			hubId,
+			"hub_name": name,
+			description,
+			game
+		}		
+		fetch(
+			"http://localhost:3000/hubs/edit", {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": "Bearer "+localStorage.accessToken
+				}, // TODO: Escape username and password in case they contained reserved characters in the x-www-form-urlencoded format.
+				body: JSON.stringify(hub)
+			
+			}).then(function(response){
+				errorMessage.innerText = ""
+				errors.innerHTML = ""
+				if (response.status != 200) {
+					response.json().then(function(errorObj){
+						errorMessage.innerText = errorObj.message
+						if (errorObj.errors.errors){
+							for (error of errorObj.errors.errors){
+								var li = document.createElement("li");
+								li.appendChild(document.createTextNode(error))
+								errors.appendChild(li)
+							}
+						}
+					})
+				} 
+				else return response.json()
+			}).then(function(body){
+				goToPage("hubs/"+hubId)
+		}).catch(function(error){
+			console.log(error)
+		})
+	})
+	
+	document.querySelector("#hub-page .editButton").addEventListener("click", function(event){
+		event.preventDefault()
+		const hubId = parseInt(document.querySelector("#hub-page .id").innerText)
+		goToPage("/hubs/edit/"+hubId)
+	})
+	document.querySelector("#hub-page .deleteButton").addEventListener("click", function(event){
+		event.preventDefault()
+		const hubId = parseInt(document.querySelector("#hub-page .id").innerText)
+		const errorMessage = document.querySelector("#hub-page .errorMessage")
+		const errors = document.querySelector("#hub-page .errors")
+		fetch(
+			"http://localhost:3000/hubs", {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": "Bearer "+localStorage.accessToken
+				}, // TODO: Escape username and password in case they contained reserved characters in the x-www-form-urlencoded format.
+				body: JSON.stringify({"hubId":hubId})	
+			}).then(function(response){
+				errorMessage.innerText = ""
+				errors.innerHTML = ""
+				if (response.status != 202) {
+					response.json().then(function(errorObj){
+						errorMessage.innerText = errorObj.message
+						if (errorObj.errors.errors){
+							for (error of errorObj.errors.errors){
+								var li = document.createElement("li");
+								li.appendChild(document.createTextNode(error))
+								errors.appendChild(li)
+							}
+						}
+					})
+				} 
+				else return response.json()
+			}).then(function(body){
+				console.log(body)
+				goToPage("/hubs/all")
+		}).catch(function(error){
+			console.log(error)
+		})
+	})
+
 })
 
 window.addEventListener("popstate", function(event){
@@ -84,10 +244,8 @@ window.addEventListener("popstate", function(event){
 })
 
 function goToPage(url){
-	
 	changeToPage(url)
 	history.pushState({}, "", url)
-	
 }
 
 function changeToPage(url){
@@ -111,9 +269,15 @@ function changeToPage(url){
 	}else if(new RegExp("^/hubs/[0-9]+$").test(url)){
 		document.getElementById("hub-page").classList.add("current-page")
 		const id = url.split("/")[2]
-		fetchHub(id)
+		fetchHub(id, "hub-page")
 	}else if(url == "/create-hub"){
 		document.getElementById("create-hub-page").classList.add("current-page")
+	}else if (url == "/register"){
+		document.getElementById("register-page").classList.add("current-page")
+	}else if (new RegExp("^/hubs/edit/[0-9]+$").test(url)){
+		document.getElementById("hubs-edit-page").classList.add("current-page")
+		const id = url.split("/")[3]
+		fetchHub(id, "hubs-edit-page")
 	}else{
 		document.getElementById("error-page").classList.add("current-page")
 	}
@@ -130,16 +294,33 @@ function getNewAccessToken(refreshToken){
 		body: JSON.stringify({"token":refreshToken, "grant_type":"refresh_token"})
 	}).then(function(response){
 		const data = response.json()
-		return data
+		console.log(response)
+		if (response.status == 201) return data
+		else return logout()
 	}).then(function(obj){
-		console.log(obj.access_token)
-		localStorage.accessToken = obj.access_token
+		login(obj.access_token, obj.refresh_token)
 	}).catch(function(error){
 		console.log(error)
 	})
 }
 
+function checkAccessToken(errorObj, errorElement){
+	console.log(localStorage.refresh_token)
+	if (localStorage.refreshToken == undefined || localStorage.refreshToken == null) {
+		errorElement.innerText = "Please login to view this page!"
+		return logout()
+	}
+	if (errorObj.message == "No id_token stored" || errorObj.message == "No token"){  //not logged in
+		logout()
+		errorElement.innerText = "Please login to view this page!"
+	}
+	else {
+		getNewAccessToken(localStorage.refreshToken) //gather new one
+	}
+}
+
 function fetchAllHubs(){
+	const errorMessage = document.querySelector("#hubs-page .errorMessage")
 	fetch(
 		"http://localhost:3000/hubs/all", {
 		method: "GET",
@@ -148,22 +329,18 @@ function fetchAllHubs(){
 			"Authorization": "Bearer "+localStorage.accessToken
 		}
 	}).then(function(response){
-		// TODO: Check status code to see if it succeeded. Display errors if it failed.
 		const data = response.json()
+		errorMessage.innerText = ""
 		if (response.status == "200") return data
-		else if (data.status == undefined) {
-			//check if access token is set, if so token has probably expired
-			//and now we gather a new one using the refresh token
-			getNewAccessToken(localStorage.refreshToken)
-			return fetchAllHubs()
-		}
 		else {
-			console.log(data.message)
+			data.then(function(errorObj){
+				checkAccessToken(errorObj, errorMessage)
+			})
 		}
 	}).then(function(obj){
 		const hubs = obj.allHubs
 		const ul = document.querySelector("#hubs-page ul")
-		ul.innerText = ""
+		ul.innerHTML = ""
 		for(const hub of hubs){
 			const li = document.createElement("li")
 			const anchor = document.createElement("a")
@@ -177,17 +354,44 @@ function fetchAllHubs(){
 	})
 }
 
-function fetchHub(id){
+function fetchHub(id, page){
+	const errorMessage = document.querySelector("#"+page+" .errorMessage")
 	fetch(
-		"http://localhost:3000/hubs/"+id
-	).then(function(response){
-		// TODO: Check status code to see if it succeeded. Display errors if it failed.
-		return response.json()
-	}).then(function(hub){
-		const nameSpan = document.querySelector("#hub-page .name")
-		const idSpan = document.querySelector("#hub-page .id")
-		nameSpan.innerText = hub.hubName
-		idSpan.innerText = hub.id
+		"http://localhost:3000/hubs/"+id,{
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer "+localStorage.accessToken
+		}
+	}).then(function(response){
+		const data = response.json()
+		errorMessage.innerText = ""
+		if (response.status == "200") return data
+		else {
+			data.then(function(errorObj){
+				checkAccessToken(errorObj, errorMessage)
+			})
+		}
+	}).then(function(obj){
+		if (page == "hub-page"){
+			const nameSpan = document.querySelector("#hub-page .name")
+			const idSpan = document.querySelector("#hub-page .id")
+			const descriptionSpan = document.querySelector("#hub-page .description")
+			const gameSpan = document.querySelector("#hub-page .game")
+			descriptionSpan.innerText = obj.hub.description
+			gameSpan.innerText = obj.hub.game
+			nameSpan.innerText = obj.hub.hubName
+			idSpan.innerText = obj.hub.id
+		} else if (page == "hubs-edit-page"){
+			const nameSpan = document.querySelector("#hubs-edit-page .name")
+			const idSpan = document.querySelector("#hubs-edit-page .id")
+			const descriptionSpan = document.querySelector("#hubs-edit-page .description")
+			const gameSpan = document.querySelector("#hubs-edit-page .game")
+			descriptionSpan.value = obj.hub.description
+			gameSpan.value = obj.hub.game
+			nameSpan.value = obj.hub.hubName
+			idSpan.innerText = obj.hub.id
+		}
 	}).catch(function(error){
 		console.log(error)
 	})
@@ -195,6 +399,7 @@ function fetchHub(id){
 }
 
 function login(accessToken, refreshToken){
+	console.log(refreshToken)
 	localStorage.accessToken = accessToken
 	localStorage.refreshToken = refreshToken
 	console.log("Logged in successfully!")
