@@ -1,5 +1,4 @@
 const express = require('express');
-const handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');

@@ -9,24 +9,25 @@ module.exports = function({logManager}){
     router.post("/", (req,res) => {
         const refreshToken = req.body.token;
         const grant_type = req.body.grant_type
-
-        if (grant_type != "refresh_token") {
-            res.status(400).json({"message": "unsupported_grant_type", "success": "false"})
-            return
-        }
-        if (refreshToken == null) return res.status(401).json({})
-        redisClient.lrange("refreshTokens", 0,-1, (err,data) => {
-            let isMatch = false
-            data.forEach(token =>{
-                if (refreshToken == token) isMatch = true
+        if (!res.finished) {
+            if (grant_type != "refresh_token") {
+                res.status(400).json({"message": "unsupported_grant_type", "success": "false"})
+                return
+            }
+            if (refreshToken == null) return res.status(401).end()
+            redisClient.lrange("refreshTokens", 0,-1, (err,data) => {
+                let isMatch = false
+                data.forEach(token =>{
+                    if (refreshToken == token) isMatch = true
+                })
+                if (isMatch == true) return res.status(401).end()
             })
-            if (isMatch == true) return res.status(401).json({})
-        })
-        jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err,user) =>{
-            if (err) return res.status(403).json({})
-            const accessToken = logManager.generateAccessToken({userId: user.id})
-            res.json({"access_token": accessToken}).end()
-        })
+            jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err,user) =>{
+                if (err) return res.status(403).json({})
+                const accessToken = logManager.generateAccessToken({userId: user.id})
+                return res.status(201).json({"access_token": accessToken}).end()
+            })
+        }
     })
 
     return router

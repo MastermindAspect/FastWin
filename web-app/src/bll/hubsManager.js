@@ -143,13 +143,13 @@ module.exports = function({hubsRepository}){
 				}
                 hubsRepository.getHub(hubId, function (hub, err) {
                     if (err) {
-                        callback(null, "Error getting post, the post you are trying to update may be deleted")
+                        callback(null, "Error getting hub, the hub you are trying to update may be deleted")
                     } else if (hub) {
 						if (hub.userId != userId) {
                             errors.push("You do not have the right authority to update this hub")
                         }
                         if (errors.length == 0) {
-                            hubsRepository.updateHub(hubId, hubName, description, game, function (err) {
+                            hubsRepository.updateHub(hub.id, hubName, description, game, function (err) {
                                 if (err) {
                                     callback(null, "Error updating hub")
                                 } else {

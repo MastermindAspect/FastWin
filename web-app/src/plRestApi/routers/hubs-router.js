@@ -1,4 +1,6 @@
 const express = require("express");
+const redis = require("redis");
+const redisClient = redis.createClient({host: 'redis', port: 6379});
 
 module.exports = function({hubsManager, postsManager, authentication}){
 	const router = express.Router()
@@ -13,14 +15,16 @@ module.exports = function({hubsManager, postsManager, authentication}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		hubsManager.createHub(req.userId,hubName,description,game,true, function(id, errors, dbError){
-			if (dbError || errors) res.status(404).json({"message": "Error creating hub", "success": "false", "errors": {dbError,errors}}).end()
-			else{
-				if (!res.finished){
-					res.writeHead(201, {'Location': "hubs/"+id})
-					res.end()
+		redisClient.get("userId", function(err,reply){
+			hubsManager.createHub(reply,hubName,description,game,true, function(id, errors, dbError){
+				if (dbError || errors) res.status(404).json({"message": "Error creating hub", "success": "false", "errors": {dbError,errors}}).end()
+				else{
+					if (!res.finished){
+						res.writeHead(201, {'Location': "hubs/"+id})
+						res.end()
+					}
 				}
-			}
+			})
 		})
 	})	
 
@@ -29,27 +33,30 @@ module.exports = function({hubsManager, postsManager, authentication}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		hubsManager.updateHub(hubId,req.userId,hubName,description,game,true, function(errors,dbError){
-			if (dbError) {
-				res.status(404).json({"message": "Error updating hub", "success": "false", "errors": {dbError,errors}}).end()
-			}
-			else {
-				res.writeHead(200, {'Location': "hubs/"+id})
-				res.end()
-			}
+		redisClient.get("userId", function(err,reply){
+			hubsManager.updateHub(hubId,reply,hubName,description,game,true, function(errors,dbError){
+				if (dbError || errors) {
+					res.status(404).json({"message": "Error updating hub", "success": "false", "errors": {dbError,errors}}).end()
+				}
+				else {
+					res.writeHead(200, {'Location': "hubs/"+hubId})
+					res.end()
+				}
+			})
 		})
 	})
 
 	router.delete("/",authentication.authenticateToken,function(req,res){
 		const hubId = req.body.hubId;
-		hubsManager.deleteHub(hubId,req.userId, true, function(errors,dbError){
-			if (dbError) {
-				res.status(404).json({"message": "Error deleting hub", "success": "false", "errors": {dbError,errors}}).end()
-			}
-			else {
-				res.writeHead(202, {'Location': "hubs/"+id})
-				res.end()
-			}
+		redisClient.get("userId", function(err,reply){
+			hubsManager.deleteHub(hubId,reply, true, function(errors,dbError){
+				if (dbError) {
+					res.status(404).json({"message": "Error deleting hub", "success": "false", "errors": {dbError,errors}}).end()
+				}
+				else {
+					res.status(202).json({"message": "Successfully deleted hub", "success": "true"}).end()
+				}
+			})
 		})
 	})
 

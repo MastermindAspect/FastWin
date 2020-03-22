@@ -38,7 +38,7 @@ module.exports = function({ logManager }) {
             req.session.destroy()
             res.redirect('/')
         } else {
-            redirect('/')
+            res.redirect('/')
         }
     })
 

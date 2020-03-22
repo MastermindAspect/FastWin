@@ -56,6 +56,7 @@ module.exports = function({db}){
 				})
 		},
 
+
 		updateHub: function(hubId, hubName, description, game, callback) {
 			db.Hub.update({
 				hubName: hubName,
