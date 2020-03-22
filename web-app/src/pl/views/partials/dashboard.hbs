@@ -50,26 +50,7 @@
                 </ul>
             </li>
             <li class="nav-item"> <!--Teams-->
-                <span id="singleLineForce">
-                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Teams</p></a>
-                    <span id="forcMultipleLines">
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/teams/create"{{else}}"/log"{{/if}}>+</a>
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/teams/all"><img src="/images/magnifying_glass.png" /></a>
-                    </span>
-                </span>
-                <ul class="nav flex-column dropdown">
-                    <li class="dashboardListItem">
-                        {{#if item.contentLinks.length}}
-                            {{#each item.contentLinks as |innerLink|}}
-                            <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
-                            {{/each}}
-                        {{else}}
-                            <span>
-                                <p style="background-color: gray;">{{#if loggedIn}} Go join to some <a href="/teams/all">teams!</a>{{else}} <a href="/log">Login</a> to view your teams!{{/if}}</p>
-                            </span>
-                        {{/if}}
-                    </li>
-                </ul>
+                    <a href="/users/" role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Users</p></a>
             </li>
         </ul>
     </div>

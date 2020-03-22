@@ -8,9 +8,15 @@ db.authenticate()
 //==Models===============================================
 
 const User = db.define('user', {
-    username: Sequelize.TEXT,
+    username: {
+        type: Sequelize.TEXT,
+        unique: true
+    },
     passHash: Sequelize.TEXT,
-    email: Sequelize.TEXT
+    email: {
+        type: Sequelize.TEXT,
+        unique: true
+    }
 })
 
 const Hub = db.define('hub', {
@@ -36,13 +42,13 @@ User.hasMany(Hub)
 User.hasMany(Tournament)
 User.hasMany(Post)
 
-User.belongsToMany(Tournament, {as: "Participation", through: "tournamentUser"})
-Tournament.belongsToMany(User, {as: "Players", through: "tournamentUser"})
+User.belongsToMany(Tournament, {as: "Participation", through: "tournamentUser", onDelete: 'cascade'})
+Tournament.belongsToMany(User, {as: "Players", through: "tournamentUser", onDelete: 'cascade'})
 
-User.belongsToMany(Hub, {as: "Subscriptions", through: 'hubSubscriptions', foreignKey: 'userId'})
-Hub.belongsToMany(User, {as: "Subscribers", through: 'hubSubscriptions', foreignKey: 'hubId'})
+User.belongsToMany(Hub, {as: "Subscriptions", through: 'hubSubscriptions', foreignKey: 'userId', onDelete: 'cascade'})
+Hub.belongsToMany(User, {as: "Subscribers", through: 'hubSubscriptions', foreignKey: 'hubId', onDelete: 'cascade'})
 
-Hub.hasMany(Post, {as: "hubid"})
+Hub.hasMany(Post, {onDelete: 'cascade'})
 
 db.sync()
 

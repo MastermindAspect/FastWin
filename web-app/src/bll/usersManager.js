@@ -1,11 +1,12 @@
 bcrypt = require('bcrypt')
+sequelize = require('sequelize')
 
 module.exports = function({usersRepository}) {
     return {
         getAllUsers: function(callback) {
-            usersRepository.getAllUsers(function(users) {
-                callback(users, error)
+            usersRepository.getAllUsers(function(users, error) {
                 if (error) {
+                    console.log(error)
                     callback(null, "Error getting users")
                 } else {
                     callback(users, null)
@@ -31,7 +32,7 @@ module.exports = function({usersRepository}) {
                     callback(errors, "Error getting user")
                 } else {
                     if (user) {
-                        errors.push("Email is already in use")
+                         errors.push("Email is already in use")
                     }
                     if (username == "") {
                         errors.push("You need to have a username")
@@ -53,10 +54,15 @@ module.exports = function({usersRepository}) {
                         const saltRounds = 10
                         const passHash = bcrypt.hashSync(password, saltRounds)
                         usersRepository.createUser(username, email, passHash, function (err) {
-                            if (err) {
-                                callback(null, "Error creating user")
+                            if (!err || err instanceof sequelize.UniqueConstraintError) {
+                                if (err instanceof sequelize.UniqueConstraintError) {
+                                    errors.push("Username is already in use")
+                                    callback(errors, null)
+                                } else {
+                                    callback(null, null)
+                                }
                             } else {
-                                callback(null, null)
+                                callback(null, "Error creating user")
                             }
                         })
                     } else {

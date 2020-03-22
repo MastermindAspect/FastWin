@@ -4,7 +4,23 @@ module.exports = function ({ usersManager, hubsManager, tournamentsManager }) {
 
     const router = express.Router()
 
-    router.get('/:userId', function (req, res) {
+    router.get('/', function(req, res) {
+        usersManager.getAllUsers(function(users, dbError) {
+            if (dbError) {
+                const modal = { 
+                    error: [dbError]
+                }
+                res.render("error.hbs", modal)
+            } else {
+                const modal = {
+                    allUsers: users
+                }
+                res.render("usersAll.hbs", modal)
+            }
+        })
+    })
+
+    router.get('/:userId', function(req, res) {
         const userId = req.params.userId;
 
         usersManager.getUserById(userId, function (user, dbError1) {
@@ -17,33 +33,38 @@ module.exports = function ({ usersManager, hubsManager, tournamentsManager }) {
                         res.render("error.hbs", modal)
                     } else {
                         const randomHubs = []
-                        if (hubs.length > 3) {
-                            let randomHub = Math.floor(Math.random() * hubs.length)
-                            for (let i = 0; i < 3; i++){
-                                randomHubs.push(hubs[randomHub])
-                                randomHub++
-                                if (randomHub == hubs.length) {
-                                    randomHub = 0
+                        if (hubs) {
+                            if (hubs.length > 3) {
+                                let randomHub = Math.floor(Math.random() * hubs.length)
+                                for (let i = 0; i < 3; i++){
+                                    randomHubs.push(hubs[randomHub])
+                                    randomHub++
+                                    if (randomHub == hubs.length) {
+                                        randomHub = 0
+                                    }
                                 }
-                            }
-                        } else {
-                            for (hub in hubs) {
-                                randomHubs.push(hubs[hub])
+                            } else {
+                                for (hub in hubs) {
+                                    randomHubs.push(hubs[hub])
+                                }
                             }
                         }
+                        
                         const randomTournaments = []
-                        if (tournaments.length > 3) {
-                            let randomTournament = Math.floor(Math.random() * tournaments.length)
-                            for (let i = 0; i < 3; i++){
-                                randomTournaments.push(hubs[randomTournament])
-                                randomTournament++
-                                if (randomHub == tournaments.length) {
-                                    randomHub = 0
+                        if (tournaments) {
+                            if (tournaments.length > 3) {
+                                let randomTournament = Math.floor(Math.random() * tournaments.length)
+                                for (let i = 0; i < 3; i++){
+                                    randomTournaments.push(tournaments[randomTournament])
+                                    randomTournament++
+                                    if (randomTournament == tournaments.length) {
+                                        randomTounament = 0
+                                    }
                                 }
-                            }
-                        } else {
-                            for (tournament in tournaments) {
-                                randomTournaments.push(tournaments[tournament])
+                            } else {
+                                for (tournament in tournaments) {
+                                    randomTournaments.push(tournaments[tournament])
+                                }
                             }
                         }
 
@@ -51,7 +72,7 @@ module.exports = function ({ usersManager, hubsManager, tournamentsManager }) {
                         const modal = {
                             user,
                             threeHubs: randomHubs,
-                            hubs: hubs,
+                            allHubs: hubs,
                             threeTournaments: randomTournaments
                         }
                         res.render("user", modal)
@@ -79,7 +100,8 @@ module.exports = function ({ usersManager, hubsManager, tournamentsManager }) {
                     createAccountEmail: email,
                     password,
                     validationPassword,
-                    createAccountErrors: errors
+                    createAccountErrors: errors,
+                    errorType: "createError"
                 }
                 res.render("login", modal)
             } else {
