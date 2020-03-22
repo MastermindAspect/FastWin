@@ -5,6 +5,7 @@ module.exports = function({tournamentsRepository}){
 		getAllTournaments: function(callback){
 			tournamentsRepository.getAllTournaments(function(tournaments, error){
 				if (error) {
+					console.log(error)
 					callback(null, "Error getting tournaments")
 				} else {
 					callback(tournaments, null)

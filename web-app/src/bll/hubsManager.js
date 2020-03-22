@@ -216,6 +216,6 @@ module.exports = function({hubsRepository}){
 					callback(hubs, null)
 				}
             })
-        }
+        },
 	}
 }

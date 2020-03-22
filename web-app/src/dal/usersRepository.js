@@ -12,31 +12,27 @@ const db1 = mysql.createConnection({
 module.exports = function({db}) {
 	return {
 		getAllUsers: function(callback) {
-			db.User.findAll()
-			.then(function(users) {
-				refinedUsers = []
-				for (user in users) {
-					refinedUsers.push(user.dataValues)
-				}
-				callback(refinedUsers, error)
-			})
-			.catch(function(error) {
-				callback(null, error)
-			})
+			db.User.findAll({raw: true})
+				.then(function(users) {
+					callback(users, null)
+				})
+				.catch(function(error) {
+					callback(null, error)
+				})
 		},
 		
 		getUserById: function(userId, callback) {
             db.User.findByPk(userId)
-            .then(function(user){
-				if (user) {
-					callback(user.dataValues, null)
-				} else {
-					callback(null, null)
-				}
-            })
-            .catch(function(error) {
-                callback(null, error)
-            })
+            	.then(function(user){
+					if (user) {
+						callback(user.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+            	})
+            	.catch(function(error) {
+                	callback(null, error)
+            	})
 		},
 		
 		createUser: function(username, email, password, callback) {
@@ -71,7 +67,6 @@ module.exports = function({db}) {
                 where: {email: email}
             })
                 .then(function(user){
-					console.log(user)
 					if (user) {
 						callback(user.dataValues, null)
 					} else {

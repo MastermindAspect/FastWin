@@ -66,6 +66,9 @@ const theUsersRouter = container.resolve("usersRouter")
 const theLogRouter = container.resolve("logRouter")
 const thePostsRouter = container.resolve("postsRouter")
 
+const theHubsManager = container.resolve("hubsManager")
+const theTournamentsManager = container.resolve("tournamentsManager")
+
 //TODO: ADD dashboardContent into a cookie and modify when needed, that way we wont have to run the function everytime we 
 //render a view.
 
@@ -130,15 +133,62 @@ app.use("/log", theLogRouter)
 app.use("/posts", thePostsRouter)
 app.use("/tournaments", theTournamentsRouter)
 app.get('/', (req, res) => {
-    try{
-        const model = {title: "Home"}
-        res.render("home", model);
-    }
-    catch(error){
-        const model = {title: "Error", error}
-        res.render("error.hbs", model);
-    }
+    theHubsManager.getAllHubs(function(hubs, dbError1) {
+        theTournamentsManager.getAllTournaments(function(tournaments, dbError2) {
+            if (dbError1 || dbError2) {
+                console.log(dbError2)
+                const model = {
+                    error: [dbError1, dbError2]
+                }
+                res.render("error.hbs", model);
+            } else {
+                const randomHubs = []
+                if (hubs.length > 3) {
+                    let randomHub = Math.floor(Math.random() * hubs.length)
+                    for (let i = 0; i < 3; i++){
+                        randomHubs.push(hubs[randomHub])
+                        randomHub++
+                        if (randomHub == hubs.length) {
+                            randomHub = 0
+                        }
+                    }
+                } else {
+                    for (hub in hubs) {
+                        randomHubs.push(hubs[hub])
+                    }
+                }
+                const randomTournaments = []
+                if (tournaments.length > 3) {
+                    let randomTournament = Math.floor(Math.random() * tournaments.length)
+                    for (let i = 0; i < 3; i++){
+                        randomTournaments.push(tournaments[randomTournament])
+                        randomTournament++
+                        if (randomTournament == tournaments.length) {
+                            randomTournament = 0
+                        }
+                    }
+                } else {
+                    for (tournament in tournaments) {
+                        randomTournaments.push(tournaments[tournament])
+                    }
+                }
+                const model = {
+                    title: "Home",
+                    featuredHubs: randomHubs,
+                    featuredTournaments: randomTournaments
+                }
+                    res.render("home", model);
+            }
+        })
+    })
 });
+
+app.get('/about', (req, res) => {
+    const modal = {
+        title: "About"
+    }
+    res.render("about", modal);
+})
 
 
 
