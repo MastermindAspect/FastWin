@@ -157,10 +157,10 @@ document.addEventListener("DOMContentLoaded", function(){
 		const game = document.querySelector("#hubs-edit-page .game").value
 		const hubId = parseInt(document.querySelector("#hubs-edit-page .id").innerText)
 		const hub = {
-			hubId,
+			"hubId":hubId,
 			"hub_name": name,
-			description,
-			game
+			"description":description,
+			"game":game
 		}		
 		fetch(
 			"http://localhost:3000/hubs/edit", {
@@ -170,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function(){
 					"Authorization": "Bearer "+localStorage.accessToken
 				}, // TODO: Escape username and password in case they contained reserved characters in the x-www-form-urlencoded format.
 				body: JSON.stringify(hub)
-			
 			}).then(function(response){
 				errorMessage.innerText = ""
 				errors.innerHTML = ""
@@ -186,11 +185,9 @@ document.addEventListener("DOMContentLoaded", function(){
 						}
 					})
 				} 
-				else return response.json()
-			}).then(function(body){
-				goToPage("hubs/"+hubId)
-		}).catch(function(error){
-			console.log(error)
+				else return goToPage("/hubs/"+hubId)
+			}).catch(function(error){
+				console.log(error)
 		})
 	})
 	
