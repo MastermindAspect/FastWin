@@ -5,10 +5,16 @@
             <h1 class="mb-3" style="display: inline;">{{hub.hubName}}</h1>
             <div>
                 <a href="/hubs/update/{{this.id}}" class="btn btn-primary btn-lg pull-right">Edit Hub</a>
-                <form method="POST" action="/hubs/delete/{{hub.id}}">
-                    <button type="submit" class="btn btn-danger btn-lg pull-right">Delete Hub</button>
-                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                </form>
+                {{#if subscribed}}
+                    <form method="POST" action="/hubs/play/{{hub.id}}">
+                        <button type="submit" class="btn btn-danger btn-lg pull-right">Play ( {{inQueue}} )</button>
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    </form>
+                    <form method="POST" action="/hubs/delete/{{hub.id}}">
+                        <button type="submit" class="btn btn-danger btn-lg pull-right">Delete Hub</button>
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    </form>
+                {{/if}}
                 <a type="button" class="btn btn-success btn-lg pull-right" href="/hubs/{{hub.id}}/members" role="button" style="color: white;">Members</a>
             </div>
         </header>

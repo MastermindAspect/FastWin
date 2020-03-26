@@ -19,6 +19,33 @@ module.exports = function({hubsManager, postsManager}){
 		})
 	})
 
+	router.post("/play/:hubId", function(req, res) {
+		const hubId = req.params.hubId
+		redisClient.get("matchmakingQueue"+hubId, (err,data)=>{
+			console.log("Number of players before player pressed play: "+parseInt(data))
+			if (parseInt(data) + 1 >= MATCHSIZE) {
+				console.log("Match found... Creating matchroom!")
+				redisClient.set("matchmakingQueue"+hubId, parseInt(data) - MATCHSIZE, redis.print)
+				req.session.userId 
+				const server = serversAvailable.pop()
+				if (server){
+					const model = {
+						title: "Match for "+ hubId,
+						hubId,
+						serverIp: "connect "+server.ip+":27015; password "+server.password
+					}
+					res.render("hubs_match_room", model)
+				}
+				else {
+					console.log("No servers availible")
+				}
+			} else {
+				redisClient.set("matchmakingQueue"+hubId, parseInt(data) + 1, redis.print)
+				res.redirect("/hubs/"+hubId)
+			}
+		})
+	})
+
 	router.post("/delete/:hubId", function(req, res) {
 		const hubId = req.params.hubId
 		hubsManager.deleteHub(hubId, req.session.userId, req.session.loggedIn, function(errors, dbError) {
