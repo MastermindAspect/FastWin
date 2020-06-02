@@ -1,27 +1,48 @@
 const express = require("express");
-const router = express.Router();
-const logManager = require('../../bll/logManager')
 
-router.get('/', (req, res) => {
-    const model = {title: "Login"}
-    res.render("login", model);
-});
+module.exports = function({ logManager }) {
 
-router.post('/login', (req, res) => {
-    const email = req.body.loginEmail
-    const password = req.body.loginPassword
-    logManager.loginUser(email, password, function(loginErrors) {
-        if (loginErrors.length > 0) {
-            const modal = {
-                loginEmail: email,
-                loginErrors
+    const router = express.Router()
+
+    router.get('/', (req, res) => {
+        const model = { title: "Login" }
+        res.render("login", model);
+    });
+
+    router.post('/login', (req, res) => {
+        const email = req.body.loginEmail
+        const password = req.body.loginPassword
+
+        logManager.loginUser(email, password, function (user, loginErrors, dbError) {
+            if (dbError) {
+                const model = {
+                    error: [dbError]
+                }
+                res.render("error.hbs", model)
+            } else if (loginErrors) {
+                const modal = {
+                    loginEmail: email,
+                    loginErrors
+                }
+                res.render("login", modal)
+            } else {
+                req.session.loggedIn = true
+                req.session.userId = user.id
+                res.redirect('/')
             }
-            res.render("login", modal)
+        }) 
+    })
+
+    router.get('/logout', (req, res) => {
+        if (req.session.loggedIn) {
+            req.session.destroy()
+            res.redirect('/')
         } else {
-            res.redirect("/")
+            res.redirect('/')
         }
     })
-    
-})
 
-module.exports = router
+
+    return router
+
+}

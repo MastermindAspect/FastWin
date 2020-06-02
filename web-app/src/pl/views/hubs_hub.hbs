@@ -1,14 +1,70 @@
+<link type="text/css" rel="stylesheet" href="/hubs_hub.css">
 <div class="row">
     <div class="col-md-12">
         <header>
-            <h1 class="mb-3">{{hub.hubName}}</h1>
+            <h1 class="mb-3" style="display: inline;">{{hub.hubName}}</h1>
+            <div>
+                <a href="/hubs/update/{{this.id}}" class="btn btn-primary btn-lg pull-right">Edit Hub</a>
+                <form method="POST" action="/hubs/delete/{{hub.id}}">
+                    <button type="submit" class="btn btn-danger btn-lg pull-right">Delete Hub</button>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                </form>
+                <a type="button" class="btn btn-success btn-lg pull-right" href="/hubs/{{hub.id}}/members" role="button" style="color: white;">Members</a>
+            </div>
         </header>
     </div>
     <div class="col-md-12">
         <hr class="mb-4">
-        <form method="POST" action="/hubs/{{hub.id}}/subscribe">
-            <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if subscribed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
-        </form>
+        <div class="row">
+            <div class="col">
+                <h2>Game: <br> {{hub.game}}</h2>
+                <h5>{{hub.description}}</h5>
+            </div>
+            <div class="col">
+                {{#if subscribeError}}
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            <li>{{subscribeError}}</li>
+                        </ul>
+                    </div>
+                {{/if}}
+                <form method="POST" action="/hubs/{{hub.id}}/{{#if subscribed}}unsubscribe{{else}}subscribe{{/if}}">
+                    <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if subscribed}}Unsubscribe{{else}}Subscribe{{/if}}</button>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                </form>
+                <div class="postsContainer">
+                    {{#if loggedIn}}
+                        {{#if subscribed}}
+                            {{>createPostForm}}
+                        {{/if}}
+                    {{/if}}
+                    {{#if posts}}
+                        {{#each posts}}
+                            <div class="card text-white bg-dark mb-3">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col">
+                                            <a href="/users/{{this.userId}}">{{this.author}}</a>
+                                        </div>
+                                        <div class="col">
+                                            <form method="POST" action="/posts/delete/{{this.hubId}}/{{this.id}}">
+                                                <button type="submit" class="btn btn-danger pull-right">Delete</button>
+                                                <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+                                            </form>
+                                            <a href="/posts/update/{{this.id}}" class="btn btn-primary pull-right">Edit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{this.title}}</h5>
+                                    <p class="card-text">{{this.content}}</p>
+                                </div>
+                            </div>  
+                        {{/each}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

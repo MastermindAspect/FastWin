@@ -1,62 +1,174 @@
 const mysql = require("mysql")
 
-const db = mysql.createConnection({
+const db1 = mysql.createConnection({
 	host: "db",
 	user: "root",
 	password: "abc123",
 	database: "myDB"
 })
-exports.getAllHubs = function(callback){
-	
-	db.query("SELECT * FROM hubs", function(error, hubs){
-		// TODO: Also handle errors.
-		if (!error) {
-			console.log(hubs)
-			callback(hubs)
-		} else {throw "Failed to get hubs!"}
-	})
-	
+
+const db = require('../dal/sequelizeSetup')
+
+module.exports = function({db}){
+	return {
+		getAllHubs: function(callback){
+			db.Hub.findAll({raw: true})
+				.then(function(hubs) {
+					callback(hubs, null)
+				})
+				.catch(function(error) {
+					callback(null, error)
+				})
+		},
+		createHub: function(userId, hubName, description, game, callback){
+			db.Hub.create({userId: userId, hubName: hubName, description: description, game: game})
+                .then(function(hub){
+                    callback(hub.dataValues.id, null)
+                })
+                .catch(function(error) {
+                    callback(null, error)
+                })
+		},
+
+		getHub: function(id, callback){
+			db.Hub.findByPk(id)
+				.then(function(hub){
+					if (hub) {
+						callback(hub.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+				})
+				.catch(function(error){
+					callback(null, error)
+				})
+		},
+
+		deleteHub: function(hubId, callback) {
+			db.Hub.destroy({
+				where: {id: hubId}
+			})
+				.then(function(){
+					callback(null)
+				})
+				.catch(function(error){
+					callback(error)
+				})
+		},
+
+
+		updateHub: function(hubId, hubName, description, game, callback) {
+			db.Hub.update({
+				hubName: hubName,
+				description: description,
+				game: game
+			}, {
+				where: {id: hubId}
+			})
+				.then(function(){
+					callback(null)
+				})
+				.catch(function(error) {
+					callback(error)
+				})
+		},
+
+		subscribeTo: function(hubId, userId, callback){
+			db.Hub.findOne({
+				where: {id: hubId},
+				include: [{
+					model: db.User,
+					as: "Subscribers"
+				}]
+			})
+				.then(function(hub){
+					db.User.findByPk(userId)
+						.then(function (user) {
+							hub.addSubscriber(user)
+								.then(function () {
+									callback(null)
+								})
+								.catch(function (error) {
+									console.log("Error1:" + error)
+									callback(error)
+								})
+						})
+						.catch(function (error) {
+							console.log("Error1:" + error)
+							callback(error)
+						})
+				})
+				.catch(function(error){
+					console.log("Error1:" + error)
+					callback(null, error)
+				})
+		},
+		unSubscribeTo: function(hubId, userId, callback){
+			db.Hub.findOne({
+				where: {id: hubId},
+				include: [{
+					model: db.User,
+					as: "Subscribers"
+				}]
+			})
+				.then(function(hub){
+					db.User.findByPk(userId)
+						.then(function (user) {
+							hub.removeSubscriber(user)
+								.then(function () {
+									callback(null)
+								})
+								.catch(function (error) {
+									console.log("Error1:" + error)
+									callback(error)
+								})
+						})
+						.catch(function (error) {
+							console.log("Error2:" + error)
+							callback(error)
+						})
+				})
+				.catch(function(error){
+					console.log("Error3:" + error)
+					callback(null, error)
+				})
+		},
+		getMembers: function(hubId, callback){
+			db.Hub.findOne({
+				where: {id: hubId},
+				include: [{
+					model: db.User,
+					as: "Subscribers"
+				}]
+			})
+			.then(function(hub){
+				const plainUsers = []
+				const subscribers = hub.Subscribers
+				for (user in subscribers) {
+					plainUsers.push(subscribers[user].dataValues)
+				}
+				callback(plainUsers, null)
+			})
+			.catch(function(error){
+				callback(null, error)
+			})
+		},
+		getAllHubsByUser: function(userId, callback){
+			db.User.findOne({
+				where: {id: userId},
+				include: [{
+					model: db.Hub,
+					as: "Subscriptions"
+				}]
+			})
+			.then(function(user){
+				callback(user.Subscriptions, null)		//Ska denna ligga i user repository istället?
+			})
+			.catch(function(error){
+				console.log(error)
+				callback(null, error)
+			})
+	 	}
+	}
 }
 
-exports.createHub = function(values, loggedin, callback){
-	db.query("INSERT INTO hubs (hubName, description, game, creationDate) VALUES (?,?,?,?)", values, function(err){
-		//handle error
-		callback(null, err)
-	})
-	db.query("SELECT id FROM hubs WHERE hubName = ?", values[0], function(err,id){
-		//handle error
-		callback(id[0].id, err)
-	})
-}
-
-
-exports.getHub = function(id, callback){
-	db.query("SELECT * FROM hubs WHERE id = ?", id,function(err,hub){
-		callback(hub[0],err)
-	})
-}
-
-
-exports.subscribeTo = function(hubId, userId, clalback){
-	db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [hubId, userId], function(err){
-		callback(err)
-	})
-}
-
-exports.unSubscribeTo = function(hubId, userId){
-	db.query("DELETE FROM hub_subscriptions WHERE hubId = ? AND userId = ?", [hubId, userId], function(err){
-		callback(err)
-	})
-}
-
-exports.getMembers = function(hubId, callback){
-	db.query("SELECT u.* FROM hubs h INNER JOIN hub_subscriptions hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.id WHERE h.id = ?", [hubId], function(users, err){
-		callback(users[0],err)
-	})
-}
-
-exports.getAllHubsByUser = function(userId, callback){
-	db.query("SELECT h.* FROM hubs h INNER JOIN hub_subscriptions hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.id WHERE u.id = ?", [userId], function(hubs, err){
-		callback(hubs[0],err)
-	})
-}

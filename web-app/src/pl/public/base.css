@@ -21,3 +21,7 @@ main{
     flex-basis: 75%;
     margin-left: auto;
 }
+
+#jsDisabled{
+    display: none;
+}

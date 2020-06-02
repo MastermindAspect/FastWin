@@ -1,3 +1,10 @@
 <div class="alert alert-danger">
-    <strong>Error!</strong> {{error}}
+    <strong>Error!</strong>
+    <div class="alert alert-danger" role="alert">
+        <ul>
+            {{#each error}}
+                <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    </div>
 </div>

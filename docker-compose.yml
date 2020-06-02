@@ -1,5 +1,20 @@
 version: '3'
 services:
+  rest-api:
+    build: web-app/src/plRestApi
+    ports:
+      - "3000:3000"
+      - "9230:9230"
+    volumes:
+      - "./web-app/src:/rest-api/src"
+    depends_on: 
+      - "db"
+  spa:
+    build: spa/frontend
+    ports:
+      - "4000:4000"
+    volumes:
+      - "./spa/singlepage/src"
   web-app:
     build: web-app
     ports:
@@ -21,3 +36,12 @@ services:
     container_name: "cache"
     ports: 
       - "6379:6379"
+  postgreDB:
+    image: "postgres"
+    container_name: "postgreDB"
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_DB=db"
+      - "POSTGRES_USER=abc321"
+      - "POSTGRES_PASSWORD=myPostgresDB"

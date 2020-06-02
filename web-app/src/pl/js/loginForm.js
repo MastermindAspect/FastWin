@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     })
 
+    let errorType = document.getElementById("errorType").value
+    if (errorType == "createError") {
+        changeFormButton.click()
+    }
+
     function getAlertObject() {
         alertObj = document.createElement("div")
         alertObj.className = "alert alert-danger"

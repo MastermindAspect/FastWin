@@ -1,53 +1,81 @@
 const mysql = require("mysql")
 
-const db = mysql.createConnection({
+const db1 = mysql.createConnection({
 	host: "db",
 	user: "root",
 	password: "abc123",
 	database: "myDB",
 })
 
-exports.getAllUsers = function(callback) {
-    db.query("SELECT * FROM users", function(error, users){
-		callback(users)
-	})
-}
 
-exports.getUserById = function(userId, callback) {
-	db.query("SELECT * FROM users WHERE id = ?", [userId], function(err, user) {
-		if (err) {
-			console.log(err)
-		} else {
-			callback(user[0])
+
+module.exports = function({db}) {
+	return {
+		getAllUsers: function(callback) {
+			db.User.findAll({raw: true})
+				.then(function(users) {
+					callback(users, null)
+				})
+				.catch(function(error) {
+					callback(null, error)
+				})
+		},
+		
+		getUserById: function(userId, callback) {
+            db.User.findByPk(userId)
+            	.then(function(user){
+					if (user) {
+						callback(user.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+            	})
+            	.catch(function(error) {
+                	callback(null, error)
+            	})
+		},
+		
+		createUser: function(username, email, password, callback) {
+			const passHash = password
+            db.User.create({username: username, passHash: passHash, email: email})
+                .then(function() {
+					callback(null)
+                })
+                .catch(function(error) {
+                    callback(error)
+                })
+		},
+		
+		getUserByUsername: function(username, callback) {
+			db.User.findOne({
+				where: {username: username}
+			})
+				.then(function(user) {
+					if (user) {
+						callback(user.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+				})
+				.catch(function(error) {
+					callback(null, error)
+				})
+		},
+		
+		getUserByEmail: function(email, callback) {
+			db.User.findOne({
+                where: {email: email}
+            })
+                .then(function(user){
+					if (user) {
+						callback(user.dataValues, null)
+					} else {
+						callback(null, null)
+					}
+                })
+                .catch(function(error){
+                    callback(null, error)
+                })
 		}
-	})
-}
-
-exports.getMostUsedHubs = function(userId, callback) {
-	db.query("SELECT hubs.* FROM hubs LEFT JOIN posts ON hubs.id = posts.hubId WHERE posts.userId = ? GROUP BY hubs.id ORDER BY COUNT(posts.id) DESC LIMIT 3", [userId], function(err, hubs) {
-		if (err) {
-			console.log(err)
-		} else {
-			callback(hubs)
-		}
-	})
-}
-
-exports.createUser = function(username, email, password, callback) {
-	const data = [username, password, email]
-	db.query("INSERT INTO users (username, passHash, email) VALUES (?, ?, ?)", data, function(err) {
-		callback(err)
-	})
-}
-
-exports.getUserByUsername = function(username, callback) {
-	db.query('SELECT * FROM users WHERE username = ?', [username], function(err, user) {
-		callback(err, user[0])
-	})
-}
-
-exports.getUserByEmail = function(email, callback) {
-	db.query('SELECT * FROM users WHERE email = ?', [email], function(err, user) {
-		callback(err, user[0])
-	})
+	}
 }

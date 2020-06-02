@@ -1,0 +1,29 @@
+<h1>Update you post:</h1>
+<div class="row">
+    <div class="col">
+        <form method="POST" action="/posts/update/{{post.id}}">
+            <div class="form-group" id="titlePlacement">
+                <label for="exampleInputUsername">Title</label>
+                <input type="text" class="form-control" id="username" name="title" value="{{post.title}}">
+            </div>
+        
+            <div class="form-group" id="contentPlacement">
+                <label for="exampleInputUsername">Content</label>
+                <input type="text" class="form-control" id="username" name="content" value="{{post.content}}">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        </form>
+    </div>
+    <div class="col">
+        {{#if errors}}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {{#each errors}}
+                        <li>{{this}}</li> 
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+    </div>
+</div>

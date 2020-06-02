@@ -1,0 +1,13 @@
+<form method="POST" action="/posts/create/{{hub.id}}">
+    <div class="form-group" id="titlePlacement">
+        <label for="exampleInputUsername">Title</label>
+        <input type="text" class="form-control" id="username" name="postTitle" value="{{postTitle}}">
+    </div>
+
+    <div class="form-group" id="contentPlacement">
+        <label for="exampleInputUsername">Content</label>
+        <input type="text" class="form-control" id="username" name="postContent" value="{{postContent}}">
+    </div>
+    <button type="submit" class="btn btn-primary">Post</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+</form>

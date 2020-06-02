@@ -1,0 +1,31 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "appRestApi.js",
+  "scripts": {
+    "api": "nodemon --inspect=0.0.0.0 -L src/plRestApi/appRestApi.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "body-parser": "^1.19.0",
+    "mysql": "^2.18.0",
+    "cookie-parser": "^1.4.4",
+    "csurf": "^1.10.0",
+    "express-session": "1.16.2",
+    "bootstrap": "^4.3.1",
+    "nodemon": "^2.0.2",
+    "connect-redis": "^4.0.4",
+    "redis": "^2.8.0",
+    "awilix": "^4.2.3",
+    "jsonwebtoken": "^8.5.1",
+    "sequelize": "^5.21.5",
+    "pg": "^7.18.2"
+    }
+}

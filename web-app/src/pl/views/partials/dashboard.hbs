@@ -3,24 +3,26 @@
 <!--  TODO: Write some hbs code that shows a message with a link to showing all hubs/tournaments/teams if the user is not logged in -->
 
 <nav class="col-md-3 d-none d-lg-block bg-light sidebar">
-    <div class="sidebar-sticky navbarToggler" id="second">
+    <div class="sidebar-sticky navbarToggler" id="second" >
         <ul class="nav flex-column">
             <li class="nav-item"> <!--Hubs-->
                 <span id="singleLineForce">
                     <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Hubs</p></a>
                         <span id="forcMultipleLines">
-                            <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/hubs/create"{{else}}"/login"{{/if}}>+</a>
+                            <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/hubs/create"{{else}}"/log"{{/if}}>+</a>
                             <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/hubs/all"><img src="/images/magnifying_glass.png" /></a>
                         </span>                
                     </span>
-                <ul class="nav flex-column dropdownDisable dropdown">
+                <ul class="nav flex-column dropdown">
                     <li class="dashboardListItem">
                         {{#if hubs.length}}
                             {{#each hubs}}
                                 <a class="nav-link dashboardLink" href="/hubs/{{id}}"> {{hubName}}</a>
                             {{/each}}
                         {{else}}
-                            <p>test</p>
+                            <span>
+                                <p style="background-color: gray;">{{#if loggedIn}} Go subscribe to some <a href="/hubs/all">hubs!</a>{{else}} <a href="/log">Login</a> to view your hubs!{{/if}}</p>
+                            </span>
                         {{/if}}
                     </li>
                 </ul>
@@ -29,41 +31,26 @@
                 <span id="singleLineForce">
                     <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow" style="white-space: nowrap;">Tournaments</p></a>
                     <span id="forcMultipleLines">
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"}}/tournaments/create"{{else}}"/login"{{/if}}>+</a>
+                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/tournaments/create"{{else}}"/log"{{/if}}>+</a>
                         <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/tournaments/all"><img src="/images/magnifying_glass.png" /></a>
                     </span>
                 </span>
-                <ul class="nav flex-column dropdownDisable dropdown">
+                <ul class="nav flex-column dropdown">
                     <li class="dashboardListItem">
-                        {{#if item.contentLinks.length}}
-                            {{#each item.contentLinks as |innerLink|}}
-                            <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
+                        {{#if tournaments.length}}
+                            {{#each tournaments}}
+                                <a class="nav-link dashboardLink" href="/tournaments/{{id}}"> {{tournamentName}}</a>
                             {{/each}}
                         {{else}}
-                            <p>test</p>
+                            <span>
+                                <p style="background-color: gray;">{{#if loggedIn}} Go join to some <a href="/tournaments/all">tournaments!</a>{{else}} <a href="/log">Login</a> to view your tournaments!{{/if}}</p>
+                            </span>
                         {{/if}}
                     </li>
                 </ul>
             </li>
             <li class="nav-item"> <!--Teams-->
-                <span id="singleLineForce">
-                    <a role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Teams</p></a>
-                    <span id="forcMultipleLines">
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href={{#if loggedIn}}"/teams/create"{{else}}"/login"{{/if}}>+</a>
-                        <a role="button" class="nav-item text-center nav-link btn btn-secondary btn-sm pull-right moreInfoBtn stack" href="/teams/all"><img src="/images/magnifying_glass.png" /></a>
-                    </span>
-                </span>
-                <ul class="nav flex-column dropdownDisable dropdown">
-                    <li class="dashboardListItem">
-                        {{#if item.contentLinks.length}}
-                            {{#each item.contentLinks as |innerLink|}}
-                            <a class="nav-link dashboardLink" href="/hubs/{{innerLink.id}}"> {{innerLink.name}}</a>
-                            {{/each}}
-                        {{else}}
-                            <p>Test</p>
-                        {{/if}}
-                    </li>
-                </ul>
+                    <a href="/users/" role="button" class="nav-item nav-link dashboardLink dashboardItemHeader" ><p class="defaultarrow"style="white-space: nowrap;">Users</p></a>
             </li>
         </ul>
     </div>

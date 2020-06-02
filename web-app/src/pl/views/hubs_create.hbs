@@ -1,40 +1,64 @@
-<div class="col-md-12">
-      <h4 class="mb-3">Hub information</h4>
-      <form class="needs-validation" method="POST">
-      <!--
-      	<input type="hidden" name="_csrf" value="{{csrfToken}}" />
-        -->
-        <div class="mb-3">
-          <label for="Hub name">Hub name</label>
-          <div class="input-group">
-            <input type="text" class="form-control" name="hub_name" id="hub_name" placeholder="Headshot Hub" required="true">
-            <div class="invalid-feedback" style="width: 100%;">
-              A Hub name is required.
+<div class="row">
+    <div class="col">
+      {{#if errors}}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {{#each errors}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
             </div>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="Description">Description</label>
-          <div class="input-group">
-            <textarea type="text" class="form-control" id="description" name="description"rows="2" placeholder="Lorem Ipsum has been the industry'sstandard dummy text ever since the 1500s, when an unknown printertook a galley of type and scrambled it to make a type specimen book." required="true"></textarea>
-            <div class="invalid-feedback" style="width: 100%;">
-              A description for the hub is required.
+        {{/if}}
+        <h4 class="mb-3">Hub information</h4>
+        <form class="needs-validation" method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <div class="mb-3">
+                <label for="Hub name">Hub name</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="hub_name" id="hub_name" placeholder="Headshot Hub"
+                        required="true">{{hubName}}
+                    <div class="invalid-feedback" style="width: 100%;">
+                        A Hub name is required.
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <label for="game">Game</label>
-            <select class="custom-select d-block w-100" id="game" name="game" required="">
-              <option value="">Choose...</option>
-              <option>Counter-Strike: Global Offensive</option>
-            </select>
-            <div class="invalid-feedback">
-              Please select a valid game.
+            <div class="mb-3">
+                <label for="Description">Description</label>
+                <div class="input-group">
+                    <textarea type="text" class="form-control" id="description" name="description" rows="2"
+                        placeholder="Lorem Ipsum has been the industry'sstandard dummy text ever since the 1500s,
+                         when an unknown printertook a galley of type and scrambled it to make a type specimen book."
+                        required="true">{{description}}</textarea>
+                    <div class="invalid-feedback" style="width: 100%;">
+                        A description for the hub is required.
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="game">Game</label>
+                    <select class="custom-select d-block w-100" id="game" name="game" required="">
+                        <option value="">Choose...</option>
+                        <option>Counter-Strike: Global Offensive</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a valid game.
+                    </div>
+                </div>
+            </div>
+            <hr class="mb-4">
+            <button class="btn btn-secondary btn-lg btn-block" type="submit">Create hub</button>
+        </form>
+    </div>
+    <div class="col">
+        {{#if errors}}
+        <div class="alert alert-danger" role="alert">
+            <ul>
+                {{#each errors}}
+                    <li>{{this}}</li>
+                {{/each}}
+            </ul>
         </div>
-        <hr class="mb-4">
-        <button class="btn btn-secondary btn-lg btn-block" type="submit">Create hub</button> 
-      </form>
+        {{/if}}
+    </div>
 </div>

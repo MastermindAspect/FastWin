@@ -1,7 +1,40 @@
-<link type="text/css" rel="stylesheet" href="home.css"/>
-
-<div class="container-fluid">
-    <div class="col-12">
+<link type="text/css" rel="stylesheet" href="/home.css"/>
+<div class="row">
+    <div class="col">
+        <h1 class="headline"> FastWin </h1>
+        <h2>"For gamers by gamers"</h2>
+    </div>
+    <div class="col">
+        <h2>Featured hubs</h2>
+        {{#if featuredHubs}}
+            {{#each featuredHubs}}
+                <div class="card">
+                    <div class="card-header">
+                        <a href="/hubs/{{this.id}}">{{this.hubName}}</a>
+                    </div>
+                    <div class="card-body">
+                        {{this.description}}
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <p>There is currently no hubs <br> be the first one to create a hub!</p>
+        {{/if}}
+        <h2>Featured tournaments</h2>
+        {{#if featuredTournaments}}
+            {{#each featuredTournaments}}
+                <div class="card">
+                    <div class="card-header">
+                        <a href="/tournaments/{{this.id}}">{{this.tournamentName}}</a>
+                    </div>
+                    <div class="card-body">
+                        {{this.game}}
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <p>There is currently no tournaments <br> Be the first one to create a tournament!</p>
+        {{/if}}
     </div>
 </div>
 

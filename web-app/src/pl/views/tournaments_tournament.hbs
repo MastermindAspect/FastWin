@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-12">
+        <header>
+            <h1 class="mb-3" style="display: inline;">{{tournament.tournamentName}}</h1>
+            <a type="button" class="btn btn-success btn-lg pull-right" href="/tournaments/{{tournament.id}}/players" role="button" style="color: white;">Players</a>
+
+            <hr class="mb-4">
+            <h4 class="mb-3 text-center">{{tournament.description}}</h4>
+
+        </header>
+    </div>
+    <div class="col-md-12">
+        <hr class="mb-4">
+        <form method="POST" action={{#if joined}}"/tournaments/{{tournament.id}}/leave"{{else}}"/tournaments/{{tournament.id}}/join"{{/if}}>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <button type="submit" class="btn btn-success btn-lg pull-right" >{{#if joined}}Leave{{else}}Join{{/if}}</button>
+        </form>
+    </div>
+</div>
+
+

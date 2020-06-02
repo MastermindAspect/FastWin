@@ -1,0 +1,16 @@
+<div class="col-md-12">
+    <header>
+        <h1>Members</h1>
+        <hr class="mb-4">
+    </header>
+    {{#if users.length}}
+    <li>
+        {{#each users}}
+            <a href="/users/{{id}}">{{username}}</a>
+            <br>
+        {{/each}}
+    </li>
+    {{else}}
+    <h1>There are no players that have joined this tournament!</h1>
+    {{/if}}
+</div>
