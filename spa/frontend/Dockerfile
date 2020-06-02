@@ -1,6 +1,6 @@
 FROM node:13.6.0
 
-WORKDIR /spa/
+WORKDIR /singlepage/
 
 COPY package*.json ./
 
