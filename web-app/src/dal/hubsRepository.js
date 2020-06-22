@@ -17,7 +17,7 @@ module.exports = function({db}){
 					callback(hubs, null)
 				})
 				.catch(function(error) {
-					callback(null, error)
+					callback(null, "Error getting hubs")
 				})
 		},
 		createHub: function(userId, hubName, description, game, callback){
@@ -26,7 +26,7 @@ module.exports = function({db}){
                     callback(hub.dataValues.id, null)
                 })
                 .catch(function(error) {
-                    callback(null, error)
+                    callback(null, "Error creating hub")
                 })
 		},
 
@@ -40,7 +40,7 @@ module.exports = function({db}){
 					}
 				})
 				.catch(function(error){
-					callback(null, error)
+					callback(null, "Error getting hub")
 				})
 		},
 
@@ -52,7 +52,7 @@ module.exports = function({db}){
 					callback(null)
 				})
 				.catch(function(error){
-					callback(error)
+					callback("Error deleting hub")
 				})
 		},
 
@@ -69,7 +69,7 @@ module.exports = function({db}){
 					callback(null)
 				})
 				.catch(function(error) {
-					callback(error)
+					callback("Error updating hub")
 				})
 		},
 
@@ -90,17 +90,17 @@ module.exports = function({db}){
 								})
 								.catch(function (error) {
 									console.log("Error1:" + error)
-									callback(error)
+									callback("Error subscribing to hub")
 								})
 						})
 						.catch(function (error) {
 							console.log("Error1:" + error)
-							callback(error)
+							callback("Error subscribing to hub")
 						})
 				})
 				.catch(function(error){
 					console.log("Error1:" + error)
-					callback(null, error)
+					callback(null, "Error subscribing to hub")
 				})
 		},
 		unSubscribeTo: function(hubId, userId, callback){
@@ -120,17 +120,17 @@ module.exports = function({db}){
 								})
 								.catch(function (error) {
 									console.log("Error1:" + error)
-									callback(error)
+									callback("Error unsubscribing to hub")
 								})
 						})
 						.catch(function (error) {
 							console.log("Error2:" + error)
-							callback(error)
+							callback("Error unsubscribing to hub")
 						})
 				})
 				.catch(function(error){
 					console.log("Error3:" + error)
-					callback(null, error)
+					callback(null, "Error unsubscribing to hub")
 				})
 		},
 		getMembers: function(hubId, callback){
@@ -150,7 +150,7 @@ module.exports = function({db}){
 				callback(plainUsers, null)
 			})
 			.catch(function(error){
-				callback(null, error)
+				callback(null, "Error getting members")
 			})
 		},
 		getAllHubsByUser: function(userId, callback){
@@ -166,7 +166,7 @@ module.exports = function({db}){
 			})
 			.catch(function(error){
 				console.log(error)
-				callback(null, error)
+				callback(null, "Error getting hubs by user")
 			})
 	 	}
 	}

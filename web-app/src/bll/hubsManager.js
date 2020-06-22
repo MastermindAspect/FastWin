@@ -5,7 +5,7 @@ module.exports = function({hubsRepository}){
 			hubsRepository.getAllHubs(function (hubs, error) {
 				if (error) {
 					console.log(error)
-					callback(null, "Error getting hubs")
+					callback(null, error)
 				} else {
 					callback(hubs, null)
 				}
@@ -28,7 +28,7 @@ module.exports = function({hubsRepository}){
 			if (errors.length == 0){
 				hubsRepository.createHub(userId, hubName, description, game, function(id, err){
 					if (err) {
-						callback(null, null, "Error creating hub")
+						callback(null, null, err)
 					} else {
 						callback(id, null, null)
 					}
@@ -50,11 +50,11 @@ module.exports = function({hubsRepository}){
 			if (loggedin){
 				hubsRepository.getHub(hubId, function(hub, err){
 					if (err) {
-						callback(null, "Error getting hub")
+						callback(null, err)
 					} else {
 						hubsRepository.subscribeTo(hub.id, userId, function(err){
 							if (err) {
-								callback(null, "Error subscribing to hub")
+								callback(null, err)
 							} else {
 								callback(null, null)
 							}
@@ -69,11 +69,11 @@ module.exports = function({hubsRepository}){
 			if(loggedin){
 				hubsRepository.getHub(hubId, function(hub,err){
 					if (err) {
-						callback(null, "Could not find hub")
+						callback(null, err)
 					} else {
 						hubsRepository.unSubscribeTo(hub.id, userId, function(err){
 							if (err) {
-								callback(null, "Could not unsubscribe from hub")
+								callback(null, err)
 							} else {
 								callback(null, null)
 							}
@@ -87,11 +87,11 @@ module.exports = function({hubsRepository}){
 		getMembers: function(hubId, callback){
 			hubsRepository.getHub(hubId, function(hub, err){
 				if (err) {
-					callback(null, "Hub was not found")
+					callback(null, err)
 				} else {
 					hubsRepository.getMembers(hub.id, function(users, err){
 						if (err) {
-							callback(null, "Error getting members")
+							callback(null, err)
 						} else {
 							callback(users, null)
 						}
@@ -104,7 +104,7 @@ module.exports = function({hubsRepository}){
 			let errors = []
             hubsRepository.getHub(hubId, function(hub, err) {
                 if (err) {
-                    callback(null, "Error getting hub")
+                    callback(null, err)
                 } else {
                     if (!hub) {
                         errors.push("The hub does not exist anymore")
@@ -117,7 +117,7 @@ module.exports = function({hubsRepository}){
                     if (errors.length == 0) {
                         hubsRepository.deleteHub(hubId, function (err) {
                             if (err) {
-                                callback(null, "Error deleting hub")
+                                callback(null, err)
                             } else {
                                 callback(null, null)
                             }
@@ -143,7 +143,7 @@ module.exports = function({hubsRepository}){
 				}
                 hubsRepository.getHub(hubId, function (hub, err) {
                     if (err) {
-                        callback(null, "Error getting hub, the hub you are trying to update may be deleted")
+                        callback(null, err)
                     } else if (hub) {
 						if (hub.userId != userId) {
                             errors.push("You do not have the right authority to update this hub")
@@ -151,7 +151,7 @@ module.exports = function({hubsRepository}){
                         if (errors.length == 0) {
                             hubsRepository.updateHub(hub.id, hubName, description, game, function (err) {
                                 if (err) {
-                                    callback(null, "Error updating hub")
+                                    callback(null, err)
                                 } else {
                                     callback(null, null)
                                 }
@@ -175,7 +175,7 @@ module.exports = function({hubsRepository}){
 			if (loggedin && userId){
 				hubsRepository.getAllHubsByUser(userId, function(hubs, err){
 					if (err) {
-						callback(null, null, "Can't get hubs")
+						callback(null, null, err)
 					} else {
 						plainHubs = []
 						for (hub in hubs) {
@@ -194,7 +194,7 @@ module.exports = function({hubsRepository}){
 		isSubscribed: function(hubId, userId, callback){
 			hubsRepository.getMembers(hubId,function(subscribers, err){
 				if (err) {
-					callback(null, "Error checking if user is subbed")
+					callback(null, err)
 				} else {
 					let subbed = false
 					for (sub in subscribers) {

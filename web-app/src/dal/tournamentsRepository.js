@@ -17,7 +17,7 @@ module.exports = function({db}){
 					callback(tournaments, null)
 				})
 				.catch(function(error){
-					callback(null, error)
+					callback(null, "Error getting tournaments")
 				})
 		},
 
@@ -27,7 +27,7 @@ module.exports = function({db}){
                     callback(tournament.dataValues.id)
                 })
                 .catch(function(error) {
-                    callback(error)
+                    callback("Error creating tournament")
                 })
 		},
 
@@ -41,7 +41,7 @@ module.exports = function({db}){
 					}
 				})
 				.catch(function(error) {
-					callback(null, error)
+					callback(null, "Error getting torunament")
 				})
 		},
 
@@ -62,7 +62,7 @@ module.exports = function({db}){
 				callback(plainUsers, null)
 			})
 			.catch(function(error){
-				callback(null, error)
+				callback(null, "Error getting players")
 			})
 		},
 
@@ -83,7 +83,7 @@ module.exports = function({db}){
 				callback(user.Participation, null)		//Ska denna ligga i user repository istället?
 			})
 			.catch(function(error){
-				callback(null, error)
+				callback(null, "Error getting tournaments")
 			})
 		},
 
@@ -103,15 +103,15 @@ module.exports = function({db}){
 									callback(null)
 								})
 								.catch(function (error) {
-									callback(error)
+									callback("Error joining tournament")
 								})
 						})
 						.catch(function (error) {
-							callback(error)
+							callback("Error joining tournament")
 						})
 				})
 				.catch(function(error){
-					callback(null, error)
+					callback(null, "Error joining tournament")
 				})
 		},
 
@@ -131,15 +131,15 @@ module.exports = function({db}){
 									callback(null)
 								})
 								.catch(function (error) {
-									callback(error)
+									callback("Error leaving tournament")
 								})
 						})
 						.catch(function (error) {
-							callback(error)
+							callback("Error leaving tournament")
 						})
 				})
 				.catch(function(error){
-					callback(null, error)
+					callback(null, "Error leaving tournament")
 				})
 		}
 

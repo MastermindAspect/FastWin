@@ -23,7 +23,7 @@ module.exports = function({db}) {
 				})
 				.catch(function(error){
 					console.log(error)
-					callback(null, error)
+					callback(null, "Error getting post")
 				})
 		},
 		
@@ -33,7 +33,7 @@ module.exports = function({db}) {
                     callback(null)
                 })
                 .catch(function(error) {
-                    callback(error)
+                    callback("Error creating post")
                 })
 		},
 		
@@ -45,7 +45,7 @@ module.exports = function({db}) {
 					callback(null)
 				})
 				.catch(function(error){
-					callback(error)
+					callback("Error deleting post")
 				})
 		},
 		
@@ -60,7 +60,7 @@ module.exports = function({db}) {
 					callback(null)
 				})
 				.catch(function(error) {
-					callback(error)
+					callback("Error updating post")
 				})
 		},
 		
@@ -77,7 +77,7 @@ module.exports = function({db}) {
 				callback(plainPosts, null)
 			})
 			.catch(function(error){
-				callback(null, error)
+				callback(null, "Error getting posts")
 			})
 		}
 	}

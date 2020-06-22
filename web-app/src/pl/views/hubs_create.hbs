@@ -10,7 +10,7 @@
             </div>
         {{/if}}
         <h4 class="mb-3">Hub information</h4>
-        <form class="needs-validation" method="POST">
+        <form class="needs-validation" action="/hubs/create/{{hub.id}}" method="POST">
             <input type="hidden" name="_csrf" value="{{csrfToken}}" />
             <div class="mb-3">
                 <label for="Hub name">Hub name</label>

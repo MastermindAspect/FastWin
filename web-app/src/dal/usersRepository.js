@@ -17,7 +17,7 @@ module.exports = function({db}) {
 					callback(users, null)
 				})
 				.catch(function(error) {
-					callback(null, error)
+					callback(null, "Error getting users")
 				})
 		},
 		
@@ -31,7 +31,7 @@ module.exports = function({db}) {
 					}
             	})
             	.catch(function(error) {
-                	callback(null, error)
+                	callback(null, "Error getting user")
             	})
 		},
 		
@@ -42,7 +42,7 @@ module.exports = function({db}) {
 					callback(null)
                 })
                 .catch(function(error) {
-                    callback(error)
+                    callback("Error creating user")
                 })
 		},
 		
@@ -58,7 +58,7 @@ module.exports = function({db}) {
 					}
 				})
 				.catch(function(error) {
-					callback(null, error)
+					callback(null, "Error getting user")
 				})
 		},
 		
@@ -74,7 +74,7 @@ module.exports = function({db}) {
 					}
                 })
                 .catch(function(error){
-                    callback(null, error)
+                    callback(null, "Error getting user")
                 })
 		}
 	}

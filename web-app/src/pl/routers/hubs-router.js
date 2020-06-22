@@ -67,7 +67,7 @@ module.exports = function({hubsManager, postsManager}){
 		})
 	})	
 
-	router.get("/:id/edit", function(req,res){
+	router.get("/update/:id", function(req,res){
 		const id = req.params.id;
 		hubsManager.getHub(id, function(hub, dbError){
 			if (dbError) {
@@ -86,7 +86,7 @@ module.exports = function({hubsManager, postsManager}){
 		})
 	})
 
-	router.post("/:id/edit",function(req,res){
+	router.post("/update/:id",function(req,res){
 		const id = req.params.id;
 		const userId = req.session.userId;
 		const hubName = req.body.hub_name;

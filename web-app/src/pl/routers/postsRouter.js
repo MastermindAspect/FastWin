@@ -8,7 +8,7 @@ module.exports = function ({ postsManager }) {
         const title = req.body.postTitle
         const content = req.body.postContent
         const hubId = req.params.hubId
-        postsManager.createPost(title, content, hubId, req.session, function (errors, dbError) {
+        postsManager.createPost(title, content, hubId, req.session.loggedIn, req.session.userId, function (errors, dbError) {
             if (dbError) {
                 const model = {
                     error: [dbError]
@@ -48,7 +48,7 @@ module.exports = function ({ postsManager }) {
         const title = req.body.title
         const content = req.body.content
         const postId = req.params.postId
-        postsManager.updatePost(title, content, postId, req.session, function (errors, dbError1) {
+        postsManager.updatePost(title, content, postId, req.session.loggedIn, req.session.userId, function (errors, dbError1) {
             postsManager.getPostById(postId, function (post, dbError2) {
                 if (dbError1 || dbError2) {
                     const model = {
@@ -73,7 +73,8 @@ module.exports = function ({ postsManager }) {
     router.post("/delete/:hubId/:postId", (req, res) => {
         const hubId = req.params.hubId
         const postId = req.params.postId
-        postsManager.deletePost(req.session, postId, function(errors, dbError) {
+
+        postsManager.deletePost(req.session.loggedIn, req.session.userId, postId, function(errors, dbError) {
             if (dbError) {
                 const model = {
                     error: [dbError]
