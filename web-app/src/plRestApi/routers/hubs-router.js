@@ -70,17 +70,21 @@ module.exports = function({hubsManager, postsManager, authentication}){
 
 	router.post("/:id/subscribe",authentication.authenticateToken, function(req,res){
 		const hubId = req.params.id;
-		hubsManager.subscribeTo(hubId,req.session.loggedIn, req.session.userId, function(error,dbError){
-			if (dbError) res.status(404).json({"message": error, "success": "false"})
-			else res.status(200).json({"message": "Successfully subscribed to hub!", "success": "true"})
+		redisClient.get("userId", function(err,reply){
+			hubsManager.subscribeTo(hubId,true, reply, function(error,dbError){
+				if (dbError) res.status(404).json({"message": error, "success": "false"})
+				else res.status(200).json({"message": "Successfully subscribed to hub!", "success": "true"})
+			})
 		})
 	})
 
 	router.post("/:id/unsubscribe",authentication.authenticateToken, function(req,res){
 		const hubId = req.params.id;
-		hubsManager.unSubscribeTo(hubId,req.session.loggedIn,req.session.userId, function(error, dbError) {
-			if (dbError) res.status(404).json({"message": error, "success": "false"})
-			else res.status(200).json({"message": "Successfully unsubscribed to hub!", "success": "true"})
+		redisClient.get("userId", function(err,reply){
+			hubsManager.unSubscribeTo(hubId,true,reply,hubName,description,game,true ,function(error, dbError) {
+				if (dbError) res.status(404).json({"message": error, "success": "false"})
+				else res.status(200).json({"message": "Successfully unsubscribed to hub!", "success": "true"})
+			})
 		})
 	})
 

@@ -1,7 +1,8 @@
 const express = require("express");
+const redis = require("redis");
+const redisClient = redis.createClient({host: 'redis', port: 6379});
 
-
-module.exports = function({tournamentsManager}){
+module.exports = function({tournamentsManager, authentication}){
 	const router = express.Router()
 	router.get("/all", function(req,res){
 		try {
@@ -25,59 +26,67 @@ module.exports = function({tournamentsManager}){
 		res.render("tournaments_create.hbs", model);
 	})
 
-	router.post("/create", function(req,res){
+	router.post("/create", authentication.authenticateToken, function(req,res){
 		const tournamentName = req.body.tournament_name;
 		const description = req.body.description;
 		const game = req.body.game;
 		const maxPlayers = req.body.max_players;
-		try {
-			tournamentsManager.createTournament([req.session.userId,tournamentName,description,game,maxPlayers, "1-1-1-1"],req.session.loggedIn, function(id){
-				res.redirect("/tournaments/"+id);
-			})
-		} catch(error){
-			const model = {error}
-			res.render("error.hbs", model)
-		}
+		redisClient.get("userId", function(err,reply){
+			try {
+				tournamentsManager.createTournament([reply,tournamentName,description,game,maxPlayers, "1-1-1-1"],true, function(id){
+					res.redirect("/tournaments/"+id);
+				})
+			} catch(error){
+				const model = {error}
+				res.render("error.hbs", model)
+			}
+		})
 	})	
 
 	router.get("/:id", function(req,res){
 		const id = req.params.id;
-		try{
-			tournamentsManager.getTournament(id,function(tournament){
-				tournamentsManager.isJoined(id,req.session.userId,function(joined){
-					const model = {title: "tournament"+tournament.id, tournament,joined}
-					res.render("tournaments_tournament.hbs", model);
+		redisClient.get("userId", function(err,reply){
+			try{
+				tournamentsManager.getTournament(id,function(tournament){
+					tournamentsManager.isJoined(id,reply,function(joined){
+						const model = {title: "tournament"+tournament.id, tournament,joined}
+						res.render("tournaments_tournament.hbs", model);
+					})
 				})
-			})
-		}
-		catch(error){
-			const model = {error}
-			res.render("error.hbs", model)
-		}
+			}
+			catch(error){
+				const model = {error}
+				res.render("error.hbs", model)
+			}
+		})
 	})
 
-	router.post("/:id/join", function(req,res){
+	router.post("/:id/join",authentication.authenticateToken, function(req,res){
 		const tournamentId = req.params.id;
-		try{
-			tournamentsManager.joinTournament(tournamentId, req.session.loggedIn,req.session.userId)
-			res.redirect("/tournaments/"+tournamentId)
-		}
-		catch(error){
-			const model = {error}
-			res.render("error.hbs", model);
-		}
+		redisClient.get("userId", function(err,reply){
+			try{
+				tournamentsManager.joinTournament(tournamentId, true,reply)
+				res.redirect("/tournaments/"+tournamentId)
+			}
+			catch(error){
+				const model = {error}
+				res.render("error.hbs", model);
+			}
+		})
 	})
 
-	router.post("/:id/leave", function(req,res){
+	router.post("/:id/leave",authentication.authenticateToken, function(req,res){
 		const tournamentId = req.params.id;
-		try{
-			tournamentsManager.leaveTournament(tournamentId, req.session.loggedIn,req.session.userId)
-			res.redirect("/tournaments/"+tournamentId)
-		}
-		catch(error){
-			const model = {error}
-			res.render("error.hbs", model)
-		}
+		redisClient.get("userId", function(err,reply){
+			try{
+				tournamentsManager.leaveTournament(tournamentId, true,reply)
+				res.redirect("/tournaments/"+tournamentId)
+			}
+			catch(error){
+				const model = {error}
+				res.render("error.hbs", model)
+			}
+		})
 	})
 
 	router.get("/:id/players", function(req,res){
