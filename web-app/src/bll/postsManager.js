@@ -47,7 +47,7 @@ module.exports = function({postsRepository, usersRepository}) {
                     if (!post) {
                         errors.push("The post does not exist anymore")
                     }
-                    if (loggedIn) {
+                    if (!loggedIn) {
                         errors.push("You need to be logged in to delete a post")
                     } else if (post.userId != userId) {
                         errors.push("You don't have right authority to delete this post")
