@@ -47,7 +47,7 @@ module.exports = function({hubsManager, postsManager}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		hubsManager.createHub(req.session.userId, hubName, description, game, req.session.loggedIn, function (id, errors, dbError) {
+		hubsManager.createHub(Number(req.session.userId), hubName, description, game, req.session.loggedIn, function (id, errors, dbError) {
 			if (dbError) {
 				const model = {
 					 error: [dbError]
@@ -130,6 +130,7 @@ module.exports = function({hubsManager, postsManager}){
 							hub, subscribed, 
 							posts 
 						}
+						
 						res.render("hubs_hub.hbs", model);
 					}
 				})

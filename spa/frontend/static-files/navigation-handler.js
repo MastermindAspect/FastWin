@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		
 		fetch(
-			"http://localhost:3000/log/login", {
+			"http://localhost:3000/", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"

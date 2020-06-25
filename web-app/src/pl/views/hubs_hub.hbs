@@ -4,11 +4,13 @@
         <header>
             <h1 class="mb-3" style="display: inline;">{{hub.hubName}}</h1>
             <div>
-                <a href="/hubs/update/{{hub.id}}" class="btn btn-primary btn-lg pull-right">Edit Hub</a>
-                <form method="POST" action="/hubs/delete/{{hub.id}}">
-                    <button type="submit" class="btn btn-danger btn-lg pull-right">Delete Hub</button>
-                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                </form>
+                {{#if_eq userId hub.userId}}
+                    <a href="/hubs/update/{{hub.id}}" class="btn btn-primary btn-lg pull-right">Edit Hub</a>
+                    <form method="POST" action="/hubs/delete/{{hub.id}}">
+                        <button type="submit" class="btn btn-danger btn-lg pull-right">Delete Hub</button>
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    </form>
+                {{/if_eq}}
                 <a type="button" class="btn btn-success btn-lg pull-right" href="/hubs/{{hub.id}}/members" role="button" style="color: white;">Members</a>
             </div>
         </header>
@@ -46,13 +48,15 @@
                                         <div class="col">
                                             <a href="/users/{{this.userId}}">{{this.author}}</a>
                                         </div>
-                                        <div class="col">
-                                            <form method="POST" action="/posts/delete/{{this.hubId}}/{{this.id}}">
-                                                <button type="submit" class="btn btn-danger pull-right">Delete</button>
-                                                <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
-                                            </form>
-                                            <a href="/posts/update/{{this.id}}" class="btn btn-primary pull-right">Edit</a>
-                                        </div>
+                                        {{#if_eq userId this.userId}}
+                                            <div class="col">
+                                                <form method="POST" action="/posts/delete/{{this.hubId}}/{{this.id}}">
+                                                    <button type="submit" class="btn btn-danger pull-right">Delete</button>
+                                                    <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+                                                </form>
+                                                <a href="/posts/update/{{this.id}}" class="btn btn-primary pull-right">Edit</a>
+                                            </div>
+                                        {{/if_eq}}
                                     </div>
                                 </div>
                                 <div class="card-body">

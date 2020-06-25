@@ -95,7 +95,7 @@ app.use(express.json());
 app.use("/token", theTokenRouter)
 app.use("/hubs", theHubsRouter)
 app.use("/users", theUsersRouter);
-app.use("/log", theLogRouter)
+app.use("/", theLogRouter)
 app.use("/posts", thePostsRouter)
 app.use("/tournaments", theTournamentsRouter)
 

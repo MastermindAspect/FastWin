@@ -6,6 +6,7 @@ const session = require('express-session');
 const path = require('path');
 const bodyParser = require("body-parser");
 const redis = require("redis");
+const Handlebars = require("handlebars");
 const redisClient = redis.createClient({host: 'redis', port: 6379});
 const redisStore = require("connect-redis")(session)
 const awilix = require("awilix")
@@ -77,6 +78,16 @@ const HOST = '0.0.0.0';
 
 // App
 const app = express();
+
+//added equal helper
+
+Handlebars.registerHelper('if_eq', function(a, b, opts) {
+    if(a == b)
+        return opts.fn(this);
+    else
+        return opts.inverse(this);
+});
+
 
 //Initialize handlebars
 app.engine('hbs', exphbs({
