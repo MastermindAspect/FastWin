@@ -60,7 +60,7 @@ module.exports = function({hubsManager, postsManager}){
 					game,
 					errors
 				}
-				res.render("hubs_create", model);   //Displaya errors i hubs_create
+				res.render("hubs_create", model);
 			} else {
 				res.redirect("/hubs/" + id);
 			}
@@ -105,7 +105,7 @@ module.exports = function({hubsManager, postsManager}){
 					game,
 					errors
 				}
-				res.render("hubs_edit", model);   //Displaya errors i hubs_create
+				res.render("hubs_edit", model);
 			} else {
 				res.redirect("/hubs/" + id);
 			}

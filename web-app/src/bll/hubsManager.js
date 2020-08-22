@@ -179,11 +179,8 @@ module.exports = function({hubsRepository}){
 					} else {
 						plainHubs = []
 						for (hub in hubs) {
-							plainHubs.push(hubs[hub].dataValues)		//Vrf funkar denna på detta sättet?? (som den utkommenterade loopen)
+							plainHubs.push(hubs[hub].dataValues)
 						}
-						// for (let i = 0; i < hubs.length; i++) {
-						// 	plainHubs.push(hubs[i].dataValues)
-						// }
 						callback(plainHubs, null, null)
 					}
 				})
@@ -198,7 +195,7 @@ module.exports = function({hubsRepository}){
 				} else {
 					let subbed = false
 					for (sub in subscribers) {
-						if (subscribers[sub].id == userId) {       //Vrf funkar det såhär? subscribers[sub].id och inte bara sub.id?
+						if (subscribers[sub].id == userId) {
 							subbed = true
 						}
 					}

@@ -1,5 +1,4 @@
 bcrypt = require('bcrypt')
-sequelize = require('sequelize')
 
 module.exports = function({usersRepository}) {
     return {
@@ -54,15 +53,15 @@ module.exports = function({usersRepository}) {
                         const saltRounds = 10
                         const passHash = bcrypt.hashSync(password, saltRounds)
                         usersRepository.createUser(username, email, passHash, function (err) {
-                            if (!err || err instanceof sequelize.UniqueConstraintError) {
-                                if (err instanceof sequelize.UniqueConstraintError) {
-                                    errors.push("Username is already in use")
+                            if(err) {
+                                if(err == "Username is already in use") {
+                                    errors.push(err)
                                     callback(errors, null)
                                 } else {
-                                    callback(null, null)
+                                    callback(null, err)
                                 }
                             } else {
-                                callback(null, "Error creating user")
+                                callback(null, null)
                             }
                         })
                     } else {

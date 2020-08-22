@@ -62,8 +62,8 @@ module.exports = function({}){
 		},
 
 		isJoined: function(tournamentId, userId,callback){
-			db.query("SELECT * FROM tournament_info WHERE tournamentId = ? AND userId = ?", [tournamentId, userId], function(err, user){
-				if (user.length) callback(true);
+			db.query("SELECT * FROM tournament_info WHERE tournamentId = ? AND userId = ?", [tournamentId, userId], function(err, userList){
+				if (userList.length) callback(true);
 				else callback(false);
 			})
 		}

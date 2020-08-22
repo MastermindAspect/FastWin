@@ -1,14 +1,3 @@
-const mysql = require("mysql")
-
-const db1 = mysql.createConnection({
-	host: "db",
-	user: "root",
-	password: "abc123",
-	database: "myDB"
-})
-
-//const db = require('../dal/sequelizeSetup')
-
 module.exports = function({db}){
 	return {
 		getAllTournaments: function(callback){
@@ -80,7 +69,7 @@ module.exports = function({db}){
 				for (tournament in participations) {
 					plainTournaments.push(participations[tournament].dataValues)
 				}
-				callback(user.Participation, null)		//Ska denna ligga i user repository istället?
+				callback(user.Participation, null)
 			})
 			.catch(function(error){
 				callback(null, "Error getting tournaments")
