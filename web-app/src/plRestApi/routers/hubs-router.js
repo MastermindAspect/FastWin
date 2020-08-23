@@ -15,8 +15,8 @@ module.exports = function({hubsManager, postsManager, authentication}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		redisClient.get("userId", function(err,reply){
-			hubsManager.createHub(reply,hubName,description,game,true, function(id, errors, dbError){
+		authentication.getUserIdFromIdToken(res,req, function(userId) {
+			hubsManager.createHub(userId,hubName,description,game,true, function(id, errors, dbError){
 				if (dbError || errors) res.status(404).json({"message": "Error creating hub", "success": "false", "errors": {dbError,errors}}).end()
 				else{
 					if (!res.finished){
@@ -25,7 +25,7 @@ module.exports = function({hubsManager, postsManager, authentication}){
 					}
 				}
 			})
-		})
+		});
 	})	
 
 	router.put("/edit",authentication.authenticateToken,function(req,res){
@@ -33,8 +33,8 @@ module.exports = function({hubsManager, postsManager, authentication}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		redisClient.get("userId", function(err,reply){
-			hubsManager.updateHub(hubId,reply,hubName,description,game,true, function(errors,dbError){
+		authentication.getUserIdFromIdToken(res,req, function(userId) {
+			hubsManager.updateHub(hubId,userId,hubName,description,game,true, function(errors,dbError){
 				if (dbError || errors) {
 					res.status(404).json({"message": "Error updating hub", "success": "false", "errors": {dbError,errors}}).end()
 				}
@@ -48,8 +48,8 @@ module.exports = function({hubsManager, postsManager, authentication}){
 
 	router.delete("/",authentication.authenticateToken,function(req,res){
 		const hubId = req.body.hubId;
-		redisClient.get("userId", function(err,reply){
-			hubsManager.deleteHub(hubId,reply, true, function(errors,dbError){
+		authentication.getUserIdFromIdToken(res,req, function(userId) {
+			hubsManager.deleteHub(hubId,userId, true, function(errors,dbError){
 				if (dbError) {
 					res.status(404).json({"message": "Error deleting hub", "success": "false", "errors": {dbError,errors}}).end()
 				}
@@ -70,8 +70,8 @@ module.exports = function({hubsManager, postsManager, authentication}){
 
 	router.post("/:id/subscribe",authentication.authenticateToken, function(req,res){
 		const hubId = req.params.id;
-		redisClient.get("userId", function(err,reply){
-			hubsManager.subscribeTo(hubId,true, reply, function(error,dbError){
+		authentication.getUserIdFromIdToken(res,req, function(userId) {
+			hubsManager.subscribeTo(hubId,true, userId, function(error,dbError){
 				if (dbError) res.status(404).json({"message": error, "success": "false"})
 				else res.status(200).json({"message": "Successfully subscribed to hub!", "success": "true"})
 			})
@@ -80,8 +80,8 @@ module.exports = function({hubsManager, postsManager, authentication}){
 
 	router.post("/:id/unsubscribe",authentication.authenticateToken, function(req,res){
 		const hubId = req.params.id;
-		redisClient.get("userId", function(err,reply){
-			hubsManager.unSubscribeTo(hubId,true,reply,hubName,description,game,true ,function(error, dbError) {
+		authentication.getUserIdFromIdToken(res,req, function(userId) {
+			hubsManager.unSubscribeTo(hubId,true,userId,hubName,description,game,true ,function(error, dbError) {
 				if (dbError) res.status(404).json({"message": error, "success": "false"})
 				else res.status(200).json({"message": "Successfully unsubscribed to hub!", "success": "true"})
 			})

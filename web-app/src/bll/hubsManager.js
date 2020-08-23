@@ -30,7 +30,11 @@ module.exports = function({hubsRepository}){
 					if (err) {
 						callback(null, null, err)
 					} else {
-						callback(id, null, null)
+						hubsRepository.subscribeTo(id,userId,function(error,dbError){
+							if (dbError) callback(id,null,dbError)
+							else if (error) callback(id,error,null)
+							else callback(id,null,null)
+						})
 					}
 				})
 			} else {

@@ -27,9 +27,6 @@ module.exports = function({ logManager }) {
                     const idToken = jwt.sign({sub: user.id, email: user.email, nickname: user.username}, CLIENT_ID_SECRET)
                     const accessToken = logManager.generateAccessToken(userSign)
                     const refreshToken = jwt.sign(userSign, REFRESH_TOKEN_SECRET)
-                    redisClient.set("idToken", idToken, redis.print)
-                    redisClient.set("userId", user.id, redis.print)
-                    redisClient.rpush(["refreshTokens", refreshToken], redis.print)
                     res.status(200).json({"access_token": accessToken, "refresh_token": refreshToken, "id_token": idToken})
                 }
             })

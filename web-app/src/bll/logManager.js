@@ -28,7 +28,7 @@ module.exports = function({usersRepository}) {
             })
         },
         generateAccessToken: function(user){
-			return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: "10m"})
+			return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: "1h"})
 		}
     }
 }
