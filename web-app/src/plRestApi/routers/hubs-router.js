@@ -1,8 +1,6 @@
 const express = require("express");
-const redis = require("redis");
-const redisClient = redis.createClient({host: 'redis', port: 6379});
 
-module.exports = function({hubsManager, postsManager, authentication}){
+module.exports = function({hubsManager, authentication}){
 	const router = express.Router()
 	router.get("/all", authentication.authenticateToken,function(req,res){
 		hubsManager.getAllHubs(function(allHubs,dbError){
