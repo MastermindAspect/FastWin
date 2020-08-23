@@ -64,12 +64,11 @@ module.exports = function({db}){
 				}]
 			})
 			.then(function(user){
-				const plainTournaments = []
-				const participations = user.Participation
-				for (tournament in participations) {
-					plainTournaments.push(participations[tournament].dataValues)
+				plainTournaments = []
+				for (tournament in user.Participation) {
+					plainTournaments.push(user.Participation[tournament].dataValues)		//Vrf funkar denna på detta sättet?? (som den utkommenterade loopen)
 				}
-				callback(user.Participation, null)
+				callback(plainTournaments, null)
 			})
 			.catch(function(error){
 				callback(null, "Error getting tournaments")

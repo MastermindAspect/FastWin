@@ -151,7 +151,13 @@ module.exports = function({db}){
 				}]
 			})
 			.then(function(user){
-				callback(user.Subscriptions, null)
+				console.log(user.Subscriptions)
+				plainHubs = []
+				for (hub in user.Subscriptions) {
+					plainHubs.push(user.Subscriptions[hub].dataValues)
+				}
+				console.log("PlainHubs: " + plainHubs)
+				callback(plainHubs, null)
 			})
 			.catch(function(error){
 				console.log(error)

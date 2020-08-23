@@ -116,11 +116,7 @@ module.exports = function({tournamentsRepository}){
 						callback(null, null, "Error getting tournaments")
 					}
 					else {
-						plainTournaments = []
-						for (tournament in tournaments) {
-							plainTournaments.push(tournaments[tournament].dataValues)		//Vrf funkar denna på detta sättet?? (som den utkommenterade loopen)
-						}
-						callback(plainTournaments, null, null)
+						callback(tournaments, null, null)
 					}
 				})
 			}

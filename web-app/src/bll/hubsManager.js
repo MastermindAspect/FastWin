@@ -177,11 +177,7 @@ module.exports = function({hubsRepository}){
 					if (err) {
 						callback(null, null, err)
 					} else {
-						plainHubs = []
-						for (hub in hubs) {
-							plainHubs.push(hubs[hub].dataValues)
-						}
-						callback(plainHubs, null, null)
+						callback(hubs, null, null)
 					}
 				})
 			}else {

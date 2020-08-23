@@ -9,30 +9,30 @@ CREATE TABLE users (
 
 CREATE TABLE hubs (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ownerId INT,
+    userId INT,
     hubName TEXT,
     description TEXT,
     game TEXT,
     creationDate TEXT,
-    FOREIGN KEY (ownerId) REFERENCES users(id)
+    FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 CREATE TABLE tournaments (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ownerId INT,
+    userId INT,
     tournamentName TEXT,
     description TEXT,
     game TEXT,
     maxPlayers INT NOT NULL,
     creationDate TEXT,
-    FOREIGN KEY (ownerId) REFERENCES users(id)
+    FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 CREATE TABLE tournament_info (
     tournamentId INT NOT NULL,
     userId INT NOT NULL,
-    FOREIGN KEY (tournamentId) REFERENCES tournaments(id),
-    FOREIGN KEY (userId) REFERENCES users(id)
+    FOREIGN KEY (tournamentId) REFERENCES tournaments(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
 
@@ -48,19 +48,20 @@ CREATE TABLE teams (
 CREATE TABLE hub_subscriptions (
     hubId INT NOT NULL,
     userId INT NOT NULL,
-    FOREIGN KEY (hubId) REFERENCES hubs(id),
-    FOREIGN KEY (userId) REFERENCES users(id)
+    FOREIGN KEY (hubId) REFERENCES hubs(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE posts (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     hubId INT,
     userId INT,
+    author TEXT,
     title TEXT,
     content TEXT,
     creationDate TEXT,
-    FOREIGN KEY (hubId) REFERENCES hubs(id),
-    FOREIGN KEY (userId) REFERENCES users(id)
+    FOREIGN KEY (hubId) REFERENCES hubs(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
 INSERT INTO users (username, passHash, email) VALUES ("john", "snow", "a@email.com");

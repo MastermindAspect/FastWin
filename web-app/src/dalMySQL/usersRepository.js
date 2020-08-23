@@ -12,16 +12,20 @@ module.exports = function({}) {
 	return {
 		getAllUsers: function(callback) {
 			db.query("SELECT * FROM users", function(error, users){
-				callback(users)
+				if (error) {
+					callback(null, error)
+				} else {
+					callback(users, null)
+				}
 			})
 		},
 		
 		getUserById: function(userId, callback) {
-			db.query("SELECT * FROM users WHERE id = ?", [userId], function(err, user) {
+			db.query("SELECT * FROM users WHERE id = ?", [userId], function(err, userResults) {
 				if (err) {
-					console.log(err)
+					callback(null, err)
 				} else {
-					callback(user[0])
+					callback(userResults[0], null)
 				}
 			})
 		},
@@ -34,14 +38,22 @@ module.exports = function({}) {
 		},
 		
 		getUserByUsername: function(username, callback) {
-			db.query('SELECT * FROM users WHERE username = ?', [username], function(err, user) {
-				callback(err, user[0])
+			db.query('SELECT * FROM users WHERE username = ?', [username], function(err, userResults) {
+				if (err) {
+					callback(null, err)
+				} else {
+					callback(userResults[0], null)
+				}
 			})
 		},
 		
 		getUserByEmail: function(email, callback) {
-			db.query('SELECT * FROM users WHERE email = ?', [email], function(err, user) {
-				callback(err, user[0])
+			db.query('SELECT * FROM users WHERE email = ?', [email], function(err, userResults) {
+				if (err) {
+					callback(null, err)
+				} else {
+					callback(userResults[0], null)
+				}
 			})
 		}
 	}
