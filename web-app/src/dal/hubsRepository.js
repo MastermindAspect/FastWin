@@ -1,14 +1,3 @@
-const mysql = require("mysql")
-
-const db1 = mysql.createConnection({
-	host: "db",
-	user: "root",
-	password: "abc123",
-	database: "myDB"
-})
-
-const db = require('../dal/sequelizeSetup')
-
 module.exports = function({db}){
 	return {
 		getAllHubs: function(callback){
@@ -162,7 +151,13 @@ module.exports = function({db}){
 				}]
 			})
 			.then(function(user){
-				callback(user.Subscriptions, null)		//Ska denna ligga i user repository istället?
+				console.log(user.Subscriptions)
+				plainHubs = []
+				for (hub in user.Subscriptions) {
+					plainHubs.push(user.Subscriptions[hub].dataValues)
+				}
+				console.log("PlainHubs: " + plainHubs)
+				callback(plainHubs, null)
 			})
 			.catch(function(error){
 				console.log(error)

@@ -10,15 +10,18 @@ const db = mysql.createConnection({
 module.exports = function({}) {
 	return {
 		getPostById: function(postId, callback) {
-			db.query("SELECT * FROM posts WHERE id = ?", [postId], function(error, post) {
-				callback(post[0], error)
+			db.query("SELECT * FROM posts WHERE id = ?", [postId], function(error, postResults) {
+				if (error) {
+					callback(null, error)
+				} else {
+					callback(postResults[0], error)
+				}
 			})
 		},
 		
-		createPost: function(title, content, hubId, userId, callback) {
-			data = [hubId, userId, title, content]
-			db.query("INSERT INTO posts (hubId, userId, title, content) VALUES (?, ?, ?, ?)", data, function(error){
-				// TODO: Also handle errors.
+		createPost: function(author, title, content, hubId, userId, callback) {
+			data = [hubId, userId, author, title, content]
+			db.query("INSERT INTO posts (hubId, userId, author, title, content) VALUES (?, ?, ?, ?, ?)", data, function(error){
 				callback(error)
 			})
 		},
@@ -31,14 +34,19 @@ module.exports = function({}) {
 		
 		updatePost: function(postId, title, content, callback) {
 			const data = [title, content, postId]
-			db.query("UPDATE posts SET title = ?, content = ? WHERE id = ?", [data], function(error) {
+			db.query("UPDATE posts SET title = ?, content = ? WHERE id = ?", data, function(error) {
+				console.log("Error" + error)
 				callback(error)
 			})
 		},
 		
 		getHubPosts: function(hubId, callback) {
 			db.query("SELECT * FROM posts WHERE hubId = ?", [hubId], function(error, posts) {
-				callback(posts, error)
+				if (error) {
+					callback(null, error)
+				} else {
+					callback(posts, null)
+				}
 			})
 		}
 	}

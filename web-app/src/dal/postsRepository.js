@@ -1,13 +1,3 @@
-// const mysql = require("mysql")
-
-// const db1 = mysql.createConnection({
-// 	host: "db",
-// 	user: "root",
-// 	password: "abc123",
-// 	database: "myDB"
-// })
-
-
 module.exports = function({db}) {
 	return {
 		getPostById: function(postId, callback) {

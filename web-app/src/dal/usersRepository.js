@@ -1,13 +1,4 @@
-const mysql = require("mysql")
-
-const db1 = mysql.createConnection({
-	host: "db",
-	user: "root",
-	password: "abc123",
-	database: "myDB",
-})
-
-
+sequelize = require('sequelize')
 
 module.exports = function({db}) {
 	return {
@@ -42,7 +33,11 @@ module.exports = function({db}) {
 					callback(null)
                 })
                 .catch(function(error) {
-                    callback("Error creating user")
+					if (error instanceof sequelize.UniqueConstraintError) {
+						callback("Username is already in use")
+					} else {
+						callback("Error creating user")
+					}
                 })
 		},
 		
@@ -66,16 +61,16 @@ module.exports = function({db}) {
 			db.User.findOne({
                 where: {email: email}
             })
-                .then(function(user){
+        		.then(function(user){
 					if (user) {
 						callback(user.dataValues, null)
 					} else {
 						callback(null, null)
 					}
                 })
-                .catch(function(error){
-                    callback(null, "Error getting user")
-                })
+            	.catch(function(error){
+            	    callback(null, "Error getting user")
+            	})
 		}
 	}
 }
