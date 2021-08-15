@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		const password = document.querySelector("#login-page .password").value
 		const errorMessage = document.querySelector("#login-page .errorMessage")
 		const errors = document.querySelector("#login-page .errors")
-
+		
 		
 		fetch(
 			"http://localhost:3000/", {
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
 				}, // TODO: Escape username and password in case they contained reserved characters in the x-www-form-urlencoded format.
-				body: "grant_type=password&username="+username+"&password="+password
+				body: "grant_type=password&username"+username+"&password="+password
 			}
 			).then(function(response){
 				const data = response.json()
