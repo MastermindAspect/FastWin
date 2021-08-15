@@ -200,32 +200,4 @@ app.get('/about', (req, res) => {
     res.render("about", modal);
 })
 
-
-
-/*
-app.post("/search", function(req,res){
-    const searchWord = request.query.queryString;
-    let schema = "SELECT * FROM Posts WHERE title LIKE ? OR Time Like ?";
-    const pattern = '%' + searchWord + '%';
-    let insertVariables = [pattern, pattern];
-    let prevPage = request.query.p - 1;
-    let nextPage = prevPage + 2;
-    let showPosts = [];
-    const postsCount = 3;
-    const numberOfPages = Math.ceil(posts.length / postsCount);
-    let offset = request.query.p * postsCount;
-    if (nextPage >= numberOfPages) nextPage = numberOfPages - 1;
-    if (prevPage < 0) prevPage = 0;
-    for (var i = offset; i < offset + postsCount; i++) {
-        if (posts[i]) showPosts.push(posts[i]);
-    }
-    let pages = [];
-    for (i = 0; i < numberOfPages; i++) {
-        pages.push(i + 1);
-    }
-    response.render('AllPosts', { posts: showPosts, previousPage: prevPage, nextPage: nextPage, pages: pages, errorList: error, q: searchWord });
-})
-*/
-
-
 app.listen(PORT, HOST);

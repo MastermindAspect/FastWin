@@ -1,7 +1,18 @@
-<div class="col-md-12">
-    <li>
-        {{#each allUsers}}
-                <a href="/users/{{this.id}}">{{this.username}}</a><br>
-        {{/each}}
-    </li>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    {{#each allUsers}}
+        <div class="col">
+            <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="card-text"><strong>Username</strong>: {{this.username}}</p>
+                <p class="card-text"><strong>Email</strong>: {{this.email}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a href="/users/{{this.id}}" type="button" class="btn btn-sm btn-outline-secondary">View</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    {{/each}}
 </div>
