@@ -1,18 +1,29 @@
-
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    {{#each allHubs}}
-        <div class="col">
-            <div class="card shadow-sm">
-            <div class="card-body">
-                <h3 class="card-text"><strong>{{hubName}}</strong></h3>
-                <p class="card-text"><strong>Game</strong>: {{game}}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                        <a href="/hubs/{{id}}" type="button" class="btn btn-sm btn-outline-secondary">View hub</a>
+    {{#if allHubs.length}}
+        {{#each allHubs}}
+            <div class="col">
+                <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-text"><strong>{{hubName}}</strong></h3>
+                    <p class="card-text"><strong>Game</strong>: {{game}}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="/hubs/{{id}}" type="button" class="btn btn-sm btn-outline-secondary">View hub</a>
+                        </div>
                     </div>
                 </div>
+                </div>
             </div>
+        {{/each}}
+    {{else}}
+        <section class="jumbotron text-center">
+            <div class="container">
+                {{#if loggedIn}}
+                    <h1 class="jumbotron-heading">Woops! Looks like there aren't any registered hubs yet.</h1>
+                    <p class="lead text-muted">Be the first one to create a hub!</p>
+                    <a href="/hubs/create" class="btn btn-primary my-2">Create a hub</a>
+                {{/if}}        
             </div>
-        </div>
-    {{/each}}
+        </section>
+    {{/if}}
 </div>

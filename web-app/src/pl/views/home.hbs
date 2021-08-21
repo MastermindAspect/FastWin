@@ -1,12 +1,24 @@
 <link type="text/css" rel="stylesheet" href="/home.css"/>
-<div class="row">
-    <div class="col">
-        <h1 class="headline"> FastWin </h1>
-        <h2>"For gamers by gamers"</h2>
+
+<section class="jumbotron text-center">
+    <div class="container">
+        {{#if loggedIn}}
+            <h1 class="jumbotron-heading">Welcome {{username}}! </h1>
+            <p class="lead text-muted">FastWin is a fast growing platform that brings players across the globe to compete against each other.</p>
+            <a href="/hubs/all" class="btn btn-primary my-2">Discover hubs!</a>
+            <a href="/users/" class="btn btn-secondary my-2">Checkout other players!</a>
+        {{else}}
+            <h1 class="jumbotron-heading">Platform by gamers!</h1>
+            <p class="lead text-muted">Please login or register an account to begin your competetive era!</p>
+
+            <a href="/log" class="btn btn-primary my-2">Login / Register</a>
+        {{/if}}        
     </div>
-    <div class="col">
+</section>
+<div class="row">
+    <div class="col-md-6 text-center">
         <h2>Featured hubs</h2>
-        {{#if featuredHubs}}
+        {{#if featuredHubs.length}}
             {{#each featuredHubs}}
                 <div class="card">
                     <div class="card-header">
@@ -18,10 +30,13 @@
                 </div>
             {{/each}}
         {{else}}
-            <p>There is currently no hubs <br> be the first one to create a hub!</p>
+            <h5>There are currently no featured hubs!</h5>
         {{/if}}
+    </div>
+
+    <div class="col-md-6 text-center">
         <h2>Featured tournaments</h2>
-        {{#if featuredTournaments}}
+        {{#if featuredTournaments.length}}
             {{#each featuredTournaments}}
                 <div class="card">
                     <div class="card-header">
@@ -33,8 +48,7 @@
                 </div>
             {{/each}}
         {{else}}
-            <p>There is currently no tournaments <br> Be the first one to create a tournament!</p>
+            <h5>There are currently no featured tournaments!</h5>
         {{/if}}
-    </div>
+    </div>        
 </div>
-

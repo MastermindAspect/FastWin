@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function(){
 	
 	changeToPage(location.pathname)
@@ -15,8 +16,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			goToPage(url)
 		}
 	})
-	
-	// TODO: Avoid using this long lines of code.
+
 	document.querySelector("#create-hub-page form").addEventListener("submit", function(event){
 		event.preventDefault()
 		const errorMessage = document.querySelector("#create-hub-page .errorMessage")
@@ -78,8 +78,8 @@ document.addEventListener("DOMContentLoaded", function(){
 			}
 			).then(function(response){
 				const data = response.json()
-				errorMessage.innerText = ""
-				errors.innerHTML =""
+				errorMessage.innerText = "";
+				errors.innerHTML = "";
 				if (response.status != 200) {
 					data.then(function(errorObj){
 						errorMessage.innerText = errorObj.message
@@ -94,8 +94,8 @@ document.addEventListener("DOMContentLoaded", function(){
 				} 
 				else return data
 			}).then(function(body){
-				// TODO: Read out information about the user account from the id_token.
-				console.log(body)
+				const userData = jwt_decode(body.id_token);
+				document.getElementById("test").innerText =
 				login(body.access_token, body.refresh_token)
 				goToPage("/hubs/all")
 		}).catch(function(error){
@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	document.querySelector("#register-page form").addEventListener("submit", function(event){
 		event.preventDefault()
-		
 		const username = document.querySelector("#register-page .username").value
 		const password = document.querySelector("#register-page .password").value
 		const email = document.querySelector("#register-page .email").value

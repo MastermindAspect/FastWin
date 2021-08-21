@@ -12,7 +12,6 @@ module.exports = function({ logManager }) {
     router.post('/login', (req, res) => {
         const email = req.body.loginEmail
         const password = req.body.loginPassword
-
         logManager.loginUser(email, password, function (user, loginErrors, dbError) {
             if (dbError) {
                 const model = {
@@ -28,6 +27,7 @@ module.exports = function({ logManager }) {
             } else {
                 req.session.loggedIn = true
                 req.session.userId = user.id
+                req.session.username = user.username;
                 res.redirect('/')
             }
         }) 

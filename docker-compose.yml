@@ -10,11 +10,11 @@ services:
     depends_on: 
       - "db"
   spa:
-    build: spa/frontend
+    build: spa
     ports:
       - "4000:4000"
     volumes:
-      - "./spa/singlepage/src"
+      - "./src:/singlepage/src/spa/frontend"
   web-app:
     build: web-app
     ports:

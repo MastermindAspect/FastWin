@@ -26,12 +26,12 @@ module.exports = function({}){
 					db.query("INSERT INTO hubs (userId, hubName, description, game, creationDate) VALUES (?,?,?,?,?)", values, function(err){
 						if (err) callback(null, "Error creating hub!")
 						else {
-							db.query("SELECT id FROM hubs WHERE hubName = ?", values[1], function(err,id){
+							db.query("SELECT id FROM hubs WHERE hubName = ?", values[1], function(err,hub){
 								if (err) callback(null, "Error finding hub")
 								else {
-									db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [id[0].id, values[0]], function(err){
+									db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [hub[0].id, values[0]], function(err){
 										if (err) callback("Error subscribing")
-										else callback(id[0].id, null)
+										else callback(hub[0].id, null)
 									})
 								}
 							})

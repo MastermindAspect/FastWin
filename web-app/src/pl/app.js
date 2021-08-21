@@ -81,11 +81,11 @@ const app = express();
 
 //added equal helper
 
-Handlebars.registerHelper('if_eq', function(a, b, opts) {
-    if(a == b)
-        return opts.fn(this);
+Handlebars.registerHelper('if_eq', function(a, b, options) {
+    if(a === b)
+        return options.fn(this);
     else
-        return opts.inverse(this);
+        return options.inverse(this);
 });
 
 
@@ -126,6 +126,7 @@ app.use(csrf({ cookie: true }));
 app.use(function (req, res, next) {
     res.locals.loggedIn = req.session.loggedIn;
     res.locals.userId = req.session.userId;
+    res.locals.username = req.session.username;
     res.locals.csrfToken = req.csrfToken();
 
     theDashboardContent.getDashboardContent(req.session.userId,req.session.loggedIn,function(hubs,tournaments){

@@ -25,10 +25,10 @@ module.exports = function({}){
 					db.query("INSERT INTO tournaments (userId,tournamentName, description, game, maxPlayers) VALUES (?,?,?,?,?)", values, function(err){
 						if (err) callback(null, "Error creating tournament!")
 						else {
-							db.query("SELECT id FROM tournaments WHERE tournamentName = ?", values[1], function(err,id){
+							db.query("SELECT id FROM tournaments WHERE tournamentName = ?", values[1], function(err,tournament){
 								if (err) callback(null, "error finding tournament")
 								else {
-									callback(id[0].id, null)
+									callback(tournament[0].id, null)
 								}
 							})
 						}

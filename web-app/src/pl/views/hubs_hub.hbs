@@ -48,7 +48,7 @@
                                         <div class="col">
                                             <a href="/users/{{this.userId}}">{{this.author}}</a>
                                         </div>
-                                        {{#if_eq userId this.userId}}
+                                        {{#if_eq @root.userId this.userId}}
                                             <div class="col">
                                                 <form method="POST" action="/posts/delete/{{this.hubId}}/{{this.id}}">
                                                     <button type="submit" class="btn btn-danger pull-right">Delete</button>
