@@ -13,10 +13,14 @@ module.exports = function({db}){
 		createTournament: function(userId, tournamentName, description, game, maxPlayers, callback){
 			db.Tournament.create({userId: userId, tournamentName: tournamentName, description: description, game: game, maxPlayers: maxPlayers})
                 .then(function(tournament){
-                    callback(tournament.dataValues.id)
+                    callback(tournament.dataValues.id, null)
                 })
                 .catch(function(error) {
-                    callback("Error creating tournament")
+                    if (error = "SequelizeUniqueConstraintError: Validation error") {
+						callback(null, "Already a hub with that name")
+					} else {
+						callback(null, "Error updating hub")
+					}
                 })
 		},
 

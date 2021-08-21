@@ -12,7 +12,11 @@ module.exports = function({}){
 		getAllTournaments: function(callback){
 
 			db.query("SELECT * FROM tournaments", function(error, tournaments){
-				callback(tournaments, error);
+				if (error) {
+					callback(null, "Error getting tournaments")
+				} else {
+					callback(tournaments, null);
+				}
 			})
 			
 		},
@@ -40,7 +44,7 @@ module.exports = function({}){
 		getTournament: function(tournamentId, callback){
 			db.query("SELECT * FROM tournaments WHERE id = ?", tournamentId,function(err,tournamentResults){
 				if (err) {
-					callback(null, err)
+					callback(null, "Error getting tournament")
 				} else {
 					callback(tournamentResults[0], null)
 				}
@@ -50,7 +54,7 @@ module.exports = function({}){
 		getTournamentPlayers: function(tournamentId, callback){
 			db.query("SELECT u.* FROM tournaments t INNER JOIN tournament_info ti ON ti.tournamentId = t.id INNER JOIN users u ON u.id = ti.userId WHERE t.id = ?", [tournamentId], function(err, users){
 				if (err) {
-					callback(null, err)
+					callback(null, "Error getting tournament players")
 				} else {
 					callback(users, null)
 				}
@@ -60,7 +64,7 @@ module.exports = function({}){
 		getAllTournamentByUser: function(userId, callback){
 			db.query("SELECT h.* FROM tournaments h INNER JOIN tournament_info hs ON hs.tournamentId = h.id INNER JOIN users u ON u.id = hs.userId WHERE u.id = ?", [userId], function(err, tournaments){
 				if (err) {
-					callback(null, err)
+					callback(null, "Error getting tournaments")
 				} else {
 					callback(tournaments, null)
 				}

@@ -1,5 +1,4 @@
 
-
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username TEXT,
@@ -35,16 +34,6 @@ CREATE TABLE tournament_info (
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
-
-CREATE TABLE teams (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ownerId INT,
-    teamName TEXT,
-    game TEXT,
-    creationDate TEXT,
-    FOREIGN KEY (ownerId) REFERENCES users(id)
-);
-
 CREATE TABLE hub_subscriptions (
     hubId INT NOT NULL,
     userId INT NOT NULL,
@@ -64,4 +53,3 @@ CREATE TABLE posts (
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
-INSERT INTO hubs (hubName,description, game, creationDate) VALUES ("Test", "best hub","csgo", "1-1-1-1");

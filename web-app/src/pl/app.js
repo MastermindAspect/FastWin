@@ -13,22 +13,22 @@ const awilix = require("awilix")
 
 //Hubs
 const hubsManager = require("../bll/hubsManager")
-const hubsRepository = require("../dal/hubsRepository")
+const hubsRepository = require("../dalMySQL/hubsRepository")
 const hubsRouter = require("./routers/hubs-router");
 //Tournaments
 const tournamentsManager = require("../bll/tournamentsManager");
-const tournamentsRepository = require("../dal/tournamentsRepository");
+const tournamentsRepository = require("../dalMySQL/tournamentsRepository");
 const tournamentsRouter = require("./routers/tournaments-router");
 //Users
 const usersManager = require("../bll/usersManager");
-const usersRepository = require("../dal/usersRepository");
+const usersRepository = require("../dalMySQL/usersRepository");
 const usersRouter = require("./routers/usersRouter");
 //log
 const logManager = require("../bll/logManager");
 const logRouter = require("./routers/logRouter");
 //posts
 const postsManager = require("../bll/postsManager");
-const postsRepository = require("../dal/postsRepository");
+const postsRepository = require("../dalMySQL/postsRepository");
 const postsRouter = require("./routers/postsRouter");
 
 const dashboardContent = require("./js/dashboard-sidemenu");

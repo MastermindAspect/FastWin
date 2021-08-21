@@ -15,7 +15,11 @@ module.exports = function({db}){
                     callback(hub.dataValues.id, null)
                 })
                 .catch(function(error) {
-                    callback(null, "Error creating hub")
+                    if (error = "SequelizeUniqueConstraintError: Validation error") {
+						callback(null, "Already a hub with that name")
+					} else {
+						callback(null, "Error updating hub")
+					}
                 })
 		},
 
@@ -58,7 +62,12 @@ module.exports = function({db}){
 					callback(null)
 				})
 				.catch(function(error) {
-					callback("Error updating hub")
+					if (error = "SequelizeUniqueConstraintError: Validation error") {
+						callback("Already a hub with that name")
+					} else {
+						callback("Error updating hub")
+					}
+					
 				})
 		},
 
@@ -151,16 +160,13 @@ module.exports = function({db}){
 				}]
 			})
 			.then(function(user){
-				console.log(user.Subscriptions)
 				plainHubs = []
 				for (hub in user.Subscriptions) {
 					plainHubs.push(user.Subscriptions[hub].dataValues)
 				}
-				console.log("PlainHubs: " + plainHubs)
 				callback(plainHubs, null)
 			})
 			.catch(function(error){
-				console.log(error)
 				callback(null, "Error getting hubs by user")
 			})
 	 	}
