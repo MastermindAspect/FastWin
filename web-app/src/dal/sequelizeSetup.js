@@ -5,6 +5,9 @@ const db = new Sequelize('postgresql://abc321:myPostgresDB@postgreDB:5432/db')
 db.authenticate()
     .then(function() {console.log('Connected to database')})
     .catch(function(err) {console.log('Error: ' + err)})
+
+
+
 //==Models===============================================
 
 const User = db.define('user', {
@@ -20,13 +23,19 @@ const User = db.define('user', {
 })
 
 const Hub = db.define('hub', {
-    hubName: Sequelize.TEXT,
+    hubName: {
+        type: Sequelize.TEXT,
+        unique: true
+    },
     description: Sequelize.TEXT,
     game: Sequelize.TEXT
 })
 
 const Tournament = db.define('tournament', {
-    tournamentName: Sequelize.TEXT,
+    tournamentName: {
+        type: Sequelize.TEXT,
+        unique: true,
+    },
     description: Sequelize.TEXT,
     game: Sequelize.TEXT,
     maxPlayers: Sequelize.TEXT

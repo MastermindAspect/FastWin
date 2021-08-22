@@ -12,7 +12,7 @@ module.exports = function({}){
 		getAllHubs: function(callback){
 			db.query("SELECT * FROM hubs", function(error, hubs){
 				if (error) {
-					callback(null, error)
+					callback(null, "Error getting hubs")
 				} else {
 					callback(hubs, null)
 				}
@@ -21,7 +21,12 @@ module.exports = function({}){
 		createHub: function(userId, hubName, description, game, callback){
 			const values = [userId, hubName, description, game, "1-1-1-1"]
 			db.query("SELECT * FROM hubs WHERE hubName = ?", values[1], function(err,hubResults){
-				if (hubResults[0]) callback(null,"Already a hub with that name")
+				if (err) {
+					callback(null, "Error creating hub")
+				}
+				else if (hubResults[0]) {
+					callback(null, "Already a hub with that name")
+				}
 				else {
 					db.query("INSERT INTO hubs (userId, hubName, description, game, creationDate) VALUES (?,?,?,?,?)", values, function(err){
 						if (err) callback(null, "Error creating hub!")
@@ -29,10 +34,7 @@ module.exports = function({}){
 							db.query("SELECT id FROM hubs WHERE hubName = ?", values[1], function(err,hub){
 								if (err) callback(null, "Error finding hub")
 								else {
-									db.query("INSERT INTO hub_subscriptions (hubId, userId) VALUES (?,?)", [hub[0].id, values[0]], function(err){
-										if (err) callback("Error subscribing")
-										else callback(hub[0].id, null)
-									})
+									callback(hub[0].id, null)
 								}
 							})
 						}
@@ -51,13 +53,31 @@ module.exports = function({}){
 		},
 		deleteHub: function(hubId, callback) {
 			db.query("DELETE FROM hubs WHERE id = ?", hubId, function(err) {
-				callback(err)
+				if (err) {
+					callback("Error deleting hub")
+				} else {
+					callback(null)
+				}
 			})
 		},
 		updateHub: function(hubId, hubName, description, game, callback) {
 			const data = [hubName, description, game, hubId]
-			db.query("UPDATE hubs SET hubName = ?, description = ?, game = ? WHERE id = ?", data, function(err) {
-				callback(err)
+			db.query("SELECT * FROM hubs WHERE hubName = ?", data[0], function(err,hubResults){
+				if (err) {
+					callback("Error updating hub")
+				}
+				else if (hubResults[0]) {
+					callback("Already a hub with that name")
+				}
+				else {
+					db.query("UPDATE hubs SET hubName = ?, description = ?, game = ? WHERE id = ?", data, function(err) {
+						if (err) {
+							callback("Error updating hub")
+						} else {
+							callback(null)
+						}
+					})
+				}
 			})
 		},
 		subscribeTo: function(hubId, userId, callback){
@@ -95,7 +115,7 @@ module.exports = function({}){
 		getMembers: function(hubId, callback){
 			db.query("SELECT u.* FROM hubs h INNER JOIN hub_subscriptions hs ON hs.hubId = h.id INNER JOIN users u ON u.id = hs.userId WHERE h.id = ?", [hubId], function(err, users){
 				if (err) {
-					callback(null, err)
+					callback(null, "Error getting members")
 				} else {
 					callback(users, null)
 				}
@@ -104,7 +124,7 @@ module.exports = function({}){
 		getAllHubsByUser: function(userId, callback){
 			db.query("SELECT h.* FROM hubs h INNER JOIN hub_subscriptions hs ON hs.hubId = h.id INNER JOIN users u ON u.id = hs.userId WHERE u.id = ?", [userId], function(err, hubs){
 				if (err) {
-					callback(null,err)
+					callback(null,"Error getting hubs")
 				} else {
 					callback(hubs,null)
 				}
