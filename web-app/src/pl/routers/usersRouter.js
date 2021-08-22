@@ -1,4 +1,5 @@
 const express = require('express');
+const loginManager = require("../../bll/logManager");
 
 module.exports = function ({ usersManager, hubsManager, tournamentsManager }) {
 
@@ -104,7 +105,7 @@ module.exports = function ({ usersManager, hubsManager, tournamentsManager }) {
                     errorType: "createError"
                 }
                 res.render("login", modal)
-            } else {
+            } else {  
                 res.render("login")
             }
         })   

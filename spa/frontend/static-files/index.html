@@ -18,7 +18,10 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/hubs/all">View hubs</a></li>
 			<li class="showIfLoggedIn"><a href="/create-hub">Create hub</a></li>
+			<li class="showIfLoggedIn"><a href="/logout">Logout</a></li>
 			<li class="showIfLoggedOut"><a href="/login">Login</a></li>
+			<li class="showIfLoggedIn"><p id="username"><strong>Test</strong></p></li>
+
 		</ul>
 	</nav>
 	
@@ -26,12 +29,13 @@
 		
 		<div id="home-page">
 			<h1>Home</h1>
-			<p>This is the home page...</p>
+			<p clsas="showIfLoggedOut">Welcome to the home page... Login to proceed!</p>
+			<p clsas="showIfLoggedIn">Welcome <p class="showIfLoggedIn" id="username"></p>!</p>
 		</div>
 		
 		<div id="about-page">
 			<h1>About</h1>
-			<p>This is the about page...</p>
+			<p>FastWin was created by Daniel Ekeroth and Oskar Eek and it serves the only purpose of brining players all over the globe into a more competetive platform!</p>
 		</div>
 		
 		<div id="hubs-page">
