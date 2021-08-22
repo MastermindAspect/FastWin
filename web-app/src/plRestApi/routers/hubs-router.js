@@ -26,8 +26,8 @@ module.exports = function({hubsManager, authentication}){
 		});
 	})	
 
-	router.put("/edit",authentication.authenticateToken,function(req,res){
-		const hubId = req.body.hubId;
+	router.put("/edit/:hubId",authentication.authenticateToken,function(req,res){
+		const hubId = req.params.hubId;
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;

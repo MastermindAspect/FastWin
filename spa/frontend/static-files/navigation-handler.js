@@ -1,4 +1,5 @@
-
+const IP = "http://localhost:";
+const PORT = 3000;
 document.addEventListener("DOMContentLoaded", function(){
 	
 	changeToPage(location.pathname)
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			game
 		}
 		fetch(
-			"http://localhost:3000/hubs/create", {
+			IP+PORT+"/hubs/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -68,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		const errors = document.querySelector("#login-page .errors")
 		
 		fetch(
-			"http://localhost:3000/", {
+			IP+PORT+"/", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -116,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		console.log(user)
 		
 		fetch(
-			"http://localhost:3000/users/create", {
+			IP+PORT+"/users/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
@@ -157,13 +158,12 @@ document.addEventListener("DOMContentLoaded", function(){
 		const game = document.querySelector("#hubs-edit-page .game").value
 		const hubId = parseInt(document.querySelector("#hubs-edit-page .id").innerText)
 		const hub = {
-			"hubId":hubId,
 			"hub_name": name,
 			"description":description,
 			"game":game
 		}		
 		fetch(
-			"http://localhost:3000/hubs/edit", {
+			IP+PORT+"/hubs/edit/"+hubId, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		const errorMessage = document.querySelector("#hub-page .errorMessage")
 		const errors = document.querySelector("#hub-page .errors")
 		fetch(
-			"http://localhost:3000/hubs", {
+			IP+PORT+"/hubs", {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
@@ -298,7 +298,7 @@ function checkAccessToken(errorObj, errorElement){
 function fetchAllHubs(){
 	const errorMessage = document.querySelector("#hubs-page .errorMessage")
 	fetch(
-		"http://localhost:3000/hubs/all", {
+		IP+PORT+"/hubs/all", {
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",
@@ -333,7 +333,7 @@ function fetchAllHubs(){
 function fetchHub(id, page){
 	const errorMessage = document.querySelector("#"+page+" .errorMessage")
 	fetch(
-		"http://localhost:3000/hubs/"+id,{
+		IP+PORT+"/hubs/"+id,{
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",
@@ -394,7 +394,7 @@ function logout(){
 
 function getUserInformation(){
 	fetch(
-		"http://localhost:3000/users/userInfo",{
+		IP+PORT+"/users/userInfo",{
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",
