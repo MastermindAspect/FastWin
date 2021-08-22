@@ -13,7 +13,7 @@ module.exports = function({hubsManager, authentication}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		authentication.getUserIdFromIdToken(res,req, function(userId) {
+		authentication.getUserIdFromToken(res,req, function(userId) {
 			hubsManager.createHub(userId,hubName,description,game,true, function(id, errors, dbError){
 				if (dbError || errors) res.status(404).json({"message": "Error creating hub", "success": "false", "errors": {dbError,errors}}).end()
 				else{
@@ -31,7 +31,7 @@ module.exports = function({hubsManager, authentication}){
 		const hubName = req.body.hub_name;
 		const description = req.body.description;
 		const game = req.body.game;
-		authentication.getUserIdFromIdToken(res,req, function(userId) {
+		authentication.getUserIdFromToken(res,req, function(userId) {
 			hubsManager.updateHub(hubId,userId,hubName,description,game,true, function(errors,dbError){
 				if (dbError || errors) {
 					res.status(404).json({"message": "Error updating hub", "success": "false", "errors": {dbError,errors}}).end()
@@ -46,7 +46,7 @@ module.exports = function({hubsManager, authentication}){
 
 	router.delete("/",authentication.authenticateToken,function(req,res){
 		const hubId = req.body.hubId;
-		authentication.getUserIdFromIdToken(res,req, function(userId) {
+		authentication.getUserIdFromToken(res,req, function(userId) {
 			hubsManager.deleteHub(hubId,userId, true, function(errors,dbError){
 				if (dbError) {
 					res.status(404).json({"message": "Error deleting hub", "success": "false", "errors": {dbError,errors}}).end()
@@ -68,7 +68,7 @@ module.exports = function({hubsManager, authentication}){
 
 	router.post("/:id/subscribe",authentication.authenticateToken, function(req,res){
 		const hubId = req.params.id;
-		authentication.getUserIdFromIdToken(res,req, function(userId) {
+		authentication.getUserIdFromToken(res,req, function(userId) {
 			hubsManager.subscribeTo(hubId,true, userId, function(error,dbError){
 				if (dbError) res.status(404).json({"message": error, "success": "false"})
 				else res.status(200).json({"message": "Successfully subscribed to hub!", "success": "true"})
@@ -78,7 +78,7 @@ module.exports = function({hubsManager, authentication}){
 
 	router.post("/:id/unsubscribe",authentication.authenticateToken, function(req,res){
 		const hubId = req.params.id;
-		authentication.getUserIdFromIdToken(res,req, function(userId) {
+		authentication.getUserIdFromToken(res,req, function(userId) {
 			hubsManager.unSubscribeTo(hubId,true,userId,hubName,description,game,true ,function(error, dbError) {
 				if (dbError) res.status(404).json({"message": error, "success": "false"})
 				else res.status(200).json({"message": "Successfully unsubscribed to hub!", "success": "true"})

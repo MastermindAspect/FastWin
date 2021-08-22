@@ -13,13 +13,13 @@ module.exports = function(){
                 else next();
             })
         },
-        getUserIdFromIdToken: function(res,req,callback){
+        getUserIdFromToken: function(res,req,callback){
             let authHeader = req.headers['authorization']
             let token = authHeader && authHeader.split(' ')[1]
             if (token == null) return res.status(401).json({"message": "No token", "success": "false"})
-            jwt.verify(token, ACCESS_TOKEN_SECRET, (err,access) => {
+            jwt.verify(token, ACCESS_TOKEN_SECRET, (err,user) => {
                 if (err) return res.status(403).json({"message": "Not authorized", "success": "false"})
-                else callback(access.userId);
+                else callback(user.userId);
             })
         }      
     }

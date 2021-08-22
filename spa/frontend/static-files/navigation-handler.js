@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	changeToPage(location.pathname)
 	
 	if(localStorage.accessToken){
-		login(localStorage.accessToken, localStorage.refreshToken)
+		login(localStorage.accessToken, localStorage.idToken)
 	}else{
 		logout()
 	}
@@ -67,14 +67,13 @@ document.addEventListener("DOMContentLoaded", function(){
 		const errorMessage = document.querySelector("#login-page .errorMessage")
 		const errors = document.querySelector("#login-page .errors")
 		
-		
 		fetch(
 			"http://localhost:3000/", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
 				}, // TODO: Escape username and password in case they contained reserved characters in the x-www-form-urlencoded format.
-				body: "grant_type=password&username"+username+"&password="+password
+				body: "grant_type=password&username="+encodeURI(username)+"&password="+encodeURI(password)
 			}
 			).then(function(response){
 				const data = response.json()
@@ -94,10 +93,10 @@ document.addEventListener("DOMContentLoaded", function(){
 				} 
 				else return data
 			}).then(function(body){
-				const userData = jwt_decode(body.id_token);
-				document.getElementById("test").innerText =
-				login(body.access_token, body.refresh_token)
-				goToPage("/hubs/all")
+				/*const userData = jwt_decode(body.id_token);
+				document.getElementById("test").innerText =*/
+				login(body.access_token, body.id_token)
+				goToPage("/")
 		}).catch(function(error){
 			console.log(error)
 		})
@@ -114,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		const user = {
 			username,password,email
 		}
+		console.log(user)
 		
 		fetch(
 			"http://localhost:3000/users/create", {
@@ -141,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				} 
 				else return data
 			}).then(function(body){
+				console.log(body)
 				goToPage("/login")
 		}).catch(function(error){
 			console.log(error)
@@ -250,9 +251,7 @@ function changeToPage(url){
 	if(currentPageDiv){
 		currentPageDiv.classList.remove("current-page")
 	}
-	
-	// TODO: Optimally this information can be put in an array instead of having a long list of if-else if statements.
-	// TODO: Factor out common code in all branches.
+
 	if(url == "/"){
 		document.getElementById("home-page").classList.add("current-page")
 	}else if(url == "/about"){
@@ -262,7 +261,12 @@ function changeToPage(url){
 		fetchAllHubs()
 	}else if(url == "/login"){
 		document.getElementById("login-page").classList.add("current-page")
-	}else if(new RegExp("^/hubs/[0-9]+$").test(url)){
+		
+	}
+	else if(url == "/logout"){
+		logout();
+	}
+	else if(new RegExp("^/hubs/[0-9]+$").test(url)){
 		document.getElementById("hub-page").classList.add("current-page")
 		const id = url.split("/")[2]
 		fetchHub(id, "hub-page")
@@ -280,38 +284,14 @@ function changeToPage(url){
 	
 }
 
-function getNewAccessToken(refreshToken){
-	fetch(
-		"http://localhost:3000/token", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({"token":refreshToken, "grant_type":"refresh_token"})
-	}).then(function(response){
-		const data = response.json()
-		console.log(response)
-		if (response.status == 201) return data
-		else return logout()
-	}).then(function(obj){
-		login(obj.access_token, obj.refresh_token)
-	}).catch(function(error){
-		console.log(error)
-	})
-}
-
 function checkAccessToken(errorObj, errorElement){
-	console.log(localStorage.refresh_token)
-	if (localStorage.refreshToken == undefined || localStorage.refreshToken == null) {
+	if (localStorage.accessToken == undefined || localStorage.accessToken == null) {
 		errorElement.innerText = "Please login to view this page!"
 		return logout()
 	}
 	if (errorObj.message == "No id_token stored" || errorObj.message == "No token"){  //not logged in
 		logout()
 		errorElement.innerText = "Please login to view this page!"
-	}
-	else {
-		getNewAccessToken(localStorage.refreshToken) //gather new one
 	}
 }
 
@@ -394,17 +374,44 @@ function fetchHub(id, page){
 	
 }
 
-function login(accessToken, refreshToken){
-	console.log(refreshToken)
+function login(accessToken, idToken){
 	localStorage.accessToken = accessToken
-	localStorage.refreshToken = refreshToken
-	console.log("Logged in successfully!")
+	localStorage.idToken = idToken
+	console.log(accessToken)
 	document.body.classList.remove("isLoggedOut")
 	document.body.classList.add("isLoggedIn")
+	getUserInformation();
 }
 
 function logout(){
 	localStorage.accessToken = ""
 	document.body.classList.remove("isLoggedIn")
 	document.body.classList.add("isLoggedOut")
+	document.getElementsByClassName("username").innerText = "";
+
+	goToPage("/")
+}
+
+function getUserInformation(){
+	fetch(
+		"http://localhost:3000/users/userInfo",{
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer "+localStorage.idToken
+		}
+	}).then(function(response){
+		const data = response.json()
+		if (response.status == "200") return data
+		else {
+			data.then(function(errorObj){
+				checkAccessToken(errorObj, errorMessage)
+			})
+		}
+	}).then(function(obj){
+		console.log(obj.user)
+		document.getElementById("username").innerText = obj.user.nickname;
+	}).catch(function(error){
+		console.log(error)
+	})
 }

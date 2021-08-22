@@ -17,14 +17,14 @@ const usersRouter = require("./routers/usersRouter");
 const logManager = require("../bll/logManager");
 const logRouter = require("./routers/logRouter");
 //token
-const tokenRouter = require("./routers/token-router")
+//const tokenRouter = require("./routers/token-router")
 
 const sequelizeSetup = require("../dal/sequelizeSetup");
 
 
 //Awilix container setup
 const container = awilix.createContainer()
-container.register("tokenRouter",awilix.asFunction(tokenRouter))
+//container.register("tokenRouter",awilix.asFunction(tokenRouter))
 container.register("authentication", awilix.asFunction(authentication))
 container.register("hubsManager", awilix.asFunction(hubsManager))
 container.register("hubsRepository", awilix.asFunction(hubsRepository))
@@ -39,7 +39,7 @@ container.register("logRouter", awilix.asFunction(logRouter))
 
 container.register("db", awilix.asValue(sequelizeSetup))
 
-const theTokenRouter = container.resolve("tokenRouter")
+//const theTokenRouter = container.resolve("tokenRouter")
 const theHubsRouter = container.resolve("hubsRouter")
 const theUsersRouter = container.resolve("usersRouter")
 const theLogRouter = container.resolve("logRouter")
@@ -73,7 +73,7 @@ app.use(express.json());
 
 //jsonToken'
 
-app.use("/token", theTokenRouter)
+//app.use("/token", theTokenRouter)
 app.use("/hubs", theHubsRouter)
 app.use("/users", theUsersRouter);
 app.use("/", theLogRouter)

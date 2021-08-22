@@ -5,10 +5,7 @@ const csrf = require('csurf');
 const session = require('express-session');
 const path = require('path');
 const bodyParser = require("body-parser");
-const redis = require("redis");
 const Handlebars = require("handlebars");
-const redisClient = redis.createClient({host: 'redis', port: 6379});
-const redisStore = require("connect-redis")(session)
 const awilix = require("awilix")
 
 //Hubs
@@ -106,16 +103,6 @@ app.use(express.static(__dirname + '/js'));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.json());
-
-//session
-
-app.use(session({
-    store: new redisStore({client: redisClient}),
-    secret: "something secret",
-    saveUninitialized: false,
-    resave: false
-}))
-
 
 //cookieparser
 app.use(cookieParser());
